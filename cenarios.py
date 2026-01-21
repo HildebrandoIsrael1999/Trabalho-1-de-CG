@@ -44,30 +44,24 @@ def setCachorro(superficie, x, y):
     #pé4
     setPreencherRetangulo(superficie, x + 95, y + 95, 10, 10, cor2)
 
-
 def setBanco(superficie, x, y):
     corbanco1 = (186, 186, 178)
     corbanco2 = (145, 145, 131)
     corbanco3 = (110, 109, 102)
     
     #parte de sentar
-    setPreencherRetangulo(superficie, x, y, 200, 30, corbanco1)
+    setPreencherRetangulo(superficie, x, y, 200, 20, corbanco1)
     
     #parte das costas
-    setPreencherRetangulo(superficie, x  + 10 , y - 60, 180, 60, corbanco2)
-    #parte das costas linha1
-    setPreencherRetangulo(superficie, x  + 10 , y - 50, 180, 10, corbanco3)
-    #parte das costas linha2
-    setPreencherRetangulo(superficie, x  + 10 , y - 30, 180, 10, corbanco3)
-    #parte das costas linha3
-    setPreencherRetangulo(superficie, x  + 10 , y - 10, 180, 10, corbanco3)
+    setPreencherRetangulo(superficie, x  + 10 , y - 50, 180, 50, corbanco2)
     
+    setPreencherRetangulo(superficie, x  + 10 , y - 40, 180, 5, corbanco3)
+    setPreencherRetangulo(superficie, x  + 10 , y -20, 180, 5, corbanco3)
 
     #PÉ ESQUERDO
-    setPreencherRetangulo(superficie, x + 15, y + 20, 15, 50, corbanco1)
-    
+    setPreencherRetangulo(superficie, x + 15, y + 15, 15, 30, corbanco1)
     #PÉ DIREITO
-    setPreencherRetangulo(superficie, x + 170, y + 20, 15, 50, corbanco1)
+    setPreencherRetangulo(superficie, x + 170, y + 15, 15, 30, corbanco1)
 
 def setJarro(superficie, x, y):
     corjarro1 = (100, 50, 0)
@@ -76,26 +70,24 @@ def setJarro(superficie, x, y):
     corjarro4 = (201, 58, 110)
     
     #tronco
-    setPreencherRetangulo(superficie, x + 13, y - 50, 15, 100, corjarro1)
+    setPreencherRetangulo(superficie, x + 15, y - 50, 10, 50, corjarro1)
 
     #arvore1
-    setPreencherRetangulo(superficie, x - 30, y - 80, 100, 50, corjarro3)
+    setPreencherRetangulo(superficie, x, y - 80, 40, 40, corjarro3)
     #arvore2
-    setPreencherRetangulo(superficie, x - 10, y - 110, 60, 40, corjarro3)
+    setPreencherRetangulo(superficie, x + 10, y - 110, 20, 40, corjarro3)
     #arvore3
-    setPreencherRetangulo(superficie, x + 5, y - 130, 30, 20, corjarro3)
+    setPreencherRetangulo(superficie, x + 15, y - 130, 10, 30, corjarro3)
 
     #Jarro1
-    setPreencherRetangulo(superficie, x, y, 40, 50, corjarro2)
-    #Jarro2
-    setPreencherRetangulo(superficie, x -10, y + 30, 60, 60, corjarro2)
+    setPreencherRetangulo(superficie, x, y, 40, 40, corjarro2)
 
      #flor1
-    setPreencherRetangulo(superficie, x - 10, y - 60, 15, 15, corjarro4)
+    setPreencherRetangulo(superficie, x , y - 60, 10, 10, corjarro4)
     #flor2
-    setPreencherRetangulo(superficie, x + 40, y - 60, 15, 15, corjarro4)
+    setPreencherRetangulo(superficie, x + 30, y - 70, 10, 10, corjarro4)
     #flor3
-    setPreencherRetangulo(superficie, x + 10, y - 100, 15, 15, corjarro4)
+    setPreencherRetangulo(superficie, x + 10, y - 100, 10, 10, corjarro4)
 
 def setMesa(superficie, x, y):
     cor = (100, 50, 0)
@@ -110,35 +102,143 @@ def setMesa(superficie, x, y):
     setPreencherRetangulo(superficie, x + 170, y + 20, 15, 80, cor)
 
 def setCarrinho(superficie, x, y):
-    cor_preto = (0, 0, 0)
-    
-    # --- NOVAS DIMENSÕES (Dobro do tamanho anterior) ---
-    escala = 100         
-    altura_base = 40     
-    largura_total = escala * 3  # 300px no total
-    
-    # 1. QUADRADO CENTRAL (Preenchido)
-    setPreencherRetangulo(superficie, x + escala, y, escala, escala, cor_preto)
+    corcarrinho1 = (193, 197, 209)
+    corcarrinho2 = (230, 101, 85)
+    corcarrinho3 = (116, 117, 120)
+    corcarrinho4= (89, 89, 89)
+    corcarrinho5= (38, 70, 166)
+    tamanho = 50  # Tamanho do quadrado e base dos triângulos
+    largura_base = 150 # tamanho * 3 (pois são 3 peças em cima)
 
-    # 2. TRIÂNGULO DA ESQUERDA (Contorno)
-    setTrianguloGenerico(
+    # --- 1. QUADRADO CENTRAL (Preenchido) ---
+    # Ele começa deslocado para a direita pelo tamanho do primeiro triângulo
+    setPreencherRetangulo(superficie, x + tamanho, y, tamanho, tamanho, corcarrinho1)
+
+    # --- 2. TRIÂNGULO DA ESQUERDA (Contorno) ---
+    # Ângulo reto encostado no quadrado (x + tamanho, y + tamanho)
+    setPreencherTrianguloGenerico(
         superficie,
-        x + escala, y,           # Topo (encosta no quadrado)
-        x + escala, y + escala,  # Canto reto (inferior direito)
-        x,           y + escala,  # Ponta esquerda
-        cor_preto
+        x + tamanho, y,           # Topo (encostado no quadrado)
+        x + tamanho, y + tamanho, # Ângulo Reto (inferior direito)
+        x,           y + tamanho, # Ponta esquerda
+        corcarrinho1
     )
 
-    # 3. TRIÂNGULO DA DIREITA (Contorno)
-    # Ângulo reto no canto inferior esquerdo (x + 2*escala, y + escala)
-    setTrianguloGenerico(
+    # --- 3. TRIÂNGULO DA DIREITA (Contorno) ---
+    # Ângulo reto encostado no outro lado do quadrado (x + 2*tamanho)
+    setPreencherTrianguloGenerico(
         superficie,
-        x + (escala * 2), y,           # Topo (encosta no outro lado do quadrado)
-        x + (escala * 2), y + escala,  # Canto reto (inferior esquerdo)
-        x + (escala * 3), y + escala,  # Ponta direita
-        cor_preto
+        x + (tamanho * 2), y,           # Topo (encostado no quadrado)
+        x + (tamanho * 2), y + tamanho, # Ângulo Reto (inferior esquerdo)
+        x + (tamanho * 3), y + tamanho, # Ponta direita
+        corcarrinho1
     )
 
-    # 4. BASE RETANGULAR (Contorno)
-    # Fica logo abaixo das formas de cima
-    setRetangulo(superficie, x, y + escala, largura_total, altura_base, cor_preto)
+    # --- 4. BASE RETANGULAR (Contorno) ---
+    # Posicionado logo abaixo das outras peças (y + tamanho)
+    setPreencherRetangulo(superficie, x, y + tamanho, largura_base, 40, corcarrinho5)
+    setPreencherRetangulo(superficie, x, y + tamanho, largura_base, 15, corcarrinho2)
+    
+    #roda1
+    setPreencherRetangulo(superficie, x + 10, y + tamanho + 40, 20, 30, corcarrinho3)
+    #roda1linha1
+    setPreencherRetangulo(superficie, x + 10, y + tamanho + 40, 10, 20, corcarrinho4)
+
+    #roda2
+    setPreencherRetangulo(superficie, x + 120, y + tamanho + 40, 20, 30, corcarrinho3)
+    #roda2linha2
+    setPreencherRetangulo(superficie, x + 130, y + tamanho + 40, 10, 20, corcarrinho4)
+
+def setLixeiras(superficie, x, y):
+    corlixeira1 = (217, 56, 56)
+    corlixeira2 = (235, 198, 17)
+    corlixeira3 = (50, 173, 31)
+    corlixeira4 = (31, 46, 173)
+    corsuportelixeira = (107, 107, 107)
+    cordentrolixeira = (38, 38, 38)
+
+    #suporte lixeira
+    setPreencherRetangulo(superficie, x , y+ 10, 10, 80, corsuportelixeira)
+    #suporte lateral lixeira 1
+    setPreencherRetangulo(superficie, x + 38, y + 10, 20, 10, corsuportelixeira)
+
+    #lixeira vermelha
+    setPreencherRetangulo(superficie, x + 10 , y, 35, 60, corlixeira1)
+    #lixeira vermelha parte de dentro
+    setPreencherRetangulo(superficie, x + 18, y + 10, 20, 10, cordentrolixeira)
+
+    #lixeira amarela
+    setPreencherRetangulo(superficie, x + 55 , y, 35, 60, corlixeira2)
+    #lixeira amarela parte de dentro
+    setPreencherRetangulo(superficie, x + 63, y + 10, 20, 10, cordentrolixeira)
+
+    #suporte lateral lixeira 2
+    setPreencherRetangulo(superficie, x + 90, y + 10, 20, 10, corsuportelixeira)
+
+    #lixeira verde
+    setPreencherRetangulo(superficie, x + 100 , y, 35, 60, corlixeira3)
+    #lixeira verde parte de dentro
+    setPreencherRetangulo(superficie, x + 108, y + 10, 20, 10, cordentrolixeira)
+
+    #suporte lateral lixeira 3
+    setPreencherRetangulo(superficie, x + 135, y + 10, 20, 10, corsuportelixeira)
+
+    #lixeira azul
+    setPreencherRetangulo(superficie, x + 145 , y, 35, 60, corlixeira4)
+    #lixeira azul parte de dentro
+    setPreencherRetangulo(superficie, x + 153, y + 10, 20, 10, cordentrolixeira)
+
+    #suporte lixeira
+    setPreencherRetangulo(superficie, x + 180, y+ 10, 10, 80, corsuportelixeira)
+
+def setMoita(superficie, x, y):
+    
+    cormoita = (108, 168, 84)
+    corcaule=(110,10,10)
+    corjarro = (161, 138, 104)
+    corflor = (184, 32, 26)
+    
+    setPreencherRetangulo(superficie, x , y, 160, 30, cormoita)
+    setPreencherRetangulo(superficie, x + 40 , y - 20, 80, 50, cormoita)
+    
+    #caule1
+    setPreencherRetangulo(superficie, x + 20 , y + 30, 10, 20, corcaule)
+    #caule2
+    setPreencherRetangulo(superficie, x + 70 , y + 30, 10, 20, corcaule)
+    #caule3
+    setPreencherRetangulo(superficie, x + 125 , y + 30, 10, 20, corcaule)
+
+    #jarro
+    setPreencherRetangulo(superficie, x - 10, y + 50, 180, 25, corjarro)
+
+    #flor1
+    setPreencherRetangulo(superficie, x + 10, y + 10, 10, 10, corflor)
+    #flor2
+    setPreencherRetangulo(superficie, x + 60, y -10, 8, 8, corflor)
+    #flor3
+    setPreencherRetangulo(superficie, x + 90, y + 10, 10, 10, corflor)
+    #flor4
+    setPreencherRetangulo(superficie, x + 140, y + 15, 8, 8, corflor)
+
+def setCarro(superficie, x, y):
+
+    corcarro = (54, 54, 54)
+    corroda = (107, 107, 107)
+    corjanela = (168, 168, 168)
+    corfarol = (232, 219, 160)
+
+    setPreencherRetangulo(superficie, x, y, 150, 100, corcarro)
+    setPreencherRetangulo(superficie, x -25, y + 60, 200, 50, corcarro)
+
+    #roda1
+    setPreencherRetangulo(superficie, x, y + 110, 20, 30, corroda)
+    #roda1
+    setPreencherRetangulo(superficie, x + 130, y + 110, 20, 30, corroda)
+
+    #farol1
+    setPreencherRetangulo(superficie, x - 10, y + 70, 25, 25, corfarol)
+    #farol2
+    setPreencherRetangulo(superficie, x + 130, y + 70, 25, 25, corfarol)
+
+    #janela
+    setPreencherRetangulo(superficie, x + 15, y + 10, 120, 40, corjanela)

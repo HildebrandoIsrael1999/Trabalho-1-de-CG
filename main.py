@@ -18,7 +18,7 @@ while rodando:
         if evento.type == pygame.QUIT:
             rodando = False
             
-    tela.fill((5, 55, 55))
+    tela.fill((216, 224, 237))
 
     # setPixel(tela, 50, 60, corPixel)
     # Desenha uma linha azul do ponto (0, 0) até o ponto (1280, 720)
@@ -29,7 +29,7 @@ while rodando:
     # setPreencherRetangulo (tela, 200, 200, 200, 40, corPixel)
     # setRetaBresenham(tela, 50, 200, 450, 50, (255, 0, 0))
     #setPreencherQuadrado(tela, 50, 50, 100, corPixel)
-    setBilly(tela, 400 ,200)
+    setBilly(tela, 400 ,500)
     # setMulher(tela, 600, 500)
     # setMenino(tela, 700, 300)
     # setPreencherTriangulo(tela, 400, 200, 400, corPixel)
@@ -37,10 +37,13 @@ while rodando:
     # setCirculo(tela, 400, 500, 150, corPixel)
     setCachorro(tela, 500, 300)
     setBanco(tela, 700, 300)
-    setJarro(tela, 800, 500)
+    setJarro(tela, 300, 200)
     setCarrinho(tela, 100, 200)
-
+    setLixeiras(tela, 200,600)
  
+    setMoita(tela, 100,100)
+
+    setCarro(tela, 500, 500)
 
     pygame.display.flip()
 

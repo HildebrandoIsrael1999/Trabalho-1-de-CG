@@ -49,10 +49,7 @@ def setRetaBresenham(superficie, x0, y0, x1, y1, cor):
         x += 1
 
 def scanline_fill(superficie, pontos, cor_preenchimento):
-    """
-    Pinta o interior de uma forma (como um quadrado ou triângulo).
-    'pontos' é uma lista de coordenadas [(x1, y1), (x2, y2), ...]
-    """
+
     # 1. Achar o topo e o fundo do desenho (Y mínimo e máximo)
     ys = [p[1] for p in pontos]
     y_min = int(min(ys))
@@ -145,9 +142,7 @@ def setTrianguloEquilatero(superficie, x, y, lado, cor):
     setRetaBresenham(superficie, p2x, p2y, p3x, p3y, cor) # Base
     
 def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
-    """
-    Usa a função scanline_fill do professor para preencher um retângulo.
-    """
+
     # 1. Criamos a lista com os 4 cantos do retângulo (em ordem)
     # Ponto 1: Topo-Esquerda
     # Ponto 2: Topo-Direita
@@ -232,3 +227,15 @@ def setTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
     setRetaBresenham(superficie, x1, y1, x2, y2, cor) # Lado A
     setRetaBresenham(superficie, x2, y2, x3, y3, cor) # Lado B
     setRetaBresenham(superficie, x3, y3, x1, y1, cor) # Lado C
+
+def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
+    # 1. Criamos a lista com os 3 vértices do triângulo
+    # Diferente do retângulo, a ordem dos pontos aqui não costuma afetar o scanline
+    pontos = [
+        (x1, y1), 
+        (x2, y2), 
+        (x3, y3)
+    ]
+    
+    # 2. Chamamos a função scanline_fill enviando a lista de 3 pontos
+    scanline_fill(superficie, pontos, cor)
