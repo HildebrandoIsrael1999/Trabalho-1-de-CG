@@ -2,6 +2,7 @@ import pygame
 import sys
 from biblioteca import *
 from personagens import *
+from cenarios import *
 
 pygame.init()
 largura, altura = 1280,720
@@ -28,12 +29,16 @@ while rodando:
     # setPreencherRetangulo (tela, 200, 200, 200, 40, corPixel)
     # setRetaBresenham(tela, 50, 200, 450, 50, (255, 0, 0))
     #setPreencherQuadrado(tela, 50, 50, 100, corPixel)
-    # setBilly(tela, 400 ,200)
+    setBilly(tela, 400 ,200)
     # setMulher(tela, 600, 500)
     # setMenino(tela, 700, 300)
     # setPreencherTriangulo(tela, 400, 200, 400, corPixel)
     # setRetaBresenham(tela, 50, 50, 450, 50, (255, 0, 0))
-    setCirculo(tela, 400, 500, 150, corPixel)
+    # setCirculo(tela, 400, 500, 150, corPixel)
+    setCachorro(tela, 500, 300)
+    setBanco(tela, 700, 300)
+    setJarro(tela, 800, 500)
+    setCarrinho(tela, 100, 200)
 
  
 

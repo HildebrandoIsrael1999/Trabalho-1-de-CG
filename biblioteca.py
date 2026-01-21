@@ -226,3 +226,9 @@ def plotarSimetriaCirculo(superficie, cx, cy, x, y, cor):
     setPixel(superficie, cx - y, cy + x, cor)
     setPixel(superficie, cx + y, cy - x, cor)
     setPixel(superficie, cx - y, cy - x, cor)
+    
+def setTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
+    # Desenha a linha entre cada par de pontos fornecidos
+    setRetaBresenham(superficie, x1, y1, x2, y2, cor) # Lado A
+    setRetaBresenham(superficie, x2, y2, x3, y3, cor) # Lado B
+    setRetaBresenham(superficie, x3, y3, x1, y1, cor) # Lado C
