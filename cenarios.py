@@ -1,4 +1,5 @@
 from biblioteca import *
+from textos import *
 
 def setCachorro(superficie, x, y):
     cor1 = (236, 178, 95)
@@ -7,42 +8,70 @@ def setCachorro(superficie, x, y):
     cor4 = (182, 0, 71)
 
     #orelha1
-    setPreencherRetangulo(superficie, x + -10, y , 10, 20, cor2)
+    setPreencherRetangulo(superficie, x + -10, y , 10, 15, cor2)
     #cabeça
-    setPreencherRetangulo(superficie, x, y, 35, 35, cor1)
+    setPreencherRetangulo(superficie, x, y, 25, 25, cor1)
     #orelha2
-    setPreencherRetangulo(superficie, x + 30, y , 15, 20, cor2)
+    setPreencherRetangulo(superficie, x + 25, y , 10, 15, cor2)
     #olho1
-    setPreencherRetangulo(superficie, x + 3, y + 8, 8, 8, cor3)
+    setPreencherRetangulo(superficie, x + 2, y + 8, 5, 5, cor3)
     #olho2
-    setPreencherRetangulo(superficie, x + 20, y + 8, 8, 8, cor3)
+    setPreencherRetangulo(superficie, x + 15, y + 8, 5, 5, cor3)
     #nariz
-    setPreencherRetangulo(superficie, x + 5, y + 20, 8, 8, cor4)
+    setPreencherRetangulo(superficie, x + 5, y + 15, 5, 5, cor4)
 
     #corpo
-    setPreencherRetangulo(superficie, x + 10, y + 35, 110, 35, cor1)
+    setPreencherRetangulo(superficie, x + 10, y + 25, 80, 25, cor1)
     #rabo
-    setPreencherRetangulo(superficie, x + 110, y + 35, 30, 10, cor1)
+    setPreencherRetangulo(superficie, x + 85, y + 35, 30, 8, cor1)
 
     #perna1
-    setPreencherRetangulo(superficie, x + 20, y + 70, 12, 35, cor1)
-    #pé1
-    setPreencherRetangulo(superficie, x + 15, y + 95, 10, 10, cor2)
-
+    setPreencherRetangulo(superficie, x + 15, y + 50, 8, 25, cor1)
+    
     #perna2
-    setPreencherRetangulo(superficie, x + 40, y + 70, 12, 35, cor1)
-    #pé2
-    setPreencherRetangulo(superficie, x + 36, y + 95, 10, 10, cor2)
-
+    setPreencherRetangulo(superficie, x + 30, y + 50, 8, 25, cor1)
+    
     #perna3
-    setPreencherRetangulo(superficie, x + 80, y + 70, 12, 35, cor1)
-    #pé3
-    setPreencherRetangulo(superficie, x + 75, y + 95, 10, 10, cor2)
-
+    setPreencherRetangulo(superficie, x + 60, y + 50, 8, 25, cor1)
+    
     #perna4
-    setPreencherRetangulo(superficie, x + 100, y + 70, 12, 35, cor1)
-    #pé4
-    setPreencherRetangulo(superficie, x + 95, y + 95, 10, 10, cor2)
+    setPreencherRetangulo(superficie, x + 75, y + 50, 8, 25, cor1)
+    
+def setCachorroMarrom(superficie, x, y):
+    cor1 = (143, 97, 60)
+    cor2 = (105, 68, 40)
+    cor3 = (0, 0, 0)
+    cor4 = (66, 17, 31)
+
+    #orelha1
+    setPreencherRetangulo(superficie, x -5, y - 10, 10, 15, cor2)
+    #cabeça
+    setPreencherRetangulo(superficie, x, y, 25, 25, cor1)
+    #orelha2
+    setPreencherRetangulo(superficie, x + 20, y - 10, 10, 15, cor2)
+    #olho1
+    setPreencherRetangulo(superficie, x + 2, y + 8, 5, 5, cor3)
+    #olho2
+    setPreencherRetangulo(superficie, x + 15, y + 8, 5, 5, cor3)
+    #nariz
+    setPreencherRetangulo(superficie, x + 5, y + 15, 5, 5, cor4)
+
+    #corpo
+    setPreencherRetangulo(superficie, x + 10, y + 25, 80, 25, cor1)
+    #rabo
+    setPreencherRetangulo(superficie, x + 85, y + 35, 30, 8, cor1)
+
+    #perna1
+    setPreencherRetangulo(superficie, x + 15, y + 50, 8, 25, cor1)
+    
+    #perna2
+    setPreencherRetangulo(superficie, x + 30, y + 50, 8, 25, cor1)
+    
+    #perna3
+    setPreencherRetangulo(superficie, x + 60, y + 50, 8, 25, cor1)
+    
+    #perna4
+    setPreencherRetangulo(superficie, x + 75, y + 50, 8, 25, cor1)
 
 def setBanco(superficie, x, y):
     corbanco1 = (186, 186, 178)
@@ -223,9 +252,10 @@ def setMoita(superficie, x, y):
 def setCarro(superficie, x, y):
 
     corcarro = (54, 54, 54)
-    corroda = (107, 107, 107)
+    corroda = (0, 0, 0)
     corjanela = (168, 168, 168)
     corfarol = (232, 219, 160)
+    corplaca = (255, 255, 255)
 
     setPreencherRetangulo(superficie, x, y, 150, 100, corcarro)
     setPreencherRetangulo(superficie, x -25, y + 60, 200, 50, corcarro)
@@ -243,11 +273,61 @@ def setCarro(superficie, x, y):
     #janela
     setPreencherRetangulo(superficie, x + 15, y + 10, 120, 40, corjanela)
 
+    #placa
+    setPreencherRetangulo(superficie, x + 55, y + 80, 40, 20, corplaca)
+
+def setGato(superficie, x, y):
+    # Cores do gato
+    cor_principal = (128, 128, 128)  # Cinza
+    cor_detalhe = (80, 80, 80)       # Cinza Escuro
+    cor_preto = (0, 0, 0)
+    cor_nariz = (255, 182, 193)      # Rosa claro
+
+    # --- ORELHAS ---
+    # Diminuídas para 6x10
+    setPreencherRetangulo(superficie, x, y - 6, 6, 10, cor_detalhe)
+    setPreencherRetangulo(superficie, x + 12, y - 6, 6, 10, cor_detalhe)
+
+    # --- CABEÇA ---
+    # Reduzida de 25x25 para 18x18
+    setPreencherRetangulo(superficie, x, y, 18, 18, cor_principal)
+
+    # --- OLHOS ---
+    # Reduzidos para 3x3
+    setPreencherRetangulo(superficie, x + 3, y + 5, 3, 3, cor_preto)
+    setPreencherRetangulo(superficie, x + 12, y + 5, 3, 3, cor_preto)
+
+    # --- NARIZ ---
+    setPreencherRetangulo(superficie, x + 8, y + 10, 3, 2, cor_nariz)
+
+    # --- BIGODES ---
+    setRetaBresenham(superficie, x - 3, y + 10, x + 4, y + 11, cor_preto)
+    setRetaBresenham(superficie, x + 14, y + 11, x + 21, y + 10, cor_preto)
+
+    # --- CORPO ---
+    # Encurtado de 60 para 40 de largura
+    setPreencherRetangulo(superficie, x + 8, y + 18, 40, 18, cor_principal)
+
+    # --- RABO ---
+    # Mais curto e fino
+    setPreencherRetangulo(superficie, x + 48, y + 22, 20, 4, cor_principal)
+
+    # --- PERNAS ---
+    # Encurtadas para 6x15
+    setPreencherRetangulo(superficie, x + 9, y + 36, 6, 15, cor_principal) # Perna 1
+    setPreencherRetangulo(superficie, x + 19, y + 36, 6, 15, cor_principal) # Perna 2
+    setPreencherRetangulo(superficie, x + 32, y + 36, 6, 15, cor_principal) # Perna 3
+    setPreencherRetangulo(superficie, x + 42, y + 36, 6, 15, cor_principal) # Perna 4
+
 def desenhar_cenario(superficie):
-    setMoita(superficie, 100, 100)
-    setCarrinho(superficie, 100, 200)
-    setJarro(superficie, 300, 200)
+    setMoita(superficie, 420, 260)
+    setCarrinho(superficie, 100, 350)
+    setJarro(superficie, 30,290)
     setBanco(superficie, 700, 300)
-    setCachorro(superficie, 500, 300)
-    setCarro(superficie, 500, 500)
-    setLixeiras(superficie, 200, 600)
+    setCachorro(superficie, 500, 400)
+    setCachorroMarrom(superficie, 700, 600)
+    setCarro(superficie, 1073, 400)
+    setLixeiras(superficie, 1050, 250)
+    setGato(superficie, 800,500)
+    # setBalao1(superficie, 480, 200)
+    # setBalao2(superficie, 680, 200)

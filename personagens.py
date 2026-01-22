@@ -42,7 +42,7 @@ def getBilly():
         {"nome": "boca", "cor": cor_roupa, "tipo": "linha", "pontos": [(10, 23), (20, 23)]}
     ]
 
-def renderizarBilly(superficie, modelo, matriz):
+def renderizarPersonagem(superficie, modelo, matriz):
     for parte in modelo:
         # Aplica a matriz composta (Escala, Rotação, Translação)
         pts_trans = aplicaTransformacao(matriz, parte["pontos"])
@@ -64,85 +64,87 @@ def renderizarBilly(superficie, modelo, matriz):
             
             setRetaBresenham(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
 
-def setMulher(superficie, x, y):
-    # Definindo cores específicas
+def getMulher():
+    # Cores extraídas da sua função original
     cor_pele = (179, 139, 109)
-    cor_mecha_rosa = (255, 105, 180) # Rosa choque
-    cor_olho = (0, 0, 0) # Preto
+    cor_mecha_rosa = (255, 105, 180)
+    cor_olho = (0, 0, 0)
     cor_vestido = (255, 150, 200)
-    cor_cabelo =(0, 0, 0)
+    cor_cabelo = (0, 0, 0)
+    cor_boca = (255, 0, 0)
 
-    # --- CABEÇA ---
-    setPreencherRetangulo(superficie, x, y, 30, 30, cor_pele)
+    return [
+        # --- CABELO FUNDO (Laterais) ---
+        {"nome": "cabelo_esq", "cor": cor_cabelo, "pontos": [(-5, 0), (0, 0), (0, 20), (-5, 20)]},
+        {"nome": "cabelo_dir", "cor": cor_cabelo, "pontos": [(30, 0), (35, 0), (35, 20), (30, 20)]},
+        
+        # --- CABEÇA ---
+        {"nome": "cabeca", "cor": cor_pele, "pontos": [(0, 0), (30, 0), (30, 30), (0, 30)]},
+        
+        # --- CABELO TOPO ---
+        {"nome": "cabelo_topo", "cor": cor_cabelo, "pontos": [(0, -10), (30, -10), (30, 5), (0, 5)]},
+        
+        # --- MECHA ROSA ---
+        {"nome": "mecha", "cor": cor_mecha_rosa, "pontos": [(10, -5), (15, -5), (15, 10), (10, 10)]},
+
+        # --- OLHOS ---
+        {"nome": "olho_e", "cor": cor_olho, "pontos": [(5, 10), (10, 10), (10, 15), (5, 15)]},
+        {"nome": "olho_d", "cor": cor_olho, "pontos": [(20, 10), (25, 10), (25, 15), (20, 15)]},
+
+        # --- CORPO (Vestido) ---
+        {"nome": "vestido", "cor": cor_vestido, "pontos": [(-5, 30), (35, 30), (35, 90), (-5, 90)]},
+
+        # --- BRAÇOS ---
+        {"nome": "braco_e", "cor": cor_pele, "pontos": [(-15, 35), (-5, 35), (-5, 65), (-15, 65)]},
+        {"nome": "braco_d", "cor": cor_pele, "pontos": [(35, 35), (45, 35), (45, 65), (35, 65)]},
+
+        # --- PERNAS ---
+        {"nome": "perna_e", "cor": cor_pele, "pontos": [(0, 90), (10, 90), (10, 120), (0, 120)]},
+        {"nome": "perna_d", "cor": cor_pele, "pontos": [(20, 90), (30, 90), (30, 120), (20, 120)]},
+
+        # --- BOCA (Linha) ---
+        {"nome": "boca", "cor": cor_boca, "tipo": "linha", "pontos": [(10, 23), (20, 23)]}
+    ]
     
-    # --- CABELO (Por cima da cabeça) ---
-    # Cabelo principal no topo
-    setPreencherRetangulo(superficie, x, y - 10, 30, 15, cor_cabelo)
-    # Cabelo nas laterais (para dar volume)
-    setPreencherRetangulo(superficie, x - 5, y, 5, 20, cor_cabelo)
-    setPreencherRetangulo(superficie, x + 30, y, 5, 20, cor_cabelo)
-    
-    # --- MECHA ROSA (Fina na frente, por cima do cabelo) ---
-    setPreencherRetangulo(superficie, x + 10, y - 5, 5, 15, cor_mecha_rosa)
-
-    # --- OLHOS ---
-    setPreencherRetangulo(superficie, x + 5, y + 10, 5, 5, cor_olho)  # Olho esquerdo
-    setPreencherRetangulo(superficie, x + 20, y + 10, 5, 5, cor_olho) # Olho direito
-
-    # --- BOCA (Reta Vermelha) ---
-    setRetaBresenham(superficie, x + 10, y + 23, x + 20, y + 23, (255, 0, 0))
-
-    # --- CORPO (Vestido Rosa) ---
-    # Começa um pouco mais estreito na parte de cima
-    setPreencherRetangulo(superficie, x - 5, y + 30, 40, 60, cor_vestido)
-
-    # --- BRAÇOS (Cor da Pele) ---
-    setPreencherRetangulo(superficie, x - 15, y + 35, 10, 30, cor_pele) # Braço esquerdo
-    setPreencherRetangulo(superficie, x + 35, y + 35, 10, 30, cor_pele) # Braço direito
-
-    # --- PERNAS (Cor da Pele) ---
-    setPreencherRetangulo(superficie, x, y + 90, 10, 30, cor_pele)      # Perna esquerda (Y um pouco mais baixo por causa do vestido)
-    setPreencherRetangulo(superficie, x + 20, y + 90, 10, 30, cor_pele) # Perna direita
-    
-def setMenino(superficie, x, y):
-    cor_pele = (255, 224, 189)   # Pele clara
-    cor_cabelo = (0, 0, 0)        # Preto
-    cor_blusa = (173, 216, 230)   # Azul Claro
-    cor_calca = (0, 0, 139)       # Azul Escuro
+def getMenino():
+    # Cores extraídas da sua função original
+    cor_pele = (255, 224, 189)
+    cor_cabelo = (0, 0, 0)
+    cor_blusa = (173, 216, 230)
+    cor_calca = (0, 0, 139)
     cor_preto = (0, 0, 0)
+    cor_boca = (200, 0, 0)
 
-    # --- CABELO (Parte de trás/topo) ---
-    setPreencherRetangulo(superficie, x, y - 5, 30, 15, cor_cabelo)
+    return [
+        # --- CABELO (Parte de trás/topo) ---
+        {"nome": "cabelo", "cor": cor_cabelo, "pontos": [(0, -5), (30, -5), (30, 10), (0, 10)]},
 
-    # --- CABEÇA ---
-    setPreencherRetangulo(superficie, x, y, 30, 30, cor_pele)
+        # --- CABEÇA ---
+        {"nome": "cabeca", "cor": cor_pele, "pontos": [(0, 0), (30, 0), (30, 30), (0, 30)]},
 
-    # --- ÓCULOS REDONDOS --
-    # Aro Esquerdo
-    setCirculo(superficie, x + 8, y + 15, 6, cor_preto)
-    # Aro Direito
-    setCirculo(superficie, x + 22, y + 15, 6, cor_preto)
-    # Ponte dos óculos 
-    setRetaBresenham(superficie, x + 14, y + 15, x + 16, y + 15, cor_preto)
+        # --- OLHOS (Pontinhos) ---
+        {"nome": "olho_e", "cor": cor_preto, "pontos": [(8, 15), (9, 15), (9, 16), (8, 16)]},
+        {"nome": "olho_d", "cor": cor_preto, "pontos": [(22, 15), (23, 15), (23, 16), (22, 16)]},
 
-    # --- OLHOS (Pontinhos dentro dos óculos) ---
-    setPixel(superficie, x + 8, y + 15, cor_preto)
-    setPixel(superficie, x + 22, y + 15, cor_preto)
+        # --- ÓCULOS (Vazados - Apenas contorno) ---
+        # Convertidos de círculos para quadrados para funcionar no seu motor atual
+        {"nome": "aro_e", "cor": cor_preto, "tipo": "apenas_contorno", "pontos": [(2, 9), (14, 9), (14, 21), (2, 21)]},
+        {"nome": "aro_d", "cor": cor_preto, "tipo": "apenas_contorno", "pontos": [(16, 9), (28, 9), (28, 21), (16, 21)]},
+        {"nome": "ponte_oculos", "cor": cor_preto, "tipo": "linha", "pontos": [(14, 15), (16, 15)]},
 
-    # --- BOCA (Reta Vermelha básica) ---
-    setRetaBresenham(superficie, x + 12, y + 25, x + 18, y + 25, (200, 0, 0))
+        # --- BOCA (Linha) ---
+        {"nome": "boca", "cor": cor_boca, "tipo": "linha", "pontos": [(12, 25), (18, 25)]},
 
-    # --- BLUSA (Corpo) ---
-    setPreencherRetangulo(superficie, x - 5, y + 30, 40, 40, cor_blusa)
+        # --- CORPO (Blusa) ---
+        {"nome": "blusa", "cor": cor_blusa, "pontos": [(-5, 30), (35, 30), (35, 70), (-5, 70)]},
 
-    # --- BRAÇOS ---
-    setPreencherRetangulo(superficie, x - 15, y + 30, 10, 30, cor_pele)
-    setPreencherRetangulo(superficie, x + 35, y + 30, 10, 30, cor_pele)
+        # --- BRAÇOS ---
+        {"nome": "braco_e", "cor": cor_pele, "pontos": [(-15, 30), (-5, 30), (-5, 60), (-15, 60)]},
+        {"nome": "braco_d", "cor": cor_pele, "pontos": [(35, 30), (45, 30), (45, 60), (35, 60)]},
 
-    # --- CALÇA (Continuação do corpo) ---
-    setPreencherRetangulo(superficie, x - 5, y + 70, 40, 20, cor_calca)
-
-    # --- PERNAS 
-    setPreencherRetangulo(superficie, x, y + 90, 12, 25, cor_calca)      # Perna esquerda
-    setPreencherRetangulo(superficie, x + 18, y + 90, 12, 25, cor_calca) # Perna direita
+        # --- CALÇA ---
+        {"nome": "calca_topo", "cor": cor_calca, "pontos": [(-5, 70), (35, 70), (35, 90), (-5, 90)]},
+        {"nome": "perna_e", "cor": cor_calca, "pontos": [(0, 90), (12, 90), (12, 115), (0, 115)]},
+        {"nome": "perna_d", "cor": cor_calca, "pontos": [(18, 90), (30, 90), (30, 115), (18, 115)]}
+    ]
 
