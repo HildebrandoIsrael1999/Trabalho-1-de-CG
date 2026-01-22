@@ -1,43 +1,67 @@
 import pygame
 import sys
-from animacao import TrianguloAnimado
-from biblioteca import setPixel,setQuadrado,setRetangulo,setTrianguloEquilatero, setPreencherRetangulo, setRetaBresenham
+from biblioteca import *
+from personagens import *
+from cenarios import *
 
+#Setar propriedades do jogo
 pygame.init()
+pygame.display.set_caption("Billy da Tapioca")
+clock = pygame.time.Clock()
 largura, altura = 1280,720
-corPixel= (255, 0, 0)
 tela = pygame.display.set_mode((largura, altura))
-pygame.display.set_caption("Nome do jogo")
 
-# meu_triangulo = TrianguloAnimado(100, 300, 200, (0, 255, 0), 2)
+billy_x, billy_y = 250, 200
+billy_escala = 1.0
+billy_angulo = 0
 
+#Loop para não fechar o jogo.
 rodando = True
 while rodando:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             rodando = False
             
-    tela.fill((255, 255, 255))
+    # 1. Limpeza
+    tela.fill((216, 224, 237))
+    teclas = pygame.key.get_pressed()
+    # 2. Lógica (Input)
+    if teclas[pygame.K_LEFT]:  billy_x -= 5
+    if teclas[pygame.K_RIGHT]: billy_x += 5
+    if teclas[pygame.K_UP]:    billy_y -= 5  
+    if teclas[pygame.K_DOWN]:  billy_y += 5 
+    
+    # Escala (com trava de segurança para não sumir/inverter)
+    if teclas[pygame.K_w]: 
+        billy_escala += 0.10
+    if teclas[pygame.K_s]:     
+        billy_escala -= 0.10
+    if billy_escala < 0.1:
+            billy_escala = 0.1
+    
+    # Rotação
+    if teclas[pygame.K_r]:     billy_angulo += 5
 
-    # setPixel(tela, 200, 150, corPixel)
-    # Desenha uma linha azul do ponto (0, 0) até o ponto (1280, 720)
-    # setQuadrado(tela, 300, 200, 80, corPixel)
-    # setRetangulo(tela, 100, 20, 200, 200, corPixel)
-    # setTrianguloEquilatero(tela, 300, 300 , 225, corPixel)
-    # setCirculo(tela, 200, 200, 40, corPixel)
-    # setPreencherRetangulo (tela, 200, 200, 200, 40, corPixel)
-    # setRetaBresenham(tela, 50, 200, 450, 50, (255, 0, 0))
+    # 3. Matemática (Matrizes)
+    m = identidade()
+    m = multiplicaMatrizes(escala(billy_escala, billy_escala), m)
+    m = multiplicaMatrizes(rotacao(billy_angulo), m)
+    m = multiplicaMatrizes(translacao(billy_x, billy_y), m)
 
-    # ------- LÓGICA DE ANIMAÇÃO --------
-    # 1. Atualiza a posição (matemática)
-    # meu_triangulo.atualizar()
-    # 2. Desenha o objeto na nova posição
-    # meu_triangulo.desenhar(tela)
+    # 4. Desenho (Renderização)
+    desenhar_cenario(tela)
+    renderizarBilly(tela, getBilly(), m)
 
+    # 5. Flip
     pygame.display.flip()
 
-    # Controla o FPS para a animação não ficar rápida demais (opcional, mas recomendado)
-    # pygame.time.Clock().tick(60)
+    # 5. ATUALIZAÇÃO ÚNICA DA TELA
+    pygame.display.flip()
+    clock.tick(60)
+    
+    
+
+
 
 pygame.quit()
 sys.exit()
