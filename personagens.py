@@ -1,5 +1,7 @@
+import pygame
 from biblioteca import *
 from matrizes import *
+
 
 def getBilly():
     #Definido na orgiem (0,0) para nao deformar o billy
@@ -43,7 +45,7 @@ def getBilly():
 def renderizarBilly(superficie, modelo, matriz):
     for parte in modelo:
         # Aplica a matriz composta (Escala, Rotação, Translação)
-        pts_trans = aplica_transformacao(matriz, parte["pontos"])
+        pts_trans = aplicaTransformacao(matriz, parte["pontos"])
         cor = parte["cor"]
         
         # Só preenche se não for uma peça marcada como 'apenas_contorno' ou 'linha'
@@ -143,3 +145,4 @@ def setMenino(superficie, x, y):
     # --- PERNAS 
     setPreencherRetangulo(superficie, x, y + 90, 12, 25, cor_calca)      # Perna esquerda
     setPreencherRetangulo(superficie, x + 18, y + 90, 12, 25, cor_calca) # Perna direita
+

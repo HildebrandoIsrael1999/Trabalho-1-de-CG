@@ -242,3 +242,12 @@ def setCarro(superficie, x, y):
 
     #janela
     setPreencherRetangulo(superficie, x + 15, y + 10, 120, 40, corjanela)
+
+def desenhar_cenario(superficie):
+    setMoita(superficie, 100, 100)
+    setCarrinho(superficie, 100, 200)
+    setJarro(superficie, 300, 200)
+    setBanco(superficie, 700, 300)
+    setCachorro(superficie, 500, 300)
+    setCarro(superficie, 500, 500)
+    setLixeiras(superficie, 200, 600)

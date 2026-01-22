@@ -15,7 +15,7 @@ def rotacao(angulo_graus):
     c, s = math.cos(theta), math.sin(theta)
     return [[c, -s, 0], [s, c, 0], [0, 0, 1]]
 
-def multiplica_matrizes(a, b):
+def multiplicaMatrizes(a, b):
     r = [[0]*3 for _ in range(3)]
     for i in range(3):
         for j in range(3):
@@ -23,7 +23,7 @@ def multiplica_matrizes(a, b):
                 r[i][j] += a[i][k] * b[k][j]
     return r
 
-def aplica_transformacao(m, pontos):
+def aplicaTransformacao(m, pontos):
     novos = []
     for x, y in pontos:
         # v = [x, y, 1] em coordenadas homogêneas para translação
@@ -31,3 +31,9 @@ def aplica_transformacao(m, pontos):
         ny = m[1][0]*x + m[1][1]*y + m[1][2]
         novos.append((nx, ny))
     return novos
+def calcularMatriz(esc, ang, x, y):
+    m = identidade()
+    m = multiplicaMatrizes(escala(esc, esc), m)
+    m = multiplicaMatrizes(rotacao(ang), m)
+    m = multiplicaMatrizes(translacao(x, y), m)
+    return m

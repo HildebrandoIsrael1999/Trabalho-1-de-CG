@@ -22,43 +22,38 @@ while rodando:
         if evento.type == pygame.QUIT:
             rodando = False
             
-    # 1. LIMPEZA ÚNICA DA TELA (Fundo do cenário)
+    # 1. Limpeza
     tela.fill((216, 224, 237))
-
-    # 2. CAPTURA DE TECLAS DO PYGAME
     teclas = pygame.key.get_pressed()
-    
-    # Movimentação (Setas)
+    # 2. Lógica (Input)
     if teclas[pygame.K_LEFT]:  billy_x -= 5
     if teclas[pygame.K_RIGHT]: billy_x += 5
     if teclas[pygame.K_UP]:    billy_y -= 5  
     if teclas[pygame.K_DOWN]:  billy_y += 5 
     
-    # Escala (W e S)
-    if teclas[pygame.K_w]:     billy_escala += 0.10 # Aumenta escala
-    if teclas[pygame.K_s]:     billy_escala -= 0.10 # Diminui escala
+    # Escala (com trava de segurança para não sumir/inverter)
+    if teclas[pygame.K_w]: 
+        billy_escala += 0.10
+    if teclas[pygame.K_s]:     
+        billy_escala -= 0.10
+    if billy_escala < 0.1:
+            billy_escala = 0.1
     
-    # Rotação (R)
+    # Rotação
     if teclas[pygame.K_r]:     billy_angulo += 5
 
-    # 3. COMPOSIÇÃO DA MATRIZ DO BILLY
+    # 3. Matemática (Matrizes)
     m = identidade()
-    m = multiplica_matrizes(escala(billy_escala, billy_escala), m)
-    m = multiplica_matrizes(rotacao(billy_angulo), m)
-    m = multiplica_matrizes(translacao(billy_x, billy_y), m)
+    m = multiplicaMatrizes(escala(billy_escala, billy_escala), m)
+    m = multiplicaMatrizes(rotacao(billy_angulo), m)
+    m = multiplicaMatrizes(translacao(billy_x, billy_y), m)
 
-    # 4. RENDERIZAÇÃO DE TODOS OS OBJETOS (Ordem: Fundo para Frente)
-    # Personagens e Cenários estáticos
-    setMoita(tela, 100, 100)
-    setCarrinho(tela, 100, 200)
-    setJarro(tela, 300, 200)
-    setBanco(tela, 700, 300)
-    setCachorro(tela, 500, 300)
-    setCarro(tela, 500, 500)
-    setLixeiras(tela, 200, 600)
-    
-    # Renderiza o Billy por cima do cenário
+    # 4. Desenho (Renderização)
+    desenhar_cenario(tela)
     renderizarBilly(tela, getBilly(), m)
+
+    # 5. Flip
+    pygame.display.flip()
 
     # 5. ATUALIZAÇÃO ÚNICA DA TELA
     pygame.display.flip()
