@@ -1,54 +1,67 @@
 from biblioteca import *
+from matrizes import *
 
-def setBilly(superficie, x, y):
+def getBilly():
+    #Definido na orgiem (0,0) para nao deformar o billy
     cor_pele = (179, 139, 109)
-    cor_roupa = (255, 0, 0)  # Camisa vermelha por baixo
-    cor_branco = (255, 255, 255) # Cor do boné e jaleco
-    cor_boca = (255, 0, 0) # Vermelho puro para boca ficar lindinha
-    
-    # --- CORPO ---
-    setPreencherRetangulo(superficie, x - 5, y + 30, 40, 50, cor_roupa)
-    
-    # --- JALECO BRANCO  ---
-    # Deixamos uma bordinha da camisa vermelha aparecendo se quiser, 
-    # ou cobrimos quase tudo.
-    setPreencherRetangulo(superficie, x - 5, y + 30, 40, 50, cor_branco)
-    # Detalhe: um retângulo fino vermelho no meio para parecer o jaleco aberto
-    setPreencherRetangulo(superficie, x + 12, y + 30, 6, 50, cor_roupa)
+    cor_roupa = (255, 0, 0)
+    cor_branco = (255, 255, 255)
+    cor_preto = (0, 0, 0)
 
-    # --- CABEÇA ---
-    setPreencherRetangulo(superficie, x, y, 30, 30, cor_pele)
-    
-    # --- BONÉ BRANCO ---
-    # Parte de cima do boné
-    setPreencherRetangulo(superficie, x, y - 5, 30, 10, cor_branco) 
-    # Aba do boné (um retângulo que sai para o lado)
-    setPreencherRetangulo(superficie, x + 15, y, 20, 5, cor_branco)
+    return [
+        # --- CORPO E JALECO ---
+        {"nome": "corpo", "cor": cor_roupa, "pontos": [(-5, 30), (35, 30), (35, 80), (-5, 80)]},
+        {"nome": "jaleco", "cor": cor_branco, "pontos": [(-5, 30), (35, 30), (35, 80), (-5, 80)]},
+        {"nome": "abertura_jaleco", "cor": cor_roupa, "pontos": [(12, 30), (18, 30), (18, 80), (12, 80)]},
 
-    # --- OLHOS ---
-    setPreencherRetangulo(superficie, x + 5, y + 12, 5, 5, (0, 0, 0))
-    setPreencherRetangulo(superficie, x + 20, y + 12, 5, 5, (0, 0, 0))
+        # --- CABEÇA ---
+        {"nome": "cabeca", "cor": cor_pele, "pontos": [(0, 0), (30, 0), (30, 30), (0, 30)]},
+        
+        # --- BONÉ ---
+        {"nome": "bone_topo", "cor": cor_branco, "pontos": [(0, -5), (30, -5), (30, 5), (0, 5)]},
+        {"nome": "bone_aba", "cor": cor_branco, "pontos": [(15, 0), (35, 0), (35, 5), (15, 5)]},
+        
+        # --- OLHOS (Preenchidos) ---
+        {"nome": "olho_e", "cor": cor_preto, "pontos": [(5, 12), (10, 12), (10, 17), (5, 17)]},
+        {"nome": "olho_d", "cor": cor_preto, "pontos": [(20, 12), (25, 12), (25, 17), (20, 17)]},
+        
+        # --- BRAÇOS E PERNAS ---
+        {"nome": "braco_e", "cor": cor_pele, "pontos": [(-15, 35), (-5, 35), (-5, 65), (-15, 65)]},
+        {"nome": "braco_d", "cor": cor_pele, "pontos": [(35, 35), (45, 35), (45, 65), (35, 65)]},
+        {"nome": "perna_e", "cor": cor_pele, "pontos": [(0, 80), (10, 80), (10, 110), (0, 110)]},
+        {"nome": "perna_d", "cor": cor_pele, "pontos": [(20, 80), (30, 80), (30, 110), (20, 110)]},
 
-    # --- BRAÇOS ---
-    setPreencherRetangulo(superficie, x - 15, y + 35, 10, 30, cor_pele)
-    setPreencherRetangulo(superficie, x + 35, y + 35, 10, 30, cor_pele)
+        # --- ÓCULOS (Vazados - Apenas contorno para não tampar o olho) ---
+        {"nome": "aro_e", "cor": cor_preto, "tipo": "apenas_contorno", "pontos": [(3, 10), (12, 10), (12, 19), (3, 19)]},
+        {"nome": "aro_d", "cor": cor_preto, "tipo": "apenas_contorno", "pontos": [(18, 10), (27, 10), (27, 19), (18, 19)]},
+        
+        # --- LINHAS (Boca e Ponte dos óculos) ---
+        {"nome": "ponte", "cor": cor_preto, "tipo": "linha", "pontos": [(12, 15), (18, 15)]},
+        {"nome": "boca", "cor": cor_roupa, "tipo": "linha", "pontos": [(10, 23), (20, 23)]}
+    ]
 
-    # --- PERNAS ---
-    setPreencherRetangulo(superficie, x, y + 80, 10, 30, cor_pele)
-    setPreencherRetangulo(superficie, x + 20, y + 80, 10, 30, cor_pele)
-    # --- ÓCULOS --
-    # Aro Esquerdo (ao redor do olho esquerdo)
-    setQuadrado(superficie, x + 3, y + 10, 9, (0, 0, 0))
-    
-    # Aro Direito (ao redor do olho direito)
-    # x + 18 para ficar centralizado no olho que está em x + 20
-    setQuadrado(superficie, x + 18, y + 10, 9, (0, 0, 0))
-    
-    # Ponte dos óculos (uma pequena linha ligando os dois quadrados)
-    setRetaBresenham(superficie, x + 12, y + 15, x + 18, y + 15, (0, 0, 0))
-    # --- BOCA (Reta Vermelha) ---
-    setRetaBresenham(superficie, x + 10, y + 23, x + 20, y + 23, cor_boca)
-    
+def renderizarBilly(superficie, modelo, matriz):
+    for parte in modelo:
+        # Aplica a matriz composta (Escala, Rotação, Translação)
+        pts_trans = aplica_transformacao(matriz, parte["pontos"])
+        cor = parte["cor"]
+        
+        # Só preenche se não for uma peça marcada como 'apenas_contorno' ou 'linha'
+        if len(pts_trans) > 2 and parte.get("tipo") != "apenas_contorno" and parte.get("tipo") != "linha":
+            scanline_fill(superficie, pts_trans, cor)
+        
+        # Desenha o contorno com a mesma cor para suavizar as bordas e nao ficar com aquele treco preto ao redor
+        n = len(pts_trans)
+        for i in range(n):
+            # Se for 'linha', não fecha o polígono (ex: boca) OBS:hidelbrando não apaga para nao deformar a boca do billy
+            if parte.get("tipo") == "linha" and i == n - 1:
+                break
+                
+            p1 = pts_trans[i]
+            p2 = pts_trans[(i + 1) % n]
+            
+            setRetaBresenham(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
+
 def setMulher(superficie, x, y):
     # Definindo cores específicas
     cor_pele = (179, 139, 109)
