@@ -3,6 +3,7 @@ import sys
 from biblioteca import *
 from personagens import *
 from cenarios import *
+import textos
 
 #Setar propriedades do jogo
 pygame.init()
@@ -24,12 +25,13 @@ while rodando:
             
     # 1. Limpeza
     tela.fill((216, 224, 237))
+    tela.fill((100, 100, 100), (0, 300, largura, 450)) #chão
     teclas = pygame.key.get_pressed()
     # 2. Lógica (Input)
-    if teclas[pygame.K_LEFT]:  billy_x -= 5
-    if teclas[pygame.K_RIGHT]: billy_x += 5
-    if teclas[pygame.K_UP]:    billy_y -= 5  
-    if teclas[pygame.K_DOWN]:  billy_y += 5 
+    if teclas[pygame.K_LEFT]:  billy_x -= 15
+    if teclas[pygame.K_RIGHT]: billy_x += 15
+    if teclas[pygame.K_UP]:    billy_y -= 15  
+    if teclas[pygame.K_DOWN]:  billy_y += 15 
     
     # Escala (com trava de segurança para não sumir/inverter)
     if teclas[pygame.K_w]: 
@@ -51,6 +53,7 @@ while rodando:
     # 4. Desenho (Renderização)
     desenhar_cenario(tela)
     renderizarBilly(tela, getBilly(), m)
+    
 
     # 5. Flip
     pygame.display.flip()
