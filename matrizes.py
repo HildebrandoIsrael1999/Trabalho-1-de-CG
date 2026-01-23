@@ -31,6 +31,7 @@ def aplicaTransformacao(m, pontos):
         ny = m[1][0]*x + m[1][1]*y + m[1][2]
         novos.append((nx, ny))
     return novos
+
 def calcularMatriz(esc, ang, x, y):
     m = identidade()
     m = multiplicaMatrizes(escala(esc, esc), m)
@@ -38,8 +39,15 @@ def calcularMatriz(esc, ang, x, y):
     m = multiplicaMatrizes(translacao(x, y), m)
     return m
 
-def calcularMatrizViewport(x_v, y_v, escala_v):
+
+
+def calcularMatrizViewport(v_xmin, v_ymin, v_xmax, v_ymax, largura_mundo=1280, altura_mundo=720):
+
+    sx = (v_xmax - v_xmin) / largura_mundo
+    sy = (v_ymax - v_ymin) / altura_mundo
+
     m = identidade()
-    m = multiplicaMatrizes(escala(escala_v, escala_v), m)
-    m = multiplicaMatrizes(translacao(x_v, y_v), m)
+    m = multiplicaMatrizes(escala(sx, sy), m)
+    m = multiplicaMatrizes(translacao(v_xmin, v_ymin), m)
+    
     return m

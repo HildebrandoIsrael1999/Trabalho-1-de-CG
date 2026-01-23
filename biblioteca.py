@@ -1,6 +1,7 @@
 import math
 from matrizes import *
 from cenarios import *
+
 def setPixel(superficie, x, y, cor):
     x = int(x)
     y = int(y)
@@ -262,14 +263,19 @@ def renderizarPersonagem(superficie, modelo, matriz):
             
             setRetaBresenham(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
             
-def desenhar_cenario(superficie):
-    # Função auxiliar para não repetir código
-    def posicionar_e_desenhar(modelo, x, y):
-        # Cria matriz apenas de translação (escala 1.0, angulo 0)
-        m = calcularMatriz(1.0, 0, x, y)
-        renderizarPersonagem(superficie, modelo, m)
+def desenhar_cenario(superficie, matriz_v=None):
+    # Se não passarmos matriz, usamos a identidade (desenha no tamanho real)
+    if matriz_v is None:
+        matriz_v = identidade()
 
-    # Aqui chamamos cada modelo nas coordenadas originais que você tinha
+    def posicionar_e_desenhar(modelo, x, y):
+        # 1. Matriz de posição no mundo
+        m_obj = calcularMatriz(1.0, 0, x, y)
+        # 2. Composição: multiplica a posição do objeto pela matriz da viewport(Verificar)
+        m_final = multiplicaMatrizes(matriz_v,m_obj)
+        renderizarPersonagem(superficie, modelo, m_final)
+
+    # Chamadas originais (elas agora serão afetadas pela matriz_v)
     posicionar_e_desenhar(getMoita(), 420, 260)
     posicionar_e_desenhar(getCarrinho(), 100, 350)
     posicionar_e_desenhar(getJarro(), 30, 290)
@@ -279,3 +285,22 @@ def desenhar_cenario(superficie):
     posicionar_e_desenhar(getCarro(), 1073, 400)
     posicionar_e_desenhar(getLixeiras(), 1050, 250)
     posicionar_e_desenhar(getGato(), 800, 500)
+
+def renderizarViewport(superficie, matriz_vp, modelos_mundo):
+    # 1. Desenha a Moldura e o Fundo sólido
+    setPreencherRetangulo(superficie, 958, 18, 304, 174, (0, 0, 0))    # Borda
+    setPreencherRetangulo(superficie, 960, 20, 300, 170, (40, 40, 40)) # Fundo escuro
+
+    # 2. Desenha o CÉU e CHÃO reduzidos (Truque visual)
+    # Céu reduzido (proporcional aos 300px de altura da tela original)
+    setPreencherRetangulo(superficie, 960, 20, 300, 70, (146, 255, 222)) 
+    # Chão reduzido (proporcional aos 450px de altura da tela original)
+    setPreencherRetangulo(superficie, 960, 90, 300, 100, (100, 100, 100))
+
+    # 3. Desenha o Cenário (passando a matriz da viewport)
+    desenhar_cenario(superficie, matriz_vp)
+
+    # 4. Desenha os Personagens
+    for modelo, matriz_original in modelos_mundo:
+        m_final = multiplicaMatrizes(matriz_vp, matriz_original)
+        renderizarPersonagem(superficie, modelo, m_final)
