@@ -1,333 +1,130 @@
 from biblioteca import *
-from textos import *
+from matrizes import *
 
-def setCachorro(superficie, x, y):
-    cor1 = (236, 178, 95)
-    cor2 = (244, 146, 71)
-    cor3 = (0, 0, 0)
-    cor4 = (182, 0, 71)
+def getCachorro(marrom=False):
+    # Alterna entre o cachorro amarelo e o marrom
+    if not marrom:
+        c1, c2, c4 = (236, 178, 95), (244, 146, 71), (182, 0, 71)
+    else:
+        c1, c2, c4 = (143, 97, 60), (105, 68, 40), (66, 17, 31)
+    c3 = (0, 0, 0)
 
-    #orelha1
-    setPreencherRetangulo(superficie, x + -10, y , 10, 15, cor2)
-    #cabeça
-    setPreencherRetangulo(superficie, x, y, 25, 25, cor1)
-    #orelha2
-    setPreencherRetangulo(superficie, x + 25, y , 10, 15, cor2)
-    #olho1
-    setPreencherRetangulo(superficie, x + 2, y + 8, 5, 5, cor3)
-    #olho2
-    setPreencherRetangulo(superficie, x + 15, y + 8, 5, 5, cor3)
-    #nariz
-    setPreencherRetangulo(superficie, x + 5, y + 15, 5, 5, cor4)
+    return [
+        {"nome": "orelha1", "cor": c2, "pontos": [(-10, 0), (0, 0), (0, 15), (-10, 15)]},
+        {"nome": "cabeca", "cor": c1, "pontos": [(0, 0), (25, 0), (25, 25), (0, 25)]},
+        {"nome": "orelha2", "cor": c2, "pontos": [(25, 0), (35, 0), (35, 15), (25, 15)]},
+        {"nome": "olho1", "cor": c3, "pontos": [(2, 8), (7, 8), (7, 13), (2, 13)]},
+        {"nome": "olho2", "cor": c3, "pontos": [(15, 8), (20, 8), (20, 13), (15, 13)]},
+        {"nome": "nariz", "cor": c4, "pontos": [(5, 15), (10, 15), (10, 20), (5, 20)]},
+        {"nome": "corpo", "cor": c1, "pontos": [(10, 25), (90, 25), (90, 50), (10, 50)]},
+        {"nome": "rabo", "cor": c1, "pontos": [(85, 35), (115, 35), (115, 43), (85, 43)]},
+        {"nome": "perna1", "cor": c1, "pontos": [(15, 50), (23, 50), (23, 75), (15, 75)]},
+        {"nome": "perna2", "cor": c1, "pontos": [(30, 50), (38, 50), (38, 75), (30, 75)]},
+        {"nome": "perna3", "cor": c1, "pontos": [(60, 50), (68, 50), (68, 75), (60, 75)]},
+        {"nome": "perna4", "cor": c1, "pontos": [(75, 50), (83, 50), (83, 75), (75, 75)]}
+    ]
 
-    #corpo
-    setPreencherRetangulo(superficie, x + 10, y + 25, 80, 25, cor1)
-    #rabo
-    setPreencherRetangulo(superficie, x + 85, y + 35, 30, 8, cor1)
+def getBanco():
+    c1, c2, c3 = (186, 186, 178), (145, 145, 131), (110, 109, 102)
+    return [
+        {"nome": "assento", "cor": c1, "pontos": [(0, 0), (200, 0), (200, 20), (0, 20)]},
+        {"nome": "costas", "cor": c2, "pontos": [(10, -50), (190, -50), (190, 0), (10, 0)]},
+        {"nome": "detalhe1", "cor": c3, "pontos": [(10, -40), (190, -40), (190, -35), (10, -35)]},
+        {"nome": "detalhe2", "cor": c3, "pontos": [(10, -20), (190, -20), (190, -15), (10, -15)]},
+        {"nome": "pe1", "cor": c1, "pontos": [(15, 20), (30, 20), (30, 50), (15, 50)]},
+        {"nome": "pe2", "cor": c1, "pontos": [(170, 20), (185, 20), (185, 50), (170, 50)]}
+    ]
 
-    #perna1
-    setPreencherRetangulo(superficie, x + 15, y + 50, 8, 25, cor1)
+def getJarro():
+    c1, c2, c3, c4 = (100, 50, 0), (117, 94, 80), (26, 166, 19), (201, 58, 110)
+    return [
+        {"nome": "tronco", "cor": c1, "pontos": [(15, -50), (25, -50), (25, 0), (15, 0)]},
+        {"nome": "folha1", "cor": c3, "pontos": [(0, -80), (40, -80), (40, -40), (0, -40)]},
+        {"nome": "folha2", "cor": c3, "pontos": [(10, -110), (30, -110), (30, -70), (10, -70)]},
+        {"nome": "folha3", "cor": c3, "pontos": [(15, -130), (25, -130), (25, -100), (15, -100)]},
+        {"nome": "vaso", "cor": c2, "pontos": [(0, 0), (40, 0), (40, 40), (0, 40)]},
+        {"nome": "flor1", "cor": c4, "pontos": [(0, -60), (10, -60), (10, -50), (0, -50)]},
+        {"nome": "flor2", "cor": c4, "pontos": [(30, -70), (40, -70), (40, -60), (30, -60)]},
+        {"nome": "flor3", "cor": c4, "pontos": [(10, -100), (20, -100), (20, -90), (10, -90)]}
+    ]
+
+def getCarrinho():
+    c1, c2, c3, c4, c5 = (193, 197, 209), (230, 101, 85), (116, 117, 120), (89, 89, 89), (38, 70, 166)
+    t = 50
+    return [
+        {"nome": "quadrado_central", "cor": c1, "pontos": [(t, 0), (2*t, 0), (2*t, t), (t, t)]},
+        {"nome": "tri_esq", "cor": c1, "pontos": [(t, 0), (t, t), (0, t)]},
+        {"nome": "tri_dir", "cor": c1, "pontos": [(2*t, 0), (2*t, t), (3*t, t)]},
+        {"nome": "base_azul", "cor": c5, "pontos": [(0, t), (150, t), (150, t+40), (0, t+40)]},
+        {"nome": "faixa_vermelha", "cor": c2, "pontos": [(0, t), (150, t), (150, t+15), (0, t+15)]},
+        {"nome": "roda1", "cor": c3, "pontos": [(10, t+40), (30, t+40), (30, t+70), (10, t+70)]},
+        {"nome": "roda1_det", "cor": c4, "pontos": [(10, t+40), (20, t+40), (20, t+60), (10, t+60)]},
+        {"nome": "roda2", "cor": c3, "pontos": [(120, t+40), (140, t+40), (140, t+70), (120, t+70)]},
+        {"nome": "roda2_det", "cor": c4, "pontos": [(130, t+40), (140, t+40), (140, t+60), (130, t+60)]}
+    ]
+
+def getLixeiras():
+    colors = [(217, 56, 56), (235, 198, 17), (50, 173, 31), (31, 46, 173)] # R, Y, G, B
+    sup, dent = (107, 107, 107), (38, 38, 38)
     
-    #perna2
-    setPreencherRetangulo(superficie, x + 30, y + 50, 8, 25, cor1)
+    modelo = [
+        {"nome": "suporte_e", "cor": sup, "pontos": [(0, 10), (10, 10), (10, 90), (0, 90)]},
+        {"nome": "suporte_d", "cor": sup, "pontos": [(180, 10), (190, 10), (190, 90), (180, 90)]}
+    ]
     
-    #perna3
-    setPreencherRetangulo(superficie, x + 60, y + 50, 8, 25, cor1)
+    for i, color in enumerate(colors):
+        x_offset = 10 + (i * 45)
+        modelo.append({"nome": f"lix_{i}", "cor": color, "pontos": [(x_offset, 0), (x_offset+35, 0), (x_offset+35, 60), (x_offset, 60)]})
+        modelo.append({"nome": f"det_{i}", "cor": dent, "pontos": [(x_offset+8, 10), (x_offset+28, 10), (x_offset+28, 20), (x_offset+8, 20)]})
+        if i < 3: # Suportes entre lixeiras
+            modelo.append({"nome": f"sup_lat_{i}", "cor": sup, "pontos": [(x_offset+28, 10), (x_offset+48, 10), (x_offset+48, 20), (x_offset+28, 20)]})
+            
+    return modelo
+
+def getMoita():
+    c1, c2, c3, c4 = (108, 168, 84), (110, 10, 10), (161, 138, 104), (184, 32, 26)
+    return [
+        {"nome": "folha_b", "cor": c1, "pontos": [(0, 0), (160, 0), (160, 30), (0, 30)]},
+        {"nome": "folha_t", "cor": c1, "pontos": [(40, -20), (120, -20), (120, 30), (40, 30)]},
+        {"nome": "caule1", "cor": c2, "pontos": [(20, 30), (30, 30), (30, 50), (20, 50)]},
+        {"nome": "caule2", "cor": c2, "pontos": [(70, 30), (80, 30), (80, 50), (70, 50)]},
+        {"nome": "caule3", "cor": c2, "pontos": [(125, 30), (135, 30), (135, 50), (125, 50)]},
+        {"nome": "jarro", "cor": c3, "pontos": [(-10, 50), (170, 50), (170, 75), (-10, 75)]},
+        {"nome": "f1", "cor": c4, "pontos": [(10, 10), (20, 10), (20, 20), (10, 20)]},
+        {"nome": "f2", "cor": c4, "pontos": [(60, -10), (68, -10), (68, -2), (60, -2)]},
+        {"nome": "f3", "cor": c4, "pontos": [(90, 10), (100, 10), (100, 20), (90, 20)]},
+        {"nome": "f4", "cor": c4, "pontos": [(140, 15), (148, 15), (148, 23), (140, 23)]}
+    ]
+
+def getCarro():
+    c_car, c_wheel, c_win, c_light, c_plate = (54, 54, 54), (0, 0, 0), (168, 168, 168), (232, 219, 160), (255, 255, 255)
+    return [
+        {"nome": "cabine", "cor": c_car, "pontos": [(0, 0), (150, 0), (150, 100), (0, 100)]},
+        {"nome": "chassis", "cor": c_car, "pontos": [(-25, 60), (175, 60), (175, 110), (-25, 110)]},
+        {"nome": "roda1", "cor": c_wheel, "pontos": [(0, 110), (20, 110), (20, 140), (0, 140)]},
+        {"nome": "roda2", "cor": c_wheel, "pontos": [(130, 110), (150, 110), (150, 140), (130, 140)]},
+        {"nome": "farol1", "cor": c_light, "pontos": [(-10, 70), (15, 70), (15, 95), (-10, 95)]},
+        {"nome": "farol2", "cor": c_light, "pontos": [(130, 70), (155, 70), (155, 95), (130, 95)]},
+        {"nome": "janela", "cor": c_win, "pontos": [(15, 10), (135, 10), (135, 50), (15, 50)]},
+        {"nome": "placa", "cor": c_plate, "pontos": [(55, 80), (95, 80), (95, 100), (55, 100)]}
+    ]
+
+def getGato():
+    c_p, c_d, c_n, preto = (128, 128, 128), (80, 80, 80), (255, 182, 193), (0, 0, 0)
+    return [
+        {"nome": "orelha1", "cor": c_d, "pontos": [(0, -6), (6, -6), (6, 4), (0, 4)]},
+        {"nome": "orelha2", "cor": c_d, "pontos": [(12, -6), (18, -6), (18, 4), (12, 4)]},
+        {"nome": "cabeca", "cor": c_p, "pontos": [(0, 0), (18, 0), (18, 18), (0, 18)]},
+        {"nome": "olho1", "cor": preto, "pontos": [(3, 5), (6, 5), (6, 8), (3, 8)]},
+        {"nome": "olho2", "cor": preto, "pontos": [(12, 5), (15, 5), (15, 8), (12, 8)]},
+        {"nome": "nariz", "cor": c_n, "pontos": [(8, 10), (11, 10), (11, 12), (8, 12)]},
+        {"nome": "bigode1", "cor": preto, "tipo": "linha", "pontos": [(-3, 10), (4, 11)]},
+        {"nome": "bigode2", "cor": preto, "tipo": "linha", "pontos": [(14, 11), (21, 10)]},
+        {"nome": "corpo", "cor": c_p, "pontos": [(8, 18), (48, 18), (48, 36), (8, 36)]},
+        {"nome": "rabo", "cor": c_p, "pontos": [(48, 22), (68, 22), (68, 26), (48, 26)]},
+        {"nome": "p1", "cor": c_p, "pontos": [(9, 36), (15, 36), (15, 51), (9, 51)]},
+        {"nome": "p2", "cor": c_p, "pontos": [(19, 36), (25, 36), (25, 51), (19, 51)]},
+        {"nome": "p3", "cor": c_p, "pontos": [(32, 36), (38, 36), (38, 51), (32, 51)]},
+        {"nome": "p4", "cor": c_p, "pontos": [(42, 36), (48, 36), (48, 51), (42, 51)]}
+    ]
     
-    #perna4
-    setPreencherRetangulo(superficie, x + 75, y + 50, 8, 25, cor1)
-    
-def setCachorroMarrom(superficie, x, y):
-    cor1 = (143, 97, 60)
-    cor2 = (105, 68, 40)
-    cor3 = (0, 0, 0)
-    cor4 = (66, 17, 31)
-
-    #orelha1
-    setPreencherRetangulo(superficie, x -5, y - 10, 10, 15, cor2)
-    #cabeça
-    setPreencherRetangulo(superficie, x, y, 25, 25, cor1)
-    #orelha2
-    setPreencherRetangulo(superficie, x + 20, y - 10, 10, 15, cor2)
-    #olho1
-    setPreencherRetangulo(superficie, x + 2, y + 8, 5, 5, cor3)
-    #olho2
-    setPreencherRetangulo(superficie, x + 15, y + 8, 5, 5, cor3)
-    #nariz
-    setPreencherRetangulo(superficie, x + 5, y + 15, 5, 5, cor4)
-
-    #corpo
-    setPreencherRetangulo(superficie, x + 10, y + 25, 80, 25, cor1)
-    #rabo
-    setPreencherRetangulo(superficie, x + 85, y + 35, 30, 8, cor1)
-
-    #perna1
-    setPreencherRetangulo(superficie, x + 15, y + 50, 8, 25, cor1)
-    
-    #perna2
-    setPreencherRetangulo(superficie, x + 30, y + 50, 8, 25, cor1)
-    
-    #perna3
-    setPreencherRetangulo(superficie, x + 60, y + 50, 8, 25, cor1)
-    
-    #perna4
-    setPreencherRetangulo(superficie, x + 75, y + 50, 8, 25, cor1)
-
-def setBanco(superficie, x, y):
-    corbanco1 = (186, 186, 178)
-    corbanco2 = (145, 145, 131)
-    corbanco3 = (110, 109, 102)
-    
-    #parte de sentar
-    setPreencherRetangulo(superficie, x, y, 200, 20, corbanco1)
-    
-    #parte das costas
-    setPreencherRetangulo(superficie, x  + 10 , y - 50, 180, 50, corbanco2)
-    
-    setPreencherRetangulo(superficie, x  + 10 , y - 40, 180, 5, corbanco3)
-    setPreencherRetangulo(superficie, x  + 10 , y -20, 180, 5, corbanco3)
-
-    #PÉ ESQUERDO
-    setPreencherRetangulo(superficie, x + 15, y + 15, 15, 30, corbanco1)
-    #PÉ DIREITO
-    setPreencherRetangulo(superficie, x + 170, y + 15, 15, 30, corbanco1)
-
-def setJarro(superficie, x, y):
-    corjarro1 = (100, 50, 0)
-    corjarro2 = (117, 94, 80)
-    corjarro3 = (26, 166, 19)
-    corjarro4 = (201, 58, 110)
-    
-    #tronco
-    setPreencherRetangulo(superficie, x + 15, y - 50, 10, 50, corjarro1)
-
-    #arvore1
-    setPreencherRetangulo(superficie, x, y - 80, 40, 40, corjarro3)
-    #arvore2
-    setPreencherRetangulo(superficie, x + 10, y - 110, 20, 40, corjarro3)
-    #arvore3
-    setPreencherRetangulo(superficie, x + 15, y - 130, 10, 30, corjarro3)
-
-    #Jarro1
-    setPreencherRetangulo(superficie, x, y, 40, 40, corjarro2)
-
-     #flor1
-    setPreencherRetangulo(superficie, x , y - 60, 10, 10, corjarro4)
-    #flor2
-    setPreencherRetangulo(superficie, x + 30, y - 70, 10, 10, corjarro4)
-    #flor3
-    setPreencherRetangulo(superficie, x + 10, y - 100, 10, 10, corjarro4)
-
-def setMesa(superficie, x, y):
-    cor = (100, 50, 0)
-
-    setPreencherRetangulo(superficie, x, y, 200, 20, cor)
-    
-    # --- PÉ ESQUERDO ---
-    setPreencherRetangulo(superficie, x + 15, y + 20, 15, 80, cor)
-    
-    # --- PÉ DIREITO ---
-    # Posicionado no final do tampo (x + 170) e logo abaixo do tampo (y + 20)
-    setPreencherRetangulo(superficie, x + 170, y + 20, 15, 80, cor)
-
-def setCarrinho(superficie, x, y):
-    corcarrinho1 = (193, 197, 209)
-    corcarrinho2 = (230, 101, 85)
-    corcarrinho3 = (116, 117, 120)
-    corcarrinho4= (89, 89, 89)
-    corcarrinho5= (38, 70, 166)
-    tamanho = 50  # Tamanho do quadrado e base dos triângulos
-    largura_base = 150 # tamanho * 3 (pois são 3 peças em cima)
-
-    # --- 1. QUADRADO CENTRAL (Preenchido) ---
-    # Ele começa deslocado para a direita pelo tamanho do primeiro triângulo
-    setPreencherRetangulo(superficie, x + tamanho, y, tamanho, tamanho, corcarrinho1)
-
-    # --- 2. TRIÂNGULO DA ESQUERDA (Contorno) ---
-    # Ângulo reto encostado no quadrado (x + tamanho, y + tamanho)
-    setPreencherTrianguloGenerico(
-        superficie,
-        x + tamanho, y,           # Topo (encostado no quadrado)
-        x + tamanho, y + tamanho, # Ângulo Reto (inferior direito)
-        x,           y + tamanho, # Ponta esquerda
-        corcarrinho1
-    )
-
-    # --- 3. TRIÂNGULO DA DIREITA (Contorno) ---
-    # Ângulo reto encostado no outro lado do quadrado (x + 2*tamanho)
-    setPreencherTrianguloGenerico(
-        superficie,
-        x + (tamanho * 2), y,           # Topo (encostado no quadrado)
-        x + (tamanho * 2), y + tamanho, # Ângulo Reto (inferior esquerdo)
-        x + (tamanho * 3), y + tamanho, # Ponta direita
-        corcarrinho1
-    )
-
-    # --- 4. BASE RETANGULAR (Contorno) ---
-    # Posicionado logo abaixo das outras peças (y + tamanho)
-    setPreencherRetangulo(superficie, x, y + tamanho, largura_base, 40, corcarrinho5)
-    setPreencherRetangulo(superficie, x, y + tamanho, largura_base, 15, corcarrinho2)
-    
-    #roda1
-    setPreencherRetangulo(superficie, x + 10, y + tamanho + 40, 20, 30, corcarrinho3)
-    #roda1linha1
-    setPreencherRetangulo(superficie, x + 10, y + tamanho + 40, 10, 20, corcarrinho4)
-
-    #roda2
-    setPreencherRetangulo(superficie, x + 120, y + tamanho + 40, 20, 30, corcarrinho3)
-    #roda2linha2
-    setPreencherRetangulo(superficie, x + 130, y + tamanho + 40, 10, 20, corcarrinho4)
-
-def setLixeiras(superficie, x, y):
-    corlixeira1 = (217, 56, 56)
-    corlixeira2 = (235, 198, 17)
-    corlixeira3 = (50, 173, 31)
-    corlixeira4 = (31, 46, 173)
-    corsuportelixeira = (107, 107, 107)
-    cordentrolixeira = (38, 38, 38)
-
-    #suporte lixeira
-    setPreencherRetangulo(superficie, x , y+ 10, 10, 80, corsuportelixeira)
-    #suporte lateral lixeira 1
-    setPreencherRetangulo(superficie, x + 38, y + 10, 20, 10, corsuportelixeira)
-
-    #lixeira vermelha
-    setPreencherRetangulo(superficie, x + 10 , y, 35, 60, corlixeira1)
-    #lixeira vermelha parte de dentro
-    setPreencherRetangulo(superficie, x + 18, y + 10, 20, 10, cordentrolixeira)
-
-    #lixeira amarela
-    setPreencherRetangulo(superficie, x + 55 , y, 35, 60, corlixeira2)
-    #lixeira amarela parte de dentro
-    setPreencherRetangulo(superficie, x + 63, y + 10, 20, 10, cordentrolixeira)
-
-    #suporte lateral lixeira 2
-    setPreencherRetangulo(superficie, x + 90, y + 10, 20, 10, corsuportelixeira)
-
-    #lixeira verde
-    setPreencherRetangulo(superficie, x + 100 , y, 35, 60, corlixeira3)
-    #lixeira verde parte de dentro
-    setPreencherRetangulo(superficie, x + 108, y + 10, 20, 10, cordentrolixeira)
-
-    #suporte lateral lixeira 3
-    setPreencherRetangulo(superficie, x + 135, y + 10, 20, 10, corsuportelixeira)
-
-    #lixeira azul
-    setPreencherRetangulo(superficie, x + 145 , y, 35, 60, corlixeira4)
-    #lixeira azul parte de dentro
-    setPreencherRetangulo(superficie, x + 153, y + 10, 20, 10, cordentrolixeira)
-
-    #suporte lixeira
-    setPreencherRetangulo(superficie, x + 180, y+ 10, 10, 80, corsuportelixeira)
-
-def setMoita(superficie, x, y):
-    
-    cormoita = (108, 168, 84)
-    corcaule=(110,10,10)
-    corjarro = (161, 138, 104)
-    corflor = (184, 32, 26)
-    
-    setPreencherRetangulo(superficie, x , y, 160, 30, cormoita)
-    setPreencherRetangulo(superficie, x + 40 , y - 20, 80, 50, cormoita)
-    
-    #caule1
-    setPreencherRetangulo(superficie, x + 20 , y + 30, 10, 20, corcaule)
-    #caule2
-    setPreencherRetangulo(superficie, x + 70 , y + 30, 10, 20, corcaule)
-    #caule3
-    setPreencherRetangulo(superficie, x + 125 , y + 30, 10, 20, corcaule)
-
-    #jarro
-    setPreencherRetangulo(superficie, x - 10, y + 50, 180, 25, corjarro)
-
-    #flor1
-    setPreencherRetangulo(superficie, x + 10, y + 10, 10, 10, corflor)
-    #flor2
-    setPreencherRetangulo(superficie, x + 60, y -10, 8, 8, corflor)
-    #flor3
-    setPreencherRetangulo(superficie, x + 90, y + 10, 10, 10, corflor)
-    #flor4
-    setPreencherRetangulo(superficie, x + 140, y + 15, 8, 8, corflor)
-
-def setCarro(superficie, x, y):
-
-    corcarro = (54, 54, 54)
-    corroda = (0, 0, 0)
-    corjanela = (168, 168, 168)
-    corfarol = (232, 219, 160)
-    corplaca = (255, 255, 255)
-
-    setPreencherRetangulo(superficie, x, y, 150, 100, corcarro)
-    setPreencherRetangulo(superficie, x -25, y + 60, 200, 50, corcarro)
-
-    #roda1
-    setPreencherRetangulo(superficie, x, y + 110, 20, 30, corroda)
-    #roda1
-    setPreencherRetangulo(superficie, x + 130, y + 110, 20, 30, corroda)
-
-    #farol1
-    setPreencherRetangulo(superficie, x - 10, y + 70, 25, 25, corfarol)
-    #farol2
-    setPreencherRetangulo(superficie, x + 130, y + 70, 25, 25, corfarol)
-
-    #janela
-    setPreencherRetangulo(superficie, x + 15, y + 10, 120, 40, corjanela)
-
-    #placa
-    setPreencherRetangulo(superficie, x + 55, y + 80, 40, 20, corplaca)
-
-def setGato(superficie, x, y):
-    # Cores do gato
-    cor_principal = (128, 128, 128)  # Cinza
-    cor_detalhe = (80, 80, 80)       # Cinza Escuro
-    cor_preto = (0, 0, 0)
-    cor_nariz = (255, 182, 193)      # Rosa claro
-
-    # --- ORELHAS ---
-    # Diminuídas para 6x10
-    setPreencherRetangulo(superficie, x, y - 6, 6, 10, cor_detalhe)
-    setPreencherRetangulo(superficie, x + 12, y - 6, 6, 10, cor_detalhe)
-
-    # --- CABEÇA ---
-    # Reduzida de 25x25 para 18x18
-    setPreencherRetangulo(superficie, x, y, 18, 18, cor_principal)
-
-    # --- OLHOS ---
-    # Reduzidos para 3x3
-    setPreencherRetangulo(superficie, x + 3, y + 5, 3, 3, cor_preto)
-    setPreencherRetangulo(superficie, x + 12, y + 5, 3, 3, cor_preto)
-
-    # --- NARIZ ---
-    setPreencherRetangulo(superficie, x + 8, y + 10, 3, 2, cor_nariz)
-
-    # --- BIGODES ---
-    setRetaBresenham(superficie, x - 3, y + 10, x + 4, y + 11, cor_preto)
-    setRetaBresenham(superficie, x + 14, y + 11, x + 21, y + 10, cor_preto)
-
-    # --- CORPO ---
-    # Encurtado de 60 para 40 de largura
-    setPreencherRetangulo(superficie, x + 8, y + 18, 40, 18, cor_principal)
-
-    # --- RABO ---
-    # Mais curto e fino
-    setPreencherRetangulo(superficie, x + 48, y + 22, 20, 4, cor_principal)
-
-    # --- PERNAS ---
-    # Encurtadas para 6x15
-    setPreencherRetangulo(superficie, x + 9, y + 36, 6, 15, cor_principal) # Perna 1
-    setPreencherRetangulo(superficie, x + 19, y + 36, 6, 15, cor_principal) # Perna 2
-    setPreencherRetangulo(superficie, x + 32, y + 36, 6, 15, cor_principal) # Perna 3
-    setPreencherRetangulo(superficie, x + 42, y + 36, 6, 15, cor_principal) # Perna 4
-
-def desenhar_cenario(superficie):
-    setMoita(superficie, 420, 260)
-    setCarrinho(superficie, 100, 350)
-    setJarro(superficie, 30,290)
-    setBanco(superficie, 700, 300)
-    setCachorro(superficie, 500, 400)
-    setCachorroMarrom(superficie, 700, 600)
-    setCarro(superficie, 1073, 400)
-    setLixeiras(superficie, 1050, 250)
-    setGato(superficie, 800,500)
-    # setBalao1(superficie, 480, 200)
-    # setBalao2(superficie, 680, 200)

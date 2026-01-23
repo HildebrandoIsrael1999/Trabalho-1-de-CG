@@ -42,28 +42,6 @@ def getBilly():
         {"nome": "boca", "cor": cor_roupa, "tipo": "linha", "pontos": [(10, 23), (20, 23)]}
     ]
 
-def renderizarPersonagem(superficie, modelo, matriz):
-    for parte in modelo:
-        # Aplica a matriz composta (Escala, Rotação, Translação)
-        pts_trans = aplicaTransformacao(matriz, parte["pontos"])
-        cor = parte["cor"]
-        
-        # Só preenche se não for uma peça marcada como 'apenas_contorno' ou 'linha'
-        if len(pts_trans) > 2 and parte.get("tipo") != "apenas_contorno" and parte.get("tipo") != "linha":
-            scanline_fill(superficie, pts_trans, cor)
-        
-        # Desenha o contorno com a mesma cor para suavizar as bordas e nao ficar com aquele treco preto ao redor
-        n = len(pts_trans)
-        for i in range(n):
-            # Se for 'linha', não fecha o polígono (ex: boca) OBS:hidelbrando não apaga para nao deformar a boca do billy
-            if parte.get("tipo") == "linha" and i == n - 1:
-                break
-                
-            p1 = pts_trans[i]
-            p2 = pts_trans[(i + 1) % n]
-            
-            setRetaBresenham(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
-
 def getMulher():
     # Cores extraídas da sua função original
     cor_pele = (179, 139, 109)

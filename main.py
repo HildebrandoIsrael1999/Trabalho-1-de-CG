@@ -12,6 +12,8 @@ clock = pygame.time.Clock()
 largura, altura = 1280,720
 tela = pygame.display.set_mode((largura, altura))
 
+
+
 menino_x, menino_y = 200, 590
 menino_escala= 1.0
 menino_angulo = 0
@@ -34,15 +36,15 @@ while rodando:
     tela.fill((100, 100, 100), (0, 300, largura, 450)) #chão
     teclas = pygame.key.get_pressed()
     # 2. Lógica (Input)
-    if teclas[pygame.K_LEFT]:  clara_x -= 15
-    if teclas[pygame.K_RIGHT]: clara_x += 15
-    if teclas[pygame.K_UP]:    clara_y -= 15  
-    if teclas[pygame.K_DOWN]:  clara_y += 15 
+    if teclas[pygame.K_LEFT]:  clara_x -= 25
+    if teclas[pygame.K_RIGHT]: clara_x += 25
+    if teclas[pygame.K_UP]:    clara_y -= 25  
+    if teclas[pygame.K_DOWN]:  clara_y += 25 
     
-    if teclas[pygame.K_a]:  billy_x -= 5
-    if teclas[pygame.K_d]: billy_x += 5
-    if teclas[pygame.K_w]:    billy_y -= 5  
-    if teclas[pygame.K_s]:  billy_y += 5 
+    if teclas[pygame.K_a]:  billy_x -= 25
+    if teclas[pygame.K_d]: billy_x += 25
+    if teclas[pygame.K_w]:    billy_y -= 25  
+    if teclas[pygame.K_s]:  billy_y += 25
     
     # Escala (com trava de segurança para não sumir/inverter)
     # if teclas[pygame.K_w]: 

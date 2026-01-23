@@ -37,3 +37,9 @@ def calcularMatriz(esc, ang, x, y):
     m = multiplicaMatrizes(rotacao(ang), m)
     m = multiplicaMatrizes(translacao(x, y), m)
     return m
+
+def calcularMatrizViewport(x_v, y_v, escala_v):
+    m = identidade()
+    m = multiplicaMatrizes(escala(escala_v, escala_v), m)
+    m = multiplicaMatrizes(translacao(x_v, y_v), m)
+    return m

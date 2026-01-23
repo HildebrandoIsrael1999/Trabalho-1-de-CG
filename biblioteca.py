@@ -1,5 +1,6 @@
 import math
-
+from matrizes import *
+from cenarios import *
 def setPixel(superficie, x, y, cor):
     x = int(x)
     y = int(y)
@@ -174,7 +175,6 @@ def setPreencherQuadrado(superficie, x, y, tamanho, cor):
     # 2. Chamamos a função de Scanline do professor para pintar o interior
     scanline_fill(superficie, pontos, cor)
 
-
 def setPreencherTriangulo(superficie, x, y, lado, cor):
  
     # 1. Calculamos a altura (H = Lado * 0.866)
@@ -239,3 +239,43 @@ def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
     
     # 2. Chamamos a função scanline_fill enviando a lista de 3 pontos
     scanline_fill(superficie, pontos, cor)
+    
+def renderizarPersonagem(superficie, modelo, matriz):
+    for parte in modelo:
+        # Aplica a matriz composta (Escala, Rotação, Translação)
+        pts_trans = aplicaTransformacao(matriz, parte["pontos"])
+        cor = parte["cor"]
+        
+        # Só preenche se não for uma peça marcada como 'apenas_contorno' ou 'linha'
+        if len(pts_trans) > 2 and parte.get("tipo") != "apenas_contorno" and parte.get("tipo") != "linha":
+            scanline_fill(superficie, pts_trans, cor)
+        
+        # Desenha o contorno com a mesma cor para suavizar as bordas e nao ficar com aquele treco preto ao redor
+        n = len(pts_trans)
+        for i in range(n):
+            # Se for 'linha', não fecha o polígono (ex: boca) OBS:hidelbrando não apaga para nao deformar a boca do billy
+            if parte.get("tipo") == "linha" and i == n - 1:
+                break
+                
+            p1 = pts_trans[i]
+            p2 = pts_trans[(i + 1) % n]
+            
+            setRetaBresenham(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
+            
+def desenhar_cenario(superficie):
+    # Função auxiliar para não repetir código
+    def posicionar_e_desenhar(modelo, x, y):
+        # Cria matriz apenas de translação (escala 1.0, angulo 0)
+        m = calcularMatriz(1.0, 0, x, y)
+        renderizarPersonagem(superficie, modelo, m)
+
+    # Aqui chamamos cada modelo nas coordenadas originais que você tinha
+    posicionar_e_desenhar(getMoita(), 420, 260)
+    posicionar_e_desenhar(getCarrinho(), 100, 350)
+    posicionar_e_desenhar(getJarro(), 30, 290)
+    posicionar_e_desenhar(getBanco(), 700, 300)
+    posicionar_e_desenhar(getCachorro(), 500, 400)
+    posicionar_e_desenhar(getCachorro(marrom=True), 700, 600)
+    posicionar_e_desenhar(getCarro(), 1073, 400)
+    posicionar_e_desenhar(getLixeiras(), 1050, 250)
+    posicionar_e_desenhar(getGato(), 800, 500)
