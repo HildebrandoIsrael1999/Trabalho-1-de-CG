@@ -1,7 +1,7 @@
 🕹️ [NOME DO JOGO] | Arcade Experience
+
 📝 Descrição do Projeto
 Este projeto consiste em um jogo arcade 2D desenvolvido para a primeira avaliação da disciplina de Computação Gráfica. O desafio central foi construir todo o motor gráfico do zero, utilizando estritamente a manipulação de matrizes numéricas através da função set_pixel, sem o auxílio de bibliotecas gráficas de alto nível para renderização.
-
 
 
 🚀 Requisitos Técnicos Implementados
@@ -47,7 +47,9 @@ Siga os passos abaixo para compilar e rodar o projeto localmente:
 
 Pré-requisitos: Certifique-se de ter o [Linguagem, ex: Python 3.x] instalado.
 
-Instalação: ```bash git clone  cd 
+Instalação: 
+
+```bash git clone  cd 
 pip install -r requirements.txt # Se houver dependências como PyGame
 
 Execução:
