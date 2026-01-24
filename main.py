@@ -11,6 +11,7 @@ pygame.display.set_caption("Billy da Tapioca")
 clock = pygame.time.Clock()
 largura, altura = 1280, 720
 tela = pygame.display.set_mode((largura, altura))
+img_grama = pygame.image.load("grama.png").convert() #imagem de textura
 
 #Definição da Viewport (Mini-mapa no Canto Superior Direito)
 matriz_vp = calcularMatrizViewport(960, 20, 1260, 190, 1280, 720)
@@ -64,12 +65,12 @@ while rodando:
     tela.fill((100, 100, 100), (0, 300, largura, 450)) 
     
     # Cenário
-    desenhar_cenario(tela)
+    desenhar_cenario(tela, None, img_grama)
     setBalao1(tela, clara_x + 20, clara_y - 100)
     setBalao2(tela, billy_x + 20, billy_y - 100)
-    renderizarPersonagem(tela, getBilly(), m)
-    renderizarPersonagem(tela, getMulher(), n)
-    renderizarPersonagem(tela, getMenino(), t)
+    renderizarPersonagem(tela, getBilly(), m, None)
+    renderizarPersonagem(tela, getMulher(), n, None)
+    renderizarPersonagem(tela, getMenino(), t, None)
     
     personagens_atuais = [
         (getBilly(), m),
@@ -77,7 +78,7 @@ while rodando:
         (getMenino(), t),
     ]
     
-    renderizarViewport(tela, matriz_vp, personagens_atuais)
+    renderizarViewport(tela, matriz_vp, personagens_atuais, img_grama)
     pygame.display.flip()
     clock.tick(60)
 

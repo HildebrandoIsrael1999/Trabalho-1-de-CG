@@ -123,4 +123,10 @@ def getGato():
     modelo.append(getRetanguloPreenchido(42, 36, 6, 15, c_p, "p4"))
     return modelo
  
-
+def getGramado():
+    return [{
+        "nome": "areagramado",
+        "cor": (0, 100, 0),
+        "pontos": [(-300, -100), (1000, -100), (1000, 0), (-300, 0)],
+        "uvs": [(0, 0), (1, 0), (1, 1), (0, 1)] # Horizontal da imagem e eixo vertical da imagem. Valores normalizados.
+    }]
