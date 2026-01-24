@@ -1,14 +1,22 @@
 import math
 from matrizes import *
 from cenarios import *
+from clipping import *
+CLIP_XMIN, CLIP_YMIN = 0, 0
+CLIP_XMAX, CLIP_YMAX = 1280, 720
+
+def definirAreaDeRecorte(xmin, ymin, xmax, ymax):
+    global CLIP_XMIN, CLIP_YMIN, CLIP_XMAX, CLIP_YMAX
+    CLIP_XMIN, CLIP_YMIN = xmin, ymin
+    CLIP_XMAX, CLIP_YMAX = xmax, ymax
 
 def setPixel(superficie, x, y, cor):
     x = int(x)
     y = int(y)
-    #If para garantir que ele não pinte um pixel fora da tela
-    if 0 <= x < superficie.get_width() and 0 <= y < superficie.get_height():
-        superficie.set_at((x, y), cor)
-
+    if CLIP_XMIN <= x < CLIP_XMAX and CLIP_YMIN <= y < CLIP_YMAX:
+        if 0 <= x < superficie.get_width() and 0 <= y < superficie.get_height():
+            superficie.set_at((x, y), cor)
+        
 def setRetaBresenham(superficie, x0, y0, x1, y1, cor):
   # Flags para transformações
     steep = abs(y1 - y0) > abs(x1 - x0)
@@ -50,44 +58,48 @@ def setRetaBresenham(superficie, x0, y0, x1, y1, cor):
 
         x += 1
 
+def setRetaRecortada(superficie, x0, y0, x1, y1, cor):
+
+    resultado = cohenSutherlandClip(x0, y0, x1, y1, CLIP_XMIN, CLIP_YMIN, CLIP_XMAX, CLIP_YMAX)
+    
+    if resultado is None:
+        return # Não desenha nada, economiza processamento.
+
+    novo_x0, novo_y0, novo_x1, novo_y1 = resultado
+
+    setRetaBresenham(superficie, novo_x0, novo_y0, novo_x1, novo_y1, cor)
+
 def scanline_fill(superficie, pontos, cor_preenchimento):
 
-    # 1. Achar o topo e o fundo do desenho (Y mínimo e máximo)
+    # Achar o topo e o fundo do desenho (Y mínimo e máximo)
     ys = [p[1] for p in pontos]
     y_min = int(min(ys))
     y_max = int(max(ys))
 
     n = len(pontos)
 
-    # 2. Descer linha por linha (da menor altura para a maior)
+    # Descer linha por linha (da menor altura para a maior)
     for y in range(y_min, y_max):
         intersecoes_x = []
 
-        # 3. Para cada lado (aresta) do desenho, ver se a linha 'y' corta ele
         for i in range(n):
             x0, y0 = pontos[i]
             x1, y1 = pontos[(i + 1) % n] # Conecta o último ponto ao primeiro
 
-            # Ignora se a linha for perfeitamente horizontal (não tem o que calcular)
             if y0 == y1:
                 continue
 
-            # Garante que estamos olhando de cima para baixo
+
             if y0 > y1:
                 x0, y0, x1, y1 = x1, y1, x0, y0
 
-            # Verifica se a linha horizontal 'y' está passando por esse lado
             if y < y0 or y >= y1:
                 continue
 
-            # Descobre o X exato onde a linha encosta na parede
             x = x0 + (y - y0) * (x1 - x0) / (y1 - y0)
             intersecoes_x.append(x)
 
-        # 4. Coloca os pontos encontrados em ordem da esquerda para a direita
         intersecoes_x.sort()
-
-        # 5. Pinta sempre o espaço entre os pares de paredes encontrados
         for i in range(0, len(intersecoes_x), 2):
             if i + 1 < len(intersecoes_x):
                 x_inicio = int(round(intersecoes_x[i]))
@@ -125,10 +137,10 @@ def setRetangulo(superficie, x, y, largura, altura, cor):
     setRetaBresenham(superficie, x, y + altura, x + largura, y + altura,cor)
     
 def setTrianguloEquilatero(superficie, x, y, lado, cor):
-    # 1. Calculamos a altura usando a fórmula
+    # Calculamos a altura usando a fórmula
     altura = lado * (math.sqrt(3) / 2)
     
-    # 2. Definimos os três pontos (vértices)
+    # Definimos os três pontos (vértices)
     # Ponto 1: Topo (o x, y que passamos)
     p1x, p1y = x, y
     
@@ -144,12 +156,6 @@ def setTrianguloEquilatero(superficie, x, y, lado, cor):
     setRetaBresenham(superficie, p2x, p2y, p3x, p3y, cor) # Base
     
 def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
-
-    # 1. Criamos a lista com os 4 cantos do retângulo (em ordem)
-    # Ponto 1: Topo-Esquerda
-    # Ponto 2: Topo-Direita
-    # Ponto 3: Base-Direita
-    # Ponto 4: Base-Esquerda
     pontos = [
         (x, y), 
         (x + largura, y), 
@@ -157,15 +163,9 @@ def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
         (x, y + altura)
     ]
     
-    # 2. Chamamos a função do professor enviando essa lista
     scanline_fill(superficie, pontos, cor)
      
 def setPreencherQuadrado(superficie, x, y, tamanho, cor):
-    # 1. Definimos os 4 cantos do quadrado em ordem (seguindo o contorno)
-    # Ponto 1: Topo-Esquerda (x, y)
-    # Ponto 2: Topo-Direita  (x + tamanho, y)
-    # Ponto 3: Base-Direita  (x + tamanho, y + tamanho)
-    # Ponto 4: Base-Esquerda (x, y + tamanho)
     pontos = [
         (x, y), 
         (x + tamanho, y), 
@@ -173,26 +173,24 @@ def setPreencherQuadrado(superficie, x, y, tamanho, cor):
         (x, y + tamanho)
     ]
     
-    # 2. Chamamos a função de Scanline do professor para pintar o interior
+    #Chamamos a função de Scanline do professor para pintar o interior
     scanline_fill(superficie, pontos, cor)
 
 def setPreencherTriangulo(superficie, x, y, lado, cor):
  
-    # 1. Calculamos a altura (H = Lado * 0.866)
+    # Calculamos a altura
     altura = lado * (math.sqrt(3) / 2)
     
-    # 2. Definimos os 3 cantos (vértices)
+    # Definimos os 3 cantos (vértices)
     # Ponto 1: Topo
     p1 = (x, y)
     # Ponto 2: Base Esquerda (anda metade do lado para a esquerda e desce a altura)
     p2 = (x - lado/2, y + altura)
-    # Ponto 3: Base Direita (anda metade do lado para a direita e desce a altura)
+
     p3 = (x + lado/2, y + altura)
     
-    # 3. Colocamos os pontos em uma lista
     pontos_triangulo = [p1, p2, p3]
     
-    # 4. Chamamos a função do professor para "escaneá-lo" e pintá-lo
     scanline_fill(superficie, pontos_triangulo, cor)
     
 def setCirculo(superficie, centro_x, centro_y, raio, cor):
@@ -230,15 +228,12 @@ def setTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
     setRetaBresenham(superficie, x3, y3, x1, y1, cor) # Lado C
 
 def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
-    # 1. Criamos a lista com os 3 vértices do triângulo
-    # Diferente do retângulo, a ordem dos pontos aqui não costuma afetar o scanline
     pontos = [
         (x1, y1), 
         (x2, y2), 
         (x3, y3)
     ]
     
-    # 2. Chamamos a função scanline_fill enviando a lista de 3 pontos
     scanline_fill(superficie, pontos, cor)
     
 def renderizarPersonagem(superficie, modelo, matriz):
@@ -247,11 +242,9 @@ def renderizarPersonagem(superficie, modelo, matriz):
         pts_trans = aplicaTransformacao(matriz, parte["pontos"])
         cor = parte["cor"]
         
-        # Só preenche se não for uma peça marcada como 'apenas_contorno' ou 'linha'
         if len(pts_trans) > 2 and parte.get("tipo") != "apenas_contorno" and parte.get("tipo") != "linha":
             scanline_fill(superficie, pts_trans, cor)
         
-        # Desenha o contorno com a mesma cor para suavizar as bordas e nao ficar com aquele treco preto ao redor
         n = len(pts_trans)
         for i in range(n):
             # Se for 'linha', não fecha o polígono (ex: boca) OBS:hidelbrando não apaga para nao deformar a boca do billy
@@ -261,7 +254,7 @@ def renderizarPersonagem(superficie, modelo, matriz):
             p1 = pts_trans[i]
             p2 = pts_trans[(i + 1) % n]
             
-            setRetaBresenham(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
+            setRetaRecortada(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
             
 def desenhar_cenario(superficie, matriz_v=None):
     # Se não passarmos matriz, usamos a identidade (desenha no tamanho real)
@@ -287,20 +280,22 @@ def desenhar_cenario(superficie, matriz_v=None):
     posicionar_e_desenhar(getGato(), 800, 500)
 
 def renderizarViewport(superficie, matriz_vp, modelos_mundo):
-    # 1. Desenha a Moldura e o Fundo sólido
+    # Desenha a Moldura e o Fundo sólido
     setPreencherRetangulo(superficie, 958, 18, 304, 174, (0, 0, 0))    # Borda
     setPreencherRetangulo(superficie, 960, 20, 300, 170, (40, 40, 40)) # Fundo escuro
 
-    # 2. Desenha o CÉU e CHÃO reduzidos (Truque visual)
-    # Céu reduzido (proporcional aos 300px de altura da tela original)
+    definirAreaDeRecorte(960, 20, 1260, 190)
+    #Desenha o Céu e Chão reduzidos, no caso oq usamos fill para preencher esse fundo
     setPreencherRetangulo(superficie, 960, 20, 300, 70, (146, 255, 222)) 
-    # Chão reduzido (proporcional aos 450px de altura da tela original)
     setPreencherRetangulo(superficie, 960, 90, 300, 100, (100, 100, 100))
 
-    # 3. Desenha o Cenário (passando a matriz da viewport)
+    #Desenha o Cenário (passando a matriz da viewport)
     desenhar_cenario(superficie, matriz_vp)
 
-    # 4. Desenha os Personagens
+    #Desenha os Personagens
     for modelo, matriz_original in modelos_mundo:
         m_final = multiplicaMatrizes(matriz_vp, matriz_original)
         renderizarPersonagem(superficie, modelo, m_final)
+    #Para dar um reset
+    definirAreaDeRecorte(0, 0, 1280, 720)
+    
