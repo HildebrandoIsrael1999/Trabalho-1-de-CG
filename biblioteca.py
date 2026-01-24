@@ -1,10 +1,11 @@
 import math
 from matrizes import *
-from cenarios import *
 from clipping import *
 CLIP_XMIN, CLIP_YMIN = 0, 0
 CLIP_XMAX, CLIP_YMAX = 1280, 720
 
+#Get usam para pegar os pontos para serem desenhados, assim facilitando ao utilizar as matrizes
+#Set usam para desenhar na tela diretamente, pixel a pixel, dificilmente usável para personagens complexos, mas mais leves, ou seja, coisas estáticas.
 def definirAreaDeRecorte(xmin, ymin, xmax, ymax):
     global CLIP_XMIN, CLIP_YMIN, CLIP_XMAX, CLIP_YMAX
     CLIP_XMIN, CLIP_YMIN = xmin, ymin
@@ -69,7 +70,7 @@ def setRetaRecortada(superficie, x0, y0, x1, y1, cor):
 
     setRetaBresenham(superficie, novo_x0, novo_y0, novo_x1, novo_y1, cor)
 
-def scanline_fill(superficie, pontos, cor_preenchimento):
+def scanlineFill(superficie, pontos, cor_preenchimento):
 
     # Achar o topo e o fundo do desenho (Y mínimo e máximo)
     ys = [p[1] for p in pontos]
@@ -108,6 +109,65 @@ def scanline_fill(superficie, pontos, cor_preenchimento):
                 # Desenha a linha horizontal pixel por pixel usando seu setPixel
                 for x in range(x_inicio, x_fim + 1):
                     setPixel(superficie, x, y, cor_preenchimento)
+   
+def getRetanguloPreenchido(x, y, w, h, cor, nome="retangulo"):
+    return {
+        "nome": nome,
+        "cor": cor,
+        "pontos": [
+            (x, y),          # Topo-Esq
+            (x + w, y),      # Topo-Dir
+            (x + w, y + h),  # Base-Dir
+            (x, y + h)       # Base-Esq
+        ]
+    }
+
+def getLinha(x1, y1, x2, y2, cor, nome="linha"):
+    return {
+        "nome": nome,
+        "cor": cor,
+        "tipo": "linha", # Já seta a flag automaticamente
+        "pontos": [(x1, y1), (x2, y2)]
+    }
+
+def getQuadrado(x, y, w, h, cor, nome="contorno"):
+    # Reaproveita a lógica do retângulo, mas seta o tipo
+    obj = getRetanguloPreenchido(x, y, w, h, cor, nome)
+    obj["tipo"] = "apenas_contorno"
+    return obj  
+
+def getRetangulo(x, y, w, h, cor, nome="contorno"):
+
+    obj = getRetanguloPreenchido(x, y, w, h, cor, nome)
+    obj["tipo"] = "apenas_contorno"
+    return obj
+
+def getCirculo(cx, cy, raio, cor, nome="circulo_vazado", resolucao=30):
+    
+    pontos = []
+    passo_angulo = 360 / resolucao
+
+    for i in range(resolucao):
+        # Converte graus para radianos
+        rad = math.radians(i * passo_angulo)
+        # Calcula a posição do ponto na circunferência
+        px = cx + raio * math.cos(rad)
+        py = cy + raio * math.sin(rad)
+        pontos.append((px, py))
+
+    return {
+        "nome": nome,
+        "cor": cor,
+        "tipo": "apenas_contorno", # Importante para ser vazado
+        "pontos": pontos
+    }
+    
+def getTrianguloPreenchido(p1, p2, p3, cor, nome="triangulo"):
+    return {
+        "nome": nome,
+        "cor": cor,
+        "pontos": [p1, p2, p3]
+    }
                     
 def setQuadrado(superficie, x, y, tamanho, cor):
     # 1. Linha do Topo (da esquerda para a direita)
@@ -163,7 +223,7 @@ def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
         (x, y + altura)
     ]
     
-    scanline_fill(superficie, pontos, cor)
+    scanlineFill(superficie, pontos, cor)
      
 def setPreencherQuadrado(superficie, x, y, tamanho, cor):
     pontos = [
@@ -174,7 +234,7 @@ def setPreencherQuadrado(superficie, x, y, tamanho, cor):
     ]
     
     #Chamamos a função de Scanline do professor para pintar o interior
-    scanline_fill(superficie, pontos, cor)
+    scanlineFill(superficie, pontos, cor)
 
 def setPreencherTriangulo(superficie, x, y, lado, cor):
  
@@ -191,7 +251,7 @@ def setPreencherTriangulo(superficie, x, y, lado, cor):
     
     pontos_triangulo = [p1, p2, p3]
     
-    scanline_fill(superficie, pontos_triangulo, cor)
+    scanlineFill(superficie, pontos_triangulo, cor)
     
 def setCirculo(superficie, centro_x, centro_y, raio, cor):
     x = 0
@@ -234,37 +294,41 @@ def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
         (x3, y3)
     ]
     
-    scanline_fill(superficie, pontos, cor)
+    scanlineFill(superficie, pontos, cor)
     
 def renderizarPersonagem(superficie, modelo, matriz):
     for parte in modelo:
         # Aplica a matriz composta (Escala, Rotação, Translação)
         pts_trans = aplicaTransformacao(matriz, parte["pontos"])
         cor = parte["cor"]
+        tipo = parte.get("tipo", "padrao")
         
-        if len(pts_trans) > 2 and parte.get("tipo") != "apenas_contorno" and parte.get("tipo") != "linha":
-            scanline_fill(superficie, pts_trans, cor)
+        if len(pts_trans) > 2 and tipo != "apenas_contorno" and tipo != "linha":
+            scanlineFill(superficie, pts_trans, cor)
         
         n = len(pts_trans)
         for i in range(n):
             # Se for 'linha', não fecha o polígono (ex: boca) OBS:hidelbrando não apaga para nao deformar a boca do billy
-            if parte.get("tipo") == "linha" and i == n - 1:
+            if tipo == "linha" and i == n - 1:
                 break
                 
             p1 = pts_trans[i]
             p2 = pts_trans[(i + 1) % n]
             
             setRetaRecortada(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
-            
+           
 def desenhar_cenario(superficie, matriz_v=None):
+    # Importa as funções de cenários aqui para evitar importação circular
+    from cenarios import getMoita, getCarrinho, getJarro, getBanco, getCachorro, getCarro, getLixeiras, getGato
+    
     # Se não passarmos matriz, usamos a identidade (desenha no tamanho real)
     if matriz_v is None:
         matriz_v = identidade()
 
     def posicionar_e_desenhar(modelo, x, y):
-        # 1. Matriz de posição no mundo
+        # Matriz de posição no mundo
         m_obj = calcularMatriz(1.0, 0, x, y)
-        # 2. Composição: multiplica a posição do objeto pela matriz da viewport(Verificar)
+        # Composição: multiplica a posição do objeto pela matriz da viewport(Verificar)
         m_final = multiplicaMatrizes(matriz_v,m_obj)
         renderizarPersonagem(superficie, modelo, m_final)
 
@@ -298,4 +362,4 @@ def renderizarViewport(superficie, matriz_vp, modelos_mundo):
         renderizarPersonagem(superficie, modelo, m_final)
     #Para dar um reset
     definirAreaDeRecorte(0, 0, 1280, 720)
-    
+ 
