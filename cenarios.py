@@ -122,5 +122,23 @@ def getGato():
     modelo.append(getRetanguloPreenchido(32, 36, 6, 15, c_p, "p3"))
     modelo.append(getRetanguloPreenchido(42, 36, 6, 15, c_p, "p4"))
     return modelo
- 
 
+def getBandeira():
+    return [{
+        "nome": "areabandeira",
+        "cor": (0, 100, 0),
+        "pontos": [(0, 0), (100, 0), (100, 80), (0, 80)],
+        "uvs": [(0, 0), (1, 0), (1, 1), (0, 1)] 
+    }]
+ 
+DADOS_DO_CENARIO = [
+    {"modelo": getMoita(),    "x": 420,  "y": 260},
+    {"modelo": getCarrinho(), "x": 100,  "y": 350},
+    {"modelo": getJarro(),    "x": 30,   "y": 290},
+    {"modelo": getBanco(),    "x": 700,  "y": 300},
+    {"modelo": getCachorro(), "x": 500,  "y": 400},
+    {"modelo": getCachorro(marrom=True), "x": 700, "y": 600},
+    {"modelo": getCarro(),    "x": 1073, "y": 400},
+    {"modelo": getLixeiras(), "x": 1050, "y": 250},
+    {"modelo": getGato(),     "x": 800,  "y": 500},
+]

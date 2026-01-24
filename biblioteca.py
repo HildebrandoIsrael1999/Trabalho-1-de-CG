@@ -109,6 +109,39 @@ def scanlineFill(superficie, pontos, cor_preenchimento):
                 # Desenha a linha horizontal pixel por pixel usando seu setPixel
                 for x in range(x_inicio, x_fim + 1):
                     setPixel(superficie, x, y, cor_preenchimento)
+                    
+def scanlineTexture(superficie, pontos, uvs, textura):
+    tex_w, tex_h = textura.get_width(), textura.get_height()
+    n = len(pontos)
+    ys = [p[1] for p in pontos]
+    y_min, y_max = int(min(ys)), int(max(ys))
+
+    for y in range(y_min, y_max):
+        intersecoes = []
+        for i in range(n):
+            x0, y0 = pontos[i]; x1, y1 = pontos[(i + 1) % n]
+            u0, v0 = uvs[i]; u1, v1 = uvs[(i + 1) % n]
+            if y0 == y1: continue
+            if y0 > y1:
+                x0, y0, x1, y1 = x1, y1, x0, y0
+                u0, v0, u1, v1 = u1, v1, u0, v0
+            if y < y0 or y >= y1: continue
+            t = (y - y0) / (y1 - y0)
+            intersecoes.append((x0 + t * (x1 - x0), u0 + t * (u1 - u0), v0 + t * (v1 - v0)))
+
+        intersecoes.sort(key=lambda item: item[0])
+        for i in range(0, len(intersecoes), 2):
+            if i + 1 < len(intersecoes):
+                x_start, u_start, v_start = intersecoes[i]
+                x_end, u_end, v_end = intersecoes[i+1]
+                if int(x_start) == int(x_end): continue
+                for x in range(int(x_start), int(x_end) + 1):
+                    t_h = (x - x_start) / (x_end - x_start)
+                    u = u_start + t_h * (u_end - u_start)
+                    v = v_start + t_h * (v_end - v_start)
+                    tx, ty = int(u * (tex_w - 1)), int(v * (tex_h - 1))
+                    if 0 <= tx < tex_w and 0 <= ty < tex_h:
+                        setPixel(superficie, x, y, textura.get_at((tx, ty)))
    
 def getRetanguloPreenchido(x, y, w, h, cor, nome="retangulo"):
     return {
@@ -296,70 +329,72 @@ def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
     
     scanlineFill(superficie, pontos, cor)
     
-def renderizarPersonagem(superficie, modelo, matriz):
+    
+def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
     for parte in modelo:
-        # Aplica a matriz composta (Escala, Rotação, Translação)
         pts_trans = aplicaTransformacao(matriz, parte["pontos"])
         cor = parte["cor"]
         tipo = parte.get("tipo", "padrao")
         
         if len(pts_trans) > 2 and tipo != "apenas_contorno" and tipo != "linha":
-            scanlineFill(superficie, pts_trans, cor)
+            # Se a parte tem UVs e recebemos uma textura, usa a função da sua amiga
+            if "uvs" in parte and textura_objeto is not None:
+                scanlineTexture(superficie, pts_trans, parte["uvs"], textura_objeto)
+            else:
+                scanlineFill(superficie, pts_trans, cor)
         
+        # Bordas
         n = len(pts_trans)
         for i in range(n):
-            # Se for 'linha', não fecha o polígono (ex: boca) OBS:hidelbrando não apaga para nao deformar a boca do billy
-            if tipo == "linha" and i == n - 1:
-                break
-                
-            p1 = pts_trans[i]
-            p2 = pts_trans[(i + 1) % n]
-            
+            if tipo == "linha" and i == n - 1: break
+            p1, p2 = pts_trans[i], pts_trans[(i + 1) % n]
             setRetaRecortada(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
            
-def desenhar_cenario(superficie, matriz_v=None):
-    # Importa as funções de cenários aqui para evitar importação circular
-    from cenarios import getMoita, getCarrinho, getJarro, getBanco, getCachorro, getCarro, getLixeiras, getGato
-    
-    # Se não passarmos matriz, usamos a identidade (desenha no tamanho real)
-    if matriz_v is None:
-        matriz_v = identidade()
+def desenhar_cenario(superficie, matriz_v=None, textura_bandeira=None):
+    from cenarios import DADOS_DO_CENARIO, getBandeira
+    if matriz_v is None: matriz_v = identidade()
 
-    def posicionar_e_desenhar(modelo, x, y):
-        # Matriz de posição no mundo
-        m_obj = calcularMatriz(1.0, 0, x, y)
-        # Composição: multiplica a posição do objeto pela matriz da viewport(Verificar)
-        m_final = multiplicaMatrizes(matriz_v,m_obj)
-        renderizarPersonagem(superficie, modelo, m_final)
+    # Desenha a bandeira (que usa textura)
+    m_band = calcularMatriz(1.0, 0, 100, 100)
+    renderizarPersonagem(superficie, getBandeira(), multiplicaMatrizes(matriz_v, m_band), textura_bandeira)
 
-    # Chamadas originais (elas agora serão afetadas pela matriz_v)
-    posicionar_e_desenhar(getMoita(), 420, 260)
-    posicionar_e_desenhar(getCarrinho(), 100, 350)
-    posicionar_e_desenhar(getJarro(), 30, 290)
-    posicionar_e_desenhar(getBanco(), 700, 300)
-    posicionar_e_desenhar(getCachorro(), 500, 400)
-    posicionar_e_desenhar(getCachorro(marrom=True), 700, 600)
-    posicionar_e_desenhar(getCarro(), 1073, 400)
-    posicionar_e_desenhar(getLixeiras(), 1050, 250)
-    posicionar_e_desenhar(getGato(), 800, 500)
+    # Desenha o resto do cenário (cor sólida)
+    for item in DADOS_DO_CENARIO:
+        m_obj = calcularMatriz(1.0, 0, item["x"], item["y"])
+        renderizarPersonagem(superficie, item["modelo"], multiplicaMatrizes(matriz_v, m_obj), None)
 
-def renderizarViewport(superficie, matriz_vp, modelos_mundo):
+def renderizarViewport(superficie, matriz_vp, modelos_mundo, textura_grama=None):
     # Desenha a Moldura e o Fundo sólido
     setPreencherRetangulo(superficie, 958, 18, 304, 174, (0, 0, 0))    # Borda
     setPreencherRetangulo(superficie, 960, 20, 300, 170, (40, 40, 40)) # Fundo escuro
 
     definirAreaDeRecorte(960, 20, 1260, 190)
-    #Desenha o Céu e Chão reduzidos, no caso oq usamos fill para preencher esse fundo
+    
+    # Desenha o Céu e Chão reduzidos
     setPreencherRetangulo(superficie, 960, 20, 300, 70, (146, 255, 222)) 
     setPreencherRetangulo(superficie, 960, 90, 300, 100, (100, 100, 100))
 
-    #Desenha o Cenário (passando a matriz da viewport)
-    desenhar_cenario(superficie, matriz_vp)
+    # IMPORTANTE: Passar a textura para o desenho do cenário na viewport
+    desenhar_cenario(superficie, matriz_vp, textura_grama)
 
-    #Desenha os Personagens
+    # Desenha os Personagens
     for modelo, matriz_original in modelos_mundo:
         m_final = multiplicaMatrizes(matriz_vp, matriz_original)
         renderizarPersonagem(superficie, modelo, m_final)
-    #Para dar um reset
+        
+    # Reset do recorte
     definirAreaDeRecorte(0, 0, 1280, 720)
+    
+def limitar_personagem_na_janela(x, y, largura_obj, altura_obj, largura_janela, altura_janela):
+    if x < 0:
+        x = 0
+    elif x + largura_obj > largura_janela:
+        x = largura_janela - largura_obj
+
+    if y < 0:
+        y = 0
+    elif y + altura_obj > altura_janela:
+        y = altura_janela - altura_obj
+
+    return x, y
  
