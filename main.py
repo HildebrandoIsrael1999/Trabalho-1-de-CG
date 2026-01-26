@@ -13,6 +13,7 @@ pygame.display.set_caption("Billy da Tapioca - Versão com Textura")
 clock = pygame.time.Clock()
 largura, altura = 1280, 720
 tela = pygame.display.set_mode((largura, altura))
+img_grama = pygame.image.load("grama.png").convert() #imagem de textura
 
 # Carregamento da Textura da sua amiga
 try:

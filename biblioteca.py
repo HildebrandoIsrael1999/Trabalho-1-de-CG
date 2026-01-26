@@ -143,6 +143,63 @@ def scanlineTexture(superficie, pontos, uvs, textura):
                     if 0 <= tx < tex_w and 0 <= ty < tex_h:
                         setPixel(superficie, x, y, textura.get_at((tx, ty)))
    
+#mtodo de colorir usando scanline, porém com textura
+def scanlineTexture(superficie, pontos, uvs, textura):
+    # Pega as dimensões da imagem da textura
+    tex_w, tex_h = textura.get_width(), textura.get_height()
+    n = len(pontos)
+
+    ys = [p[1] for p in pontos]
+    y_min = int(min(ys))
+    y_max = int(max(ys))
+
+    for y in range(y_min, y_max):
+        intersecoes = []
+
+        for i in range(n):
+            x0, y0 = pontos[i]
+            x1, y1 = pontos[(i + 1) % n]
+            u0, v0 = uvs[i]
+            u1, v1 = uvs[(i + 1) % n]
+
+            if y0 == y1: continue
+
+            if y0 > y1:
+                x0, y0, x1, y1 = x1, y1, x0, y0
+                u0, v0, u1, v1 = u1, v1, u0, v0
+
+            if y < y0 or y >= y1: continue
+
+            t = (y - y0) / (y1 - y0)
+            
+            x = x0 + t * (x1 - x0)
+            u = u0 + t * (u1 - u0)
+            v = v0 + t * (v1 - v0)
+            intersecoes.append((x, u, v))
+
+        intersecoes.sort(key=lambda item: item[0])
+
+        for i in range(0, len(intersecoes), 2):
+            if i + 1 < len(intersecoes):
+                x_inicio, u_inicio, v_inicio = intersecoes[i]
+                x_fim, u_fim, v_fim = intersecoes[i+1]
+
+                if int(x_inicio) == int(x_fim): continue
+
+                for x in range(int(x_inicio), int(x_fim) + 1):
+                    
+                    t_horiz = (x - x_inicio) / (x_fim - x_inicio)
+                    
+                    u = u_inicio + t_horiz * (u_fim - u_inicio)
+                    v = v_inicio + t_horiz * (v_fim - v_inicio)
+
+                    tx = int(u * (tex_w - 1))
+                    ty = int(v * (tex_h - 1))
+
+                    if 0 <= tx < tex_w and 0 <= ty < tex_h:
+                        cor = textura.get_at((tx, ty))
+                        setPixel(superficie, x, y, cor)
+
 def getRetanguloPreenchido(x, y, w, h, cor, nome="retangulo"):
     return {
         "nome": nome,
@@ -336,6 +393,7 @@ def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
         cor = parte["cor"]
         tipo = parte.get("tipo", "padrao")
         
+        #logica de Preenchimento para textura ou cor solida
         if len(pts_trans) > 2 and tipo != "apenas_contorno" and tipo != "linha":
             # Se a parte tem UVs e recebemos uma textura, usa a função da sua amiga
             if "uvs" in parte and textura_objeto is not None:
