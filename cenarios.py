@@ -125,6 +125,25 @@ def getGato():
     modelo.append(getRetanguloPreenchido(42, 36, 6, 15, c_p, "p4"))
     return modelo
 
+def getNuvem():
+    cor_nuvem = (255, 255, 255) # Branco puro
+    modelo = []
+    
+    # Círculo Central (maior)
+    modelo.append(getCirculoPreenchido(0, 0, 35, cor_nuvem, "centro"))
+    
+    # Círculo Esquerdo (médio)
+    modelo.append(getCirculoPreenchido(-30, 10, 25, cor_nuvem, "esq"))
+    
+    # Círculo Direito (médio)
+    modelo.append(getCirculoPreenchido(30, 10, 25, cor_nuvem, "dir"))
+    
+    # (Opcional) Base reta para dar estilo de desenho animado
+    # Se preferir ela toda redonda, remova essa linha abaixo:
+    modelo.append(getRetanguloPreenchido(-30, 15, 60, 20, cor_nuvem, "base"))
+
+    return modelo
+
 def getBandeira():
     return [{
         "nome": "areabandeira",
@@ -143,4 +162,8 @@ DADOS_DO_CENARIO = [
     {"modelo": getCarro(),    "x": 1073, "y": 400},
     {"modelo": getLixeiras(), "x": 1050, "y": 250},
     {"modelo": getGato(),     "x": 800,  "y": 500},
+    {"modelo": getNuvem(), "x": 350, "y": 130},
+    {"modelo": getNuvem(), "x": 600, "y": 80},
+    {"modelo": getNuvem(), "x": 900, "y": 120},
+    {"modelo": getNuvem(), "x": 1100, "y": 60}
 ]

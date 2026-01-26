@@ -59,7 +59,6 @@ def setRetaBresenham(superficie, x0, y0, x1, y1, cor):
 
         x += 1
 
-
 def floodfill(superficie, x, y, cor_preenchimento, cor_limite=None):
     x, y = int(x), int(y)
     
@@ -105,8 +104,7 @@ def floodfill(superficie, x, y, cor_preenchimento, cor_limite=None):
             nx, ny = cx + dx, cy + dy
             if (nx, ny) not in visitados:
                 pilha.append((nx, ny))     
-                
-    
+                  
 def setRetaRecortada(superficie, x0, y0, x1, y1, cor):
 
     resultado = cohenSutherlandClip(x0, y0, x1, y1, CLIP_XMIN, CLIP_YMIN, CLIP_XMAX, CLIP_YMAX)
@@ -297,6 +295,23 @@ def getCirculo(cx, cy, raio, cor, nome="circulo_vazado", resolucao=30):
         "nome": nome,
         "cor": cor,
         "tipo": "apenas_contorno", # Importante para ser vazado
+        "pontos": pontos
+    }
+
+def getCirculoPreenchido(cx, cy, raio, cor, nome="circulo_cheio", resolucao=20):
+    pontos = []
+    passo_angulo = 360 / resolucao
+
+    for i in range(resolucao):
+        rad = math.radians(i * passo_angulo)
+        px = cx + raio * math.cos(rad)
+        py = cy + raio * math.sin(rad)
+        pontos.append((px, py))
+
+    return {
+        "nome": nome,
+        "cor": cor,
+        # Sem "tipo": "apenas_contorno", o seu renderizarPersonagem vai usar scanlineFill autom.
         "pontos": pontos
     }
     
@@ -503,7 +518,7 @@ def renderizarViewport(superficie, matriz_vp, modelos_mundo, textura_grama=None)
     definirAreaDeRecorte(960, 20, 1260, 190)
     
     # Desenha o Céu e Chão reduzidos
-    setPreencherRetangulo(superficie, 960, 20, 300, 70, (146, 255, 222)) 
+    setPreencherRetangulo(superficie, 960, 20, 300, 70, (135, 206, 235)) 
     setPreencherRetangulo(superficie, 960, 90, 300, 100, (100, 100, 100))
 
     # IMPORTANTE: Passar a textura para o desenho do cenário na viewport
