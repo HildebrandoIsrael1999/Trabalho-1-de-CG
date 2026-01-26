@@ -12,6 +12,12 @@ clock = pygame.time.Clock()
 largura, altura = 1280, 720
 tela = pygame.display.set_mode((largura, altura))
 
+# ===== FONTE (CARREGAR UMA VEZ) =====
+pygame.font.init()
+fonte_oi = pygame.font.Font("Fontes/Oi-Regular.ttf", 40)
+texto = fonte_oi.render("Oi Tapioca!", True, (0, 0, 0))
+rect_texto = texto.get_rect(center=(largura // 2, altura // 2))
+
 # 2. Definição da Viewport (Mini-mapa no Canto Superior Direito)
 matriz_vp = calcularMatrizViewport(960, 20, 1260, 190, 1280, 720)
 
@@ -60,26 +66,32 @@ while rodando:
 
     # --- 3. Renderização ---
     
-    # Limpeza da tela (Céu e Chão)
+    # Céu e chão
     tela.fill((146, 255, 222))
     tela.fill((100, 100, 100), (0, 300, largura, 450)) 
 
-    # A. DESENHO MUNDO NORMAL (Tamanho real)
+    # Mundo normal
     desenhar_cenario(tela)
     renderizarPersonagem(tela, getBilly(), m)
     renderizarPersonagem(tela, getMulher(), n)
     renderizarPersonagem(tela, getMenino(), t)
     
-    # B. DESENHO VIEWPORT (Mini-mapa)
-    # Preparamos a lista de personagens para a função da viewport
+    # Viewport (mini-mapa)
     personagens_atuais = [
         (getBilly(), m),
         (getMulher(), n),
         (getMenino(), t)
     ]
-    
-    # Chamamos a função única que cuida de tudo no mini-mapa
     renderizarViewport(tela, matriz_vp, personagens_atuais)
+
+    # Testes de preenchimento
+    setPreencherQuadradoFloodfill(tela, 50, 50, 100, (0, 255, 0), (0, 0, 255))
+    setPreencherRetanguloFloodfill(tela, 200, 50, 150, 80, (255, 255, 0), (128, 0, 128))
+    setPreencherTrianguloFloodfill(tela, 400, 50, 100, (255, 255, 255), (255, 0, 255))
+    setTrianguloGenerico(tela, 600, 50, 550, 150, 650, 150, (0, 0, 0))
+
+    # ===== TEXTO (SÓ DESENHA) =====
+    tela.blit(texto,rect_texto)
 
     # --- 4. Finalização do Frame ---
     pygame.display.flip()

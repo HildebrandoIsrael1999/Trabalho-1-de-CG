@@ -2,6 +2,64 @@ import math
 from matrizes import *
 from cenarios import *
 
+def floodfill(superficie, x, y, cor_preenchimento, cor_limite=None):
+    """Flood fill iterativo usando pilha"""
+    # Converte coordenadas para inteiros
+    x, y = int(x), int(y)
+    
+    # Verifica se o ponto inicial está dentro da superfície
+    if not (0 <= x < superficie.get_width() and 0 <= y < superficie.get_height()):
+        return
+    
+    # Obtém a cor do ponto inicial
+    cor_alvo = superficie.get_at((x, y))
+    
+    # Se não especificou cor_limite, usa a cor do ponto inicial
+    if cor_limite is None:
+        cor_limite = cor_alvo
+    
+    # Se a cor_alvo já é a cor de preenchimento, não faz nada
+    if cor_alvo == cor_preenchimento:
+        return
+    
+    # Se a cor_alvo não é a cor_limite, não preenche
+    if cor_alvo != cor_limite:
+        return
+    
+    # Pilha para armazenar pontos a processar
+    pilha = [(x, y)]
+    
+    # Conjunto para evitar processar o mesmo ponto múltiplas vezes
+    visitados = set()
+    
+    while pilha:
+        cx, cy = pilha.pop()
+        
+        # Verifica limites
+        if not (0 <= cx < superficie.get_width() and 0 <= cy < superficie.get_height()):
+            continue
+        
+        # Verifica se já visitou
+        if (cx, cy) in visitados:
+            continue
+        
+        # Obtém a cor atual do pixel
+        cor_atual = superficie.get_at((cx, cy))
+        
+        # Se a cor atual não for a cor_limite, pula
+        if cor_atual != cor_limite:
+            visitados.add((cx, cy))
+            continue
+        
+        # Preenche o pixel
+        superficie.set_at((cx, cy), cor_preenchimento)
+        visitados.add((cx, cy))
+        
+        # Adiciona vizinhos (4-direções)
+        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            nx, ny = cx + dx, cy + dy
+            if (nx, ny) not in visitados:
+                pilha.append((nx, ny))
 def setPixel(superficie, x, y, cor):
     x = int(x)
     y = int(y)
@@ -50,6 +108,55 @@ def setRetaBresenham(superficie, x0, y0, x1, y1, cor):
 
         x += 1
 
+def floodfill(superficie, x, y, cor_preenchimento, cor_limite=None):
+    """Flood fill CORRIGIDO"""
+    # 1. Verificar se está dentro dos limites
+    x, y = int(x), int(y)
+    if not (0 <= x < superficie.get_width() and 0 <= y < superficie.get_height()):
+        return
+    
+    # 2. Obter cor do pixel inicial
+    cor_original = superficie.get_at((x, y))
+    
+    # 3. Se não especificou cor_limite, usa a cor_original como limite
+    if cor_limite is None:
+        cor_limite = cor_original
+    
+    # 4. Condições de parada CORRETAS:
+    #    a) Se já está com a cor de preenchimento → para
+    #    b) Se a cor não é a cor_limite → para (está fora da área)
+    if cor_original == cor_preenchimento:
+        return
+    
+    if cor_original != cor_limite:
+        return
+    
+    # 5. Agora faz o preenchimento
+    pilha = [(x, y)]
+    
+    while pilha:
+        px, py = pilha.pop()
+        
+        if not (0 <= px < superficie.get_width() and 0 <= py < superficie.get_height()):
+            continue
+        
+        atual = superficie.get_at((px, py))
+        
+        # Verifica novamente as condições
+        if atual == cor_preenchimento:
+            continue
+            
+        if atual != cor_limite:
+            continue
+        
+        # Preenche o pixel
+        superficie.set_at((px, py), cor_preenchimento)
+        
+        # Adiciona vizinhos
+        pilha.append((px + 1, py))
+        pilha.append((px - 1, py))
+        pilha.append((px, py + 1))
+        pilha.append((px, py - 1))
 def scanline_fill(superficie, pontos, cor_preenchimento):
 
     # 1. Achar o topo e o fundo do desenho (Y mínimo e máximo)
@@ -123,7 +230,13 @@ def setRetangulo(superficie, x, y, largura, altura, cor):
     
     # 4. Linha de baixo (da esquerda para a direita, deslocada para baixo)
     setRetaBresenham(superficie, x, y + altura, x + largura, y + altura,cor)
-    
+
+def setPreencherQuadradoFloodfill(superficie, x, y, tamanho, cor_contorno, cor_preenchimento):
+    # Desenha o contorno do quadrado
+    setQuadrado(superficie, x, y, tamanho, cor_contorno)
+    # Preenche usando floodfill a partir de um ponto dentro do quadrado
+    # Em setPreencherQuadradoFloodfill
+    floodfill(superficie, x + 2, y + 2, cor_preenchimento)   
 def setTrianguloEquilatero(superficie, x, y, lado, cor):
     # 1. Calculamos a altura usando a fórmula
     altura = lado * (math.sqrt(3) / 2)
@@ -159,7 +272,11 @@ def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
     
     # 2. Chamamos a função do professor enviando essa lista
     scanline_fill(superficie, pontos, cor)
-     
+def setPreencherRetanguloFloodfill(superficie, x, y, largura, altura, cor_contorno, cor_preenchimento):
+    # Desenha o contorno do retângulo
+    setRetangulo(superficie, x, y, largura, altura, cor_contorno)
+    # Preenche usando floodfill a partir de um ponto dentro do retângulo
+    floodfill(superficie, x + largura // 2, y + altura // 2, cor_preenchimento)     
 def setPreencherQuadrado(superficie, x, y, tamanho, cor):
     # 1. Definimos os 4 cantos do quadrado em ordem (seguindo o contorno)
     # Ponto 1: Topo-Esquerda (x, y)
@@ -194,7 +311,21 @@ def setPreencherTriangulo(superficie, x, y, lado, cor):
     
     # 4. Chamamos a função do professor para "escaneá-lo" e pintá-lo
     scanline_fill(superficie, pontos_triangulo, cor)
-    
+
+def setPreencherTrianguloFloodfill(superficie, x, y, lado, cor_contorno, cor_preenchimento):
+    # Calcula a altura do triângulo
+    altura = lado * (math.sqrt(3) / 2)
+    # Define os três vértices
+    p1x, p1y = x, y
+    p2x, p2y = x - (lado / 2), y + altura
+    p3x, p3y = x + (lado / 2), y + altura
+    # Desenha o contorno do triângulo
+    setRetaBresenham(superficie, p1x, p1y, p2x, p2y, cor_contorno)
+    setRetaBresenham(superficie, p1x, p1y, p3x, p3y, cor_contorno)
+    setRetaBresenham(superficie, p2x, p2y, p3x, p3y, cor_contorno)
+    # Preenche usando floodfill a partir de um ponto dentro do triângulo
+    floodfill(superficie, int(x), int(y + altura // 2), cor_preenchimento, cor_limite=cor_contorno) 
+
 def setCirculo(superficie, centro_x, centro_y, raio, cor):
     x = 0
     y = raio
