@@ -19,7 +19,6 @@ tela = pygame.display.set_mode((largura, altura))
 # texto = fonte_oi.render("Oi Tapioca!", True, (0, 0, 0))
 # rect_texto = texto.get_rect(center=(largura // 2, altura // 2))
 
-
 try:
     img_bandeira = pygame.image.load("bandeira.png").convert()
 except:
@@ -56,19 +55,27 @@ while rodando:
     
     # Movimentação Billy
     dx, dy = 0, 0
-    if teclas[pygame.K_a]: dx -= 40
-    if teclas[pygame.K_d]: dx += 40
-    if teclas[pygame.K_w]: dy -= 40  
-    if teclas[pygame.K_s]: dy += 40 
+    if teclas[pygame.K_a]: dx -= 20
+    if teclas[pygame.K_d]: dx += 20
+    if teclas[pygame.K_w]: dy -= 20  
+    if teclas[pygame.K_s]: dy += 20 
     
     # Rotação Billy
     if teclas[pygame.K_r]: billy_angulo += 5
+    
+    m_clara_temp = calcularMatriz(clara_escala, clara_angulo, clara_x, clara_y)
+    aabb_clara = get_aabb(getMulher(), m_clara_temp)
+
+    m_menino_temp = calcularMatriz(menino_escala, menino_angulo, menino_x, menino_y)
+    aabb_menino = get_aabb(getMenino(), m_menino_temp)
+
+    obstaculos_vivos = [aabb_clara, aabb_menino]
 
     # Teste de colisão antes de aplicar o movimento
     novo_x = billy_x + dx
     novo_y = billy_y + dy
 
-    if not colisor.verificarMovimento(getBilly(), novo_x, novo_y, billy_escala, billy_angulo):
+    if not colisor.verificarMovimento(getBilly(), novo_x, novo_y, billy_escala, billy_angulo, obstaculos_vivos):
         billy_x = novo_x
         billy_y = novo_y
         billy_x, billy_y = limitar_personagem_na_janela(billy_x, billy_y, 40, 110, largura, altura)
