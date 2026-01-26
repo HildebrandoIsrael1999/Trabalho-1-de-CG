@@ -1,71 +1,59 @@
-import pygame
 from biblioteca import *
 from matrizes import *
 
 
 def getBilly():
-    #Definido na orgiem (0,0) para nao deformar o billy
+    # Paleta de cores
     cor_pele = (179, 139, 109)
     cor_roupa = (255, 0, 0)
     cor_branco = (255, 255, 255)
     cor_preto = (0, 0, 0)
+    
+    modelo = []
 
-    return [
-        # --- CORPO E JALECO ---
-        {"nome": "corpo", "cor": cor_roupa, "pontos": [(-5, 30), (35, 30), (35, 80), (-5, 80)]},
-        {"nome": "jaleco", "cor": cor_branco, "pontos": [(-5, 30), (35, 30), (35, 80), (-5, 80)]},
-        {"nome": "abertura_jaleco", "cor": cor_roupa, "pontos": [(12, 30), (18, 30), (18, 80), (12, 80)]},
 
-        # --- CABEÇA ---
-        {"nome": "cabeca", "cor": cor_pele, "pontos": [(0, 0), (30, 0), (30, 30), (0, 30)]},
-        
-        # --- BONÉ ---
-        {"nome": "bone_topo", "cor": cor_branco, "pontos": [(0, -5), (30, -5), (30, 5), (0, 5)]},
-        {"nome": "bone_aba", "cor": cor_branco, "pontos": [(15, 0), (35, 0), (35, 5), (15, 5)]},
-        
-        # --- OLHOS (Preenchidos) ---
-        {"nome": "olho_e", "cor": cor_preto, "pontos": [(5, 12), (10, 12), (10, 17), (5, 17)]},
-        {"nome": "olho_d", "cor": cor_preto, "pontos": [(20, 12), (25, 12), (25, 17), (20, 17)]},
-        
-        # --- BRAÇOS E PERNAS ---
-        {"nome": "braco_e", "cor": cor_pele, "pontos": [(-15, 35), (-5, 35), (-5, 65), (-15, 65)]},
-        {"nome": "braco_d", "cor": cor_pele, "pontos": [(35, 35), (45, 35), (45, 65), (35, 65)]},
-        {"nome": "perna_e", "cor": cor_pele, "pontos": [(0, 80), (10, 80), (10, 110), (0, 110)]},
-        {"nome": "perna_d", "cor": cor_pele, "pontos": [(20, 80), (30, 80), (30, 110), (20, 110)]},
+    # --- CABEÇA  ---
+    modelo.append(getRetanguloPreenchido(0, 0, 30, 30, cor_pele, "cabeca"))
+    
+    # CORPO ---
+    modelo.append(getRetanguloPreenchido(-5, 30, 40, 50, cor_roupa, "corpo"))
+    
+    # Jaleco (Mesma posição do corpo)
+    modelo.append(getRetanguloPreenchido(-5, 30, 40, 50, cor_branco, "jaleco"))
+    
+    # Abertura Jaleco 
+    modelo.append(getRetanguloPreenchido(12, 30, 6, 50, cor_roupa, "abertura_jaleco"))
 
-        # --- ÓCULOS (Vazados - Apenas contorno para não tampar o olho) ---
-        {"nome": "aro_e", "cor": cor_preto, "tipo": "apenas_contorno", "pontos": [(3, 10), (12, 10), (12, 19), (3, 19)]},
-        {"nome": "aro_d", "cor": cor_preto, "tipo": "apenas_contorno", "pontos": [(18, 10), (27, 10), (27, 19), (18, 19)]},
-        
-        # --- LINHAS (Boca e Ponte dos óculos) ---
-        {"nome": "ponte", "cor": cor_preto, "tipo": "linha", "pontos": [(12, 15), (18, 15)]},
-        {"nome": "boca", "cor": cor_roupa, "tipo": "linha", "pontos": [(10, 23), (20, 23)]}
-    ]
+    # --- BONÉ ---
+    modelo.append(getRetanguloPreenchido(0, -5, 30, 10, cor_branco, "bone_topo"))
+    modelo.append(getRetanguloPreenchido(15, 0, 20, 5, cor_branco, "bone_aba"))
 
-def renderizarPersonagem(superficie, modelo, matriz):
-    for parte in modelo:
-        # Aplica a matriz composta (Escala, Rotação, Translação)
-        pts_trans = aplicaTransformacao(matriz, parte["pontos"])
-        cor = parte["cor"]
-        
-        # Só preenche se não for uma peça marcada como 'apenas_contorno' ou 'linha'
-        if len(pts_trans) > 2 and parte.get("tipo") != "apenas_contorno" and parte.get("tipo") != "linha":
-            scanline_fill(superficie, pts_trans, cor)
-        
-        # Desenha o contorno com a mesma cor para suavizar as bordas e nao ficar com aquele treco preto ao redor
-        n = len(pts_trans)
-        for i in range(n):
-            # Se for 'linha', não fecha o polígono (ex: boca) OBS:hidelbrando não apaga para nao deformar a boca do billy
-            if parte.get("tipo") == "linha" and i == n - 1:
-                break
-                
-            p1 = pts_trans[i]
-            p2 = pts_trans[(i + 1) % n]
-            
-            setRetaBresenham(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
+    # --- OLHOS ---
+    modelo.append(getRetanguloPreenchido(5, 12, 5, 5, cor_preto, "olho_e"))
+    modelo.append(getRetanguloPreenchido(20, 12, 5, 5, cor_preto, "olho_d"))
+
+    # --- MEMBROS ---
+    # Braços
+    modelo.append(getRetanguloPreenchido(-15, 35, 10, 30, cor_pele, "braco_e"))
+    modelo.append(getRetanguloPreenchido(35, 35, 10, 30, cor_pele, "braco_d"))
+    
+    # Pernas 
+    modelo.append(getRetanguloPreenchido(0, 80, 10, 30, cor_pele, "perna_e"))
+    modelo.append(getRetanguloPreenchido(20, 80, 10, 30, cor_pele, "perna_d"))
+
+    # --- ACESSÓRIOS (Vazados/Linhas) ---
+    # Óculos (usando a função de quadrado vazado)
+    modelo.append(getQuadrado(3, 10, 9, 9, cor_preto, "aro_e"))
+    modelo.append(getQuadrado(18, 10, 9, 9, cor_preto, "aro_d"))
+    
+    # Detalhes (usando a função de linha)
+    modelo.append(getLinha(12, 15, 18, 15, cor_preto, "ponte"))
+    modelo.append(getLinha(10, 23, 20, 23, cor_roupa, "boca"))
+
+    return modelo
 
 def getMulher():
-    # Cores extraídas da sua função original
+    # Cores
     cor_pele = (179, 139, 109)
     cor_mecha_rosa = (255, 105, 180)
     cor_olho = (0, 0, 0)
@@ -73,41 +61,43 @@ def getMulher():
     cor_cabelo = (0, 0, 0)
     cor_boca = (255, 0, 0)
 
-    return [
-        # --- CABELO FUNDO (Laterais) ---
-        {"nome": "cabelo_esq", "cor": cor_cabelo, "pontos": [(-5, 0), (0, 0), (0, 20), (-5, 20)]},
-        {"nome": "cabelo_dir", "cor": cor_cabelo, "pontos": [(30, 0), (35, 0), (35, 20), (30, 20)]},
-        
-        # --- CABEÇA ---
-        {"nome": "cabeca", "cor": cor_pele, "pontos": [(0, 0), (30, 0), (30, 30), (0, 30)]},
-        
-        # --- CABELO TOPO ---
-        {"nome": "cabelo_topo", "cor": cor_cabelo, "pontos": [(0, -10), (30, -10), (30, 5), (0, 5)]},
-        
-        # --- MECHA ROSA ---
-        {"nome": "mecha", "cor": cor_mecha_rosa, "pontos": [(10, -5), (15, -5), (15, 10), (10, 10)]},
+    modelo = []
 
-        # --- OLHOS ---
-        {"nome": "olho_e", "cor": cor_olho, "pontos": [(5, 10), (10, 10), (10, 15), (5, 15)]},
-        {"nome": "olho_d", "cor": cor_olho, "pontos": [(20, 10), (25, 10), (25, 15), (20, 15)]},
+    # --- CABELO ---
+    # Lateral Esquerda 
+    modelo.append(getRetanguloPreenchido(-5, 0, 5, 20, cor_cabelo, "cabelo_esq"))
+    # Lateral Direita
+    modelo.append(getRetanguloPreenchido(30, 0, 5, 20, cor_cabelo, "cabelo_dir"))
+    # Topo 
+    modelo.append(getRetanguloPreenchido(0, -10, 30, 15, cor_cabelo, "cabelo_topo"))
+    # Mecha Rosa 
+    modelo.append(getRetanguloPreenchido(10, -5, 5, 15, cor_mecha_rosa, "mecha"))
 
-        # --- CORPO (Vestido) ---
-        {"nome": "vestido", "cor": cor_vestido, "pontos": [(-5, 30), (35, 30), (35, 90), (-5, 90)]},
+    # --- CABEÇA 
+    modelo.append(getRetanguloPreenchido(0, 0, 30, 30, cor_pele, "cabeca"))
 
-        # --- BRAÇOS ---
-        {"nome": "braco_e", "cor": cor_pele, "pontos": [(-15, 35), (-5, 35), (-5, 65), (-15, 65)]},
-        {"nome": "braco_d", "cor": cor_pele, "pontos": [(35, 35), (45, 35), (45, 65), (35, 65)]},
+    # --- OLHOS ---
+    modelo.append(getRetanguloPreenchido(5, 10, 5, 5, cor_olho, "olho_e"))
+    modelo.append(getRetanguloPreenchido(20, 10, 5, 5, cor_olho, "olho_d"))
 
-        # --- PERNAS ---
-        {"nome": "perna_e", "cor": cor_pele, "pontos": [(0, 90), (10, 90), (10, 120), (0, 120)]},
-        {"nome": "perna_d", "cor": cor_pele, "pontos": [(20, 90), (30, 90), (30, 120), (20, 120)]},
+    # --- CORPO  ---
+    modelo.append(getRetanguloPreenchido(-5, 30, 40, 60, cor_vestido, "vestido"))
 
-        # --- BOCA (Linha) ---
-        {"nome": "boca", "cor": cor_boca, "tipo": "linha", "pontos": [(10, 23), (20, 23)]}
-    ]
-    
+    # --- BRAÇOS ---
+    modelo.append(getRetanguloPreenchido(-15, 35, 10, 30, cor_pele, "braco_e"))
+    modelo.append(getRetanguloPreenchido(35, 35, 10, 30, cor_pele, "braco_d"))
+
+    # --- PERNAS ---
+    modelo.append(getRetanguloPreenchido(0, 90, 10, 30, cor_pele, "perna_e"))
+    modelo.append(getRetanguloPreenchido(20, 90, 10, 30, cor_pele, "perna_d"))
+
+    # --- BOCA (Linha) ---
+    modelo.append(getLinha(10, 23, 20, 23, cor_boca, "boca"))
+
+    return modelo
+
 def getMenino():
-    # Cores extraídas da sua função original
+    # Cores
     cor_pele = (255, 224, 189)
     cor_cabelo = (0, 0, 0)
     cor_blusa = (173, 216, 230)
@@ -115,36 +105,41 @@ def getMenino():
     cor_preto = (0, 0, 0)
     cor_boca = (200, 0, 0)
 
-    return [
-        # --- CABELO (Parte de trás/topo) ---
-        {"nome": "cabelo", "cor": cor_cabelo, "pontos": [(0, -5), (30, -5), (30, 10), (0, 10)]},
+    modelo = []
 
-        # --- CABEÇA ---
-        {"nome": "cabeca", "cor": cor_pele, "pontos": [(0, 0), (30, 0), (30, 30), (0, 30)]},
+    # --- CABEÇA E CABELO ---
+    # Cabelo 
+    modelo.append(getRetanguloPreenchido(0, -5, 30, 15, cor_cabelo, "cabelo"))
+    # Cabeça 
+    modelo.append(getRetanguloPreenchido(0, 0, 30, 30, cor_pele, "cabeca"))
 
-        # --- OLHOS (Pontinhos) ---
-        {"nome": "olho_e", "cor": cor_preto, "pontos": [(8, 15), (9, 15), (9, 16), (8, 16)]},
-        {"nome": "olho_d", "cor": cor_preto, "pontos": [(22, 15), (23, 15), (23, 16), (22, 16)]},
+    # --- ROSTO ---
+    # Olhos 
+    modelo.append(getRetanguloPreenchido(8, 15, 1, 1, cor_preto, "olho_e"))
+    modelo.append(getRetanguloPreenchido(22, 15, 1, 1, cor_preto, "olho_d"))
+    
+    # Óculos 
+    modelo.append(getCirculo(cx=8, cy=15, raio=6, cor=cor_preto, nome="aro_e", resolucao=40))
+    modelo.append(getCirculo(cx=22, cy=15, raio=6, cor=cor_preto, nome="aro_d", resolucao=40))
+    
+    # Detalhes do rosto (Linhas)
+    modelo.append(getLinha(14, 15, 16, 15, cor_preto, "ponte_oculos"))
+    modelo.append(getLinha(12, 25, 18, 25, cor_boca, "boca"))
 
-        # --- ÓCULOS (Vazados - Apenas contorno) ---
-        # Convertidos de círculos para quadrados para funcionar no seu motor atual
-        {"nome": "aro_e", "cor": cor_preto, "tipo": "apenas_contorno", "pontos": [(2, 9), (14, 9), (14, 21), (2, 21)]},
-        {"nome": "aro_d", "cor": cor_preto, "tipo": "apenas_contorno", "pontos": [(16, 9), (28, 9), (28, 21), (16, 21)]},
-        {"nome": "ponte_oculos", "cor": cor_preto, "tipo": "linha", "pontos": [(14, 15), (16, 15)]},
+    # --- CORPO (Blusa)
+    modelo.append(getRetanguloPreenchido(-5, 30, 40, 40, cor_blusa, "blusa"))
 
-        # --- BOCA (Linha) ---
-        {"nome": "boca", "cor": cor_boca, "tipo": "linha", "pontos": [(12, 25), (18, 25)]},
+    # --- BRAÇOS ---
+    modelo.append(getRetanguloPreenchido(-15, 30, 10, 30, cor_pele, "braco_e"))
+    modelo.append(getRetanguloPreenchido(35, 30, 10, 30, cor_pele, "braco_d"))
 
-        # --- CORPO (Blusa) ---
-        {"nome": "blusa", "cor": cor_blusa, "pontos": [(-5, 30), (35, 30), (35, 70), (-5, 70)]},
+    # --- CALÇA ---
+    # Parte de cima da calça (Cintura)
+    modelo.append(getRetanguloPreenchido(-5, 70, 40, 20, cor_calca, "calca_topo"))
+    # Perna Esquerda 
+    modelo.append(getRetanguloPreenchido(0, 90, 12, 25, cor_calca, "perna_e"))
+    # Perna Direita
+    modelo.append(getRetanguloPreenchido(18, 90, 12, 25, cor_calca, "perna_d"))
 
-        # --- BRAÇOS ---
-        {"nome": "braco_e", "cor": cor_pele, "pontos": [(-15, 30), (-5, 30), (-5, 60), (-15, 60)]},
-        {"nome": "braco_d", "cor": cor_pele, "pontos": [(35, 30), (45, 30), (45, 60), (35, 60)]},
-
-        # --- CALÇA ---
-        {"nome": "calca_topo", "cor": cor_calca, "pontos": [(-5, 70), (35, 70), (35, 90), (-5, 90)]},
-        {"nome": "perna_e", "cor": cor_calca, "pontos": [(0, 90), (12, 90), (12, 115), (0, 115)]},
-        {"nome": "perna_d", "cor": cor_calca, "pontos": [(18, 90), (30, 90), (30, 115), (18, 115)]}
-    ]
+    return modelo
 
