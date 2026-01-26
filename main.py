@@ -15,6 +15,13 @@ largura, altura = 1280, 720
 tela = pygame.display.set_mode((largura, altura))
 img_grama = pygame.image.load("grama.png").convert() #imagem de textura
 
+# ===== FONTE (CARREGAR UMA VEZ) =====
+pygame.font.init()
+fonte_oi = pygame.font.Font("Fontes/Oi-Regular.ttf", 40)
+texto = fonte_oi.render("Oi Tapioca!", True, (0, 0, 0))
+rect_texto = texto.get_rect(center=(largura // 2, altura // 2))
+
+# 2. Definição da Viewport (Mini-mapa no Canto Superior Direito)
 # Carregamento da Textura da sua amiga
 try:
     img_bandeira = pygame.image.load("bandeira.png").convert()
@@ -75,6 +82,17 @@ while rodando:
         billy_y = novo_y
         billy_x, billy_y = limitar_personagem_na_janela(billy_x, billy_y, 40, 110, largura, altura)
     
+    # Céu e chão
+    tela.fill((146, 255, 222))
+    tela.fill((100, 100, 100), (0, 300, largura, 450)) 
+
+    # Mundo normal
+    desenhar_cenario(tela)
+    renderizarPersonagem(tela, getBilly(), m)
+    renderizarPersonagem(tela, getMulher(), n)
+    renderizarPersonagem(tela, getMenino(), t)
+    
+    # Viewport (mini-mapa)
     # Movimentação Clara (Controles de setas)
     if teclas[pygame.K_LEFT]:  clara_x -= 10
     if teclas[pygame.K_RIGHT]: clara_x += 10
@@ -111,6 +129,18 @@ while rodando:
         (getMulher(), m_clara),
         (getMenino(), m_menino),
     ]
+    renderizarViewport(tela, matriz_vp, personagens_atuais)
+
+    # Testes de preenchimento
+    setPreencherQuadradoFloodfill(tela, 50, 50, 100, (0, 255, 0), (0, 0, 255))
+    setPreencherRetanguloFloodfill(tela, 200, 50, 150, 80, (255, 255, 0), (128, 0, 128))
+    setPreencherTrianguloFloodfill(tela, 400, 50, 100, (255, 255, 255), (255, 0, 255))
+    setTrianguloGenerico(tela, 600, 50, 550, 150, 650, 150, (0, 0, 0))
+
+    # ===== TEXTO (SÓ DESENHA) =====
+    tela.blit(texto,rect_texto)
+
+    # --- 4. Finalização do Frame ---
     renderizarViewport(tela, matriz_vp, personagens_atuais, img_bandeira)
 
     # --- ATUALIZA TELA ---
