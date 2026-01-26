@@ -212,6 +212,6 @@ DADOS_DO_CENARIO = [
     {"modelo": getNuvem(), "x": 600, "y": 80},
     {"modelo": getNuvem(), "x": 900, "y": 120},
     {"modelo": getNuvem(), "x": 1100, "y": 60},
-    {"modelo": getTapioca(),  "x": 175,  "y": 355}, 
-    {"modelo": getTapioca(largura=25, altura=13),  "x": 173,  "y": 380},
+    # {"modelo": getTapioca(),  "x": 175,  "y": 355}, 
+    # {"modelo": getTapioca(largura=25, altura=13),  "x": 173,  "y": 380},
 ]
