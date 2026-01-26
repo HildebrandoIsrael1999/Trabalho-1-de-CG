@@ -166,7 +166,7 @@ def floodfill(superficie, x, y, cor_preenchimento, cor_limite=None):
         pilha.append((px - 1, py))
         pilha.append((px, py + 1))
         pilha.append((px, py - 1))
-def scanline_fill(superficie, pontos, cor_preenchimento):
+    
 def setRetaRecortada(superficie, x0, y0, x1, y1, cor):
 
     resultado = cohenSutherlandClip(x0, y0, x1, y1, CLIP_XMIN, CLIP_YMIN, CLIP_XMAX, CLIP_YMAX)
@@ -428,7 +428,7 @@ def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
     ]
     
     # 2. Chamamos a função do professor enviando essa lista
-    scanline_fill(superficie, pontos, cor)
+    scanlineFill(superficie, pontos, cor)
 def setPreencherRetanguloFloodfill(superficie, x, y, largura, altura, cor_contorno, cor_preenchimento):
     # Desenha o contorno do retângulo
     setRetangulo(superficie, x, y, largura, altura, cor_contorno)
@@ -461,7 +461,7 @@ def setPreencherTriangulo(superficie, x, y, lado, cor):
     pontos_triangulo = [p1, p2, p3]
     
     # 4. Chamamos a função do professor para "escaneá-lo" e pintá-lo
-    scanline_fill(superficie, pontos_triangulo, cor)
+    scanlineFill(superficie, pontos_triangulo, cor)
 
 def setPreencherTrianguloFloodfill(superficie, x, y, lado, cor_contorno, cor_preenchimento):
     # Calcula a altura do triângulo
