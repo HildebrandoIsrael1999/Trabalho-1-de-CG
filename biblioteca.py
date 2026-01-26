@@ -10,65 +10,7 @@ def definirAreaDeRecorte(xmin, ymin, xmax, ymax):
     global CLIP_XMIN, CLIP_YMIN, CLIP_XMAX, CLIP_YMAX
     CLIP_XMIN, CLIP_YMIN = xmin, ymin
     CLIP_XMAX, CLIP_YMAX = xmax, ymax
-
-def floodfill(superficie, x, y, cor_preenchimento, cor_limite=None):
-    """Flood fill iterativo usando pilha"""
-    # Converte coordenadas para inteiros
-    x, y = int(x), int(y)
-    
-    # Verifica se o ponto inicial está dentro da superfície
-    if not (0 <= x < superficie.get_width() and 0 <= y < superficie.get_height()):
-        return
-    
-    # Obtém a cor do ponto inicial
-    cor_alvo = superficie.get_at((x, y))
-    
-    # Se não especificou cor_limite, usa a cor do ponto inicial
-    if cor_limite is None:
-        cor_limite = cor_alvo
-    
-    # Se a cor_alvo já é a cor de preenchimento, não faz nada
-    if cor_alvo == cor_preenchimento:
-        return
-    
-    # Se a cor_alvo não é a cor_limite, não preenche
-    if cor_alvo != cor_limite:
-        return
-    
-    # Pilha para armazenar pontos a processar
-    pilha = [(x, y)]
-    
-    # Conjunto para evitar processar o mesmo ponto múltiplas vezes
-    visitados = set()
-    
-    while pilha:
-        cx, cy = pilha.pop()
-        
-        # Verifica limites
-        if not (0 <= cx < superficie.get_width() and 0 <= cy < superficie.get_height()):
-            continue
-        
-        # Verifica se já visitou
-        if (cx, cy) in visitados:
-            continue
-        
-        # Obtém a cor atual do pixel
-        cor_atual = superficie.get_at((cx, cy))
-        
-        # Se a cor atual não for a cor_limite, pula
-        if cor_atual != cor_limite:
-            visitados.add((cx, cy))
-            continue
-        
-        # Preenche o pixel
-        superficie.set_at((cx, cy), cor_preenchimento)
-        visitados.add((cx, cy))
-        
-        # Adiciona vizinhos (4-direções)
-        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            nx, ny = cx + dx, cy + dy
-            if (nx, ny) not in visitados:
-                pilha.append((nx, ny))
+                           
 def setPixel(superficie, x, y, cor):
     x = int(x)
     y = int(y)
@@ -117,55 +59,53 @@ def setRetaBresenham(superficie, x0, y0, x1, y1, cor):
 
         x += 1
 
+
 def floodfill(superficie, x, y, cor_preenchimento, cor_limite=None):
-    """Flood fill CORRIGIDO"""
-    # 1. Verificar se está dentro dos limites
     x, y = int(x), int(y)
+    
     if not (0 <= x < superficie.get_width() and 0 <= y < superficie.get_height()):
         return
     
-    # 2. Obter cor do pixel inicial
-    cor_original = superficie.get_at((x, y))
+    cor_alvo = superficie.get_at((x, y))
     
-    # 3. Se não especificou cor_limite, usa a cor_original como limite
     if cor_limite is None:
-        cor_limite = cor_original
+        cor_limite = cor_alvo
     
-    # 4. Condições de parada CORRETAS:
-    #    a) Se já está com a cor de preenchimento → para
-    #    b) Se a cor não é a cor_limite → para (está fora da área)
-    if cor_original == cor_preenchimento:
+    if cor_alvo == cor_preenchimento:
         return
     
-    if cor_original != cor_limite:
+
+    if cor_alvo != cor_limite:
         return
     
-    # 5. Agora faz o preenchimento
     pilha = [(x, y)]
     
+    visitados = set()
+    
     while pilha:
-        px, py = pilha.pop()
+        cx, cy = pilha.pop()
         
-        if not (0 <= px < superficie.get_width() and 0 <= py < superficie.get_height()):
+        if not (0 <= cx < superficie.get_width() and 0 <= cy < superficie.get_height()):
             continue
         
-        atual = superficie.get_at((px, py))
-        
-        # Verifica novamente as condições
-        if atual == cor_preenchimento:
-            continue
-            
-        if atual != cor_limite:
+        if (cx, cy) in visitados:
             continue
         
-        # Preenche o pixel
-        superficie.set_at((px, py), cor_preenchimento)
+        cor_atual = superficie.get_at((cx, cy))
         
-        # Adiciona vizinhos
-        pilha.append((px + 1, py))
-        pilha.append((px - 1, py))
-        pilha.append((px, py + 1))
-        pilha.append((px, py - 1))
+        if cor_atual != cor_limite:
+            visitados.add((cx, cy))
+            continue
+        
+        setPixel(superficie, cx, cy, cor_preenchimento)
+        visitados.add((cx, cy))
+        
+
+        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            nx, ny = cx + dx, cy + dy
+            if (nx, ny) not in visitados:
+                pilha.append((nx, ny))     
+                
     
 def setRetaRecortada(superficie, x0, y0, x1, y1, cor):
 
