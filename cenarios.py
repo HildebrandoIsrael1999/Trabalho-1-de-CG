@@ -1,130 +1,144 @@
 from biblioteca import *
-from matrizes import *
 
 def getCachorro(marrom=False):
-    # Alterna entre o cachorro amarelo e o marrom
     if not marrom:
         c1, c2, c4 = (236, 178, 95), (244, 146, 71), (182, 0, 71)
     else:
         c1, c2, c4 = (143, 97, 60), (105, 68, 40), (66, 17, 31)
     c3 = (0, 0, 0)
 
-    return [
-        {"nome": "orelha1", "cor": c2, "pontos": [(-10, 0), (0, 0), (0, 15), (-10, 15)]},
-        {"nome": "cabeca", "cor": c1, "pontos": [(0, 0), (25, 0), (25, 25), (0, 25)]},
-        {"nome": "orelha2", "cor": c2, "pontos": [(25, 0), (35, 0), (35, 15), (25, 15)]},
-        {"nome": "olho1", "cor": c3, "pontos": [(2, 8), (7, 8), (7, 13), (2, 13)]},
-        {"nome": "olho2", "cor": c3, "pontos": [(15, 8), (20, 8), (20, 13), (15, 13)]},
-        {"nome": "nariz", "cor": c4, "pontos": [(5, 15), (10, 15), (10, 20), (5, 20)]},
-        {"nome": "corpo", "cor": c1, "pontos": [(10, 25), (90, 25), (90, 50), (10, 50)]},
-        {"nome": "rabo", "cor": c1, "pontos": [(85, 35), (115, 35), (115, 43), (85, 43)]},
-        {"nome": "perna1", "cor": c1, "pontos": [(15, 50), (23, 50), (23, 75), (15, 75)]},
-        {"nome": "perna2", "cor": c1, "pontos": [(30, 50), (38, 50), (38, 75), (30, 75)]},
-        {"nome": "perna3", "cor": c1, "pontos": [(60, 50), (68, 50), (68, 75), (60, 75)]},
-        {"nome": "perna4", "cor": c1, "pontos": [(75, 50), (83, 50), (83, 75), (75, 75)]}
-    ]
+    modelo = []
+    modelo.append(getRetanguloPreenchido(-10, 0, 10, 15, c2, "orelha1"))
+    modelo.append(getRetanguloPreenchido(0, 0, 25, 25, c1, "cabeca"))
+    modelo.append(getRetanguloPreenchido(25, 0, 10, 15, c2, "orelha2"))
+    modelo.append(getRetanguloPreenchido(2, 8, 5, 5, c3, "olho1"))
+    modelo.append(getRetanguloPreenchido(15, 8, 5, 5, c3, "olho2"))
+    modelo.append(getRetanguloPreenchido(5, 15, 5, 5, c4, "nariz"))
+    modelo.append(getRetanguloPreenchido(10, 25, 80, 25, c1, "corpo"))
+    modelo.append(getRetanguloPreenchido(85, 35, 30, 8, c1, "rabo"))
+    modelo.append(getRetanguloPreenchido(15, 50, 8, 25, c1, "perna1"))
+    modelo.append(getRetanguloPreenchido(30, 50, 8, 25, c1, "perna2"))
+    modelo.append(getRetanguloPreenchido(60, 50, 8, 25, c1, "perna3"))
+    modelo.append(getRetanguloPreenchido(75, 50, 8, 25, c1, "perna4"))
+    return modelo
 
-def getBanco():
+def getBanco(): 
     c1, c2, c3 = (186, 186, 178), (145, 145, 131), (110, 109, 102)
-    return [
-        {"nome": "assento", "cor": c1, "pontos": [(0, 0), (200, 0), (200, 20), (0, 20)]},
-        {"nome": "costas", "cor": c2, "pontos": [(10, -50), (190, -50), (190, 0), (10, 0)]},
-        {"nome": "detalhe1", "cor": c3, "pontos": [(10, -40), (190, -40), (190, -35), (10, -35)]},
-        {"nome": "detalhe2", "cor": c3, "pontos": [(10, -20), (190, -20), (190, -15), (10, -15)]},
-        {"nome": "pe1", "cor": c1, "pontos": [(15, 20), (30, 20), (30, 50), (15, 50)]},
-        {"nome": "pe2", "cor": c1, "pontos": [(170, 20), (185, 20), (185, 50), (170, 50)]}
-    ]
+    modelo = []
+    modelo.append(getRetanguloPreenchido(0, 0, 200, 20, c1, "assento"))
+    modelo.append(getRetanguloPreenchido(10, -50, 180, 50, c2, "costas"))
+    modelo.append(getRetanguloPreenchido(10, -40, 180, 5, c3, "detalhe1"))
+    modelo.append(getRetanguloPreenchido(10, -20, 180, 5, c3, "detalhe2"))
+    modelo.append(getRetanguloPreenchido(15, 20, 15, 30, c1, "pe1"))
+    modelo.append(getRetanguloPreenchido(170, 20, 15, 30, c1, "pe2"))
+    return modelo
 
 def getJarro():
     c1, c2, c3, c4 = (100, 50, 0), (117, 94, 80), (26, 166, 19), (201, 58, 110)
-    return [
-        {"nome": "tronco", "cor": c1, "pontos": [(15, -50), (25, -50), (25, 0), (15, 0)]},
-        {"nome": "folha1", "cor": c3, "pontos": [(0, -80), (40, -80), (40, -40), (0, -40)]},
-        {"nome": "folha2", "cor": c3, "pontos": [(10, -110), (30, -110), (30, -70), (10, -70)]},
-        {"nome": "folha3", "cor": c3, "pontos": [(15, -130), (25, -130), (25, -100), (15, -100)]},
-        {"nome": "vaso", "cor": c2, "pontos": [(0, 0), (40, 0), (40, 40), (0, 40)]},
-        {"nome": "flor1", "cor": c4, "pontos": [(0, -60), (10, -60), (10, -50), (0, -50)]},
-        {"nome": "flor2", "cor": c4, "pontos": [(30, -70), (40, -70), (40, -60), (30, -60)]},
-        {"nome": "flor3", "cor": c4, "pontos": [(10, -100), (20, -100), (20, -90), (10, -90)]}
-    ]
+    modelo = []
+    modelo.append(getRetanguloPreenchido(15, -50, 10, 50, c1, "tronco"))
+    modelo.append(getRetanguloPreenchido(0, -80, 40, 40, c3, "folha1"))
+    modelo.append(getRetanguloPreenchido(10, -110, 20, 40, c3, "folha2"))
+    modelo.append(getRetanguloPreenchido(15, -130, 10, 30, c3, "folha3"))
+    modelo.append(getRetanguloPreenchido(0, 0, 40, 40, c2, "vaso"))
+    modelo.append(getRetanguloPreenchido(0, -60, 10, 10, c4, "flor1"))
+    modelo.append(getRetanguloPreenchido(30, -70, 10, 10, c4, "flor2"))
+    modelo.append(getRetanguloPreenchido(10, -100, 10, 10, c4, "flor3"))
+    return modelo
 
 def getCarrinho():
     c1, c2, c3, c4, c5 = (193, 197, 209), (230, 101, 85), (116, 117, 120), (89, 89, 89), (38, 70, 166)
     t = 50
-    return [
-        {"nome": "quadrado_central", "cor": c1, "pontos": [(t, 0), (2*t, 0), (2*t, t), (t, t)]},
-        {"nome": "tri_esq", "cor": c1, "pontos": [(t, 0), (t, t), (0, t)]},
-        {"nome": "tri_dir", "cor": c1, "pontos": [(2*t, 0), (2*t, t), (3*t, t)]},
-        {"nome": "base_azul", "cor": c5, "pontos": [(0, t), (150, t), (150, t+40), (0, t+40)]},
-        {"nome": "faixa_vermelha", "cor": c2, "pontos": [(0, t), (150, t), (150, t+15), (0, t+15)]},
-        {"nome": "roda1", "cor": c3, "pontos": [(10, t+40), (30, t+40), (30, t+70), (10, t+70)]},
-        {"nome": "roda1_det", "cor": c4, "pontos": [(10, t+40), (20, t+40), (20, t+60), (10, t+60)]},
-        {"nome": "roda2", "cor": c3, "pontos": [(120, t+40), (140, t+40), (140, t+70), (120, t+70)]},
-        {"nome": "roda2_det", "cor": c4, "pontos": [(130, t+40), (140, t+40), (140, t+60), (130, t+60)]}
-    ]
+    modelo = []
+    modelo.append(getRetanguloPreenchido(t, 0, t, t, c1, "quadrado_central"))
+    modelo.append(getTrianguloPreenchido((t, 0), (t, t), (0, t), c1, "tri_esq"))
+    modelo.append(getTrianguloPreenchido((2*t, 0), (2*t, t), (3*t, t), c1, "tri_dir"))
+    modelo.append(getRetanguloPreenchido(0, t, 150, 40, c5, "base_azul"))
+    modelo.append(getRetanguloPreenchido(0, t, 150, 15, c2, "faixa_vermelha"))
+    modelo.append(getRetanguloPreenchido(10, t+40, 20, 30, c3, "roda1"))
+    modelo.append(getRetanguloPreenchido(10, t+40, 10, 20, c4, "roda1_det"))
+    modelo.append(getRetanguloPreenchido(120, t+40, 20, 30, c3, "roda2"))
+    modelo.append(getRetanguloPreenchido(130, t+40, 10, 20, c4, "roda2_det"))
+    return modelo
 
 def getLixeiras():
     colors = [(217, 56, 56), (235, 198, 17), (50, 173, 31), (31, 46, 173)] # R, Y, G, B
     sup, dent = (107, 107, 107), (38, 38, 38)
-    
-    modelo = [
-        {"nome": "suporte_e", "cor": sup, "pontos": [(0, 10), (10, 10), (10, 90), (0, 90)]},
-        {"nome": "suporte_d", "cor": sup, "pontos": [(180, 10), (190, 10), (190, 90), (180, 90)]}
-    ]
-    
+    modelo = []
+    modelo.append(getRetanguloPreenchido(0, 10, 10, 80, sup, "suporte_e"))
+    modelo.append(getRetanguloPreenchido(180, 10, 10, 80, sup, "suporte_d"))
+
     for i, color in enumerate(colors):
         x_offset = 10 + (i * 45)
-        modelo.append({"nome": f"lix_{i}", "cor": color, "pontos": [(x_offset, 0), (x_offset+35, 0), (x_offset+35, 60), (x_offset, 60)]})
-        modelo.append({"nome": f"det_{i}", "cor": dent, "pontos": [(x_offset+8, 10), (x_offset+28, 10), (x_offset+28, 20), (x_offset+8, 20)]})
-        if i < 3: # Suportes entre lixeiras
-            modelo.append({"nome": f"sup_lat_{i}", "cor": sup, "pontos": [(x_offset+28, 10), (x_offset+48, 10), (x_offset+48, 20), (x_offset+28, 20)]})
-            
+        modelo.append(getRetanguloPreenchido(x_offset, 0, 35, 60, color, f"lix_{i}"))
+        modelo.append(getRetanguloPreenchido(x_offset+8, 10, 20, 10, dent, f"det_{i}"))
+        if i < 3: 
+            modelo.append(getRetanguloPreenchido(x_offset+28, 10, 20, 10, sup, f"sup_lat_{i}"))
     return modelo
 
 def getMoita():
     c1, c2, c3, c4 = (108, 168, 84), (110, 10, 10), (161, 138, 104), (184, 32, 26)
-    return [
-        {"nome": "folha_b", "cor": c1, "pontos": [(0, 0), (160, 0), (160, 30), (0, 30)]},
-        {"nome": "folha_t", "cor": c1, "pontos": [(40, -20), (120, -20), (120, 30), (40, 30)]},
-        {"nome": "caule1", "cor": c2, "pontos": [(20, 30), (30, 30), (30, 50), (20, 50)]},
-        {"nome": "caule2", "cor": c2, "pontos": [(70, 30), (80, 30), (80, 50), (70, 50)]},
-        {"nome": "caule3", "cor": c2, "pontos": [(125, 30), (135, 30), (135, 50), (125, 50)]},
-        {"nome": "jarro", "cor": c3, "pontos": [(-10, 50), (170, 50), (170, 75), (-10, 75)]},
-        {"nome": "f1", "cor": c4, "pontos": [(10, 10), (20, 10), (20, 20), (10, 20)]},
-        {"nome": "f2", "cor": c4, "pontos": [(60, -10), (68, -10), (68, -2), (60, -2)]},
-        {"nome": "f3", "cor": c4, "pontos": [(90, 10), (100, 10), (100, 20), (90, 20)]},
-        {"nome": "f4", "cor": c4, "pontos": [(140, 15), (148, 15), (148, 23), (140, 23)]}
-    ]
+    modelo = []
+    modelo.append(getRetanguloPreenchido(0, 0, 160, 30, c1, "folha_b"))
+    modelo.append(getRetanguloPreenchido(40, -20, 80, 50, c1, "folha_t"))
+    modelo.append(getRetanguloPreenchido(20, 30, 10, 20, c2, "caule1"))
+    modelo.append(getRetanguloPreenchido(70, 30, 10, 20, c2, "caule2"))
+    modelo.append(getRetanguloPreenchido(125, 30, 10, 20, c2, "caule3"))
+    modelo.append(getRetanguloPreenchido(-10, 50, 180, 25, c3, "jarro"))
+    modelo.append(getRetanguloPreenchido(10, 10, 10, 10, c4, "f1"))
+    modelo.append(getRetanguloPreenchido(60, -10, 8, 8, c4, "f2"))
+    modelo.append(getRetanguloPreenchido(90, 10, 10, 10, c4, "f3"))
+    modelo.append(getRetanguloPreenchido(140, 15, 8, 8, c4, "f4"))
+    return modelo
 
 def getCarro():
     c_car, c_wheel, c_win, c_light, c_plate = (54, 54, 54), (0, 0, 0), (168, 168, 168), (232, 219, 160), (255, 255, 255)
-    return [
-        {"nome": "cabine", "cor": c_car, "pontos": [(0, 0), (150, 0), (150, 100), (0, 100)]},
-        {"nome": "chassis", "cor": c_car, "pontos": [(-25, 60), (175, 60), (175, 110), (-25, 110)]},
-        {"nome": "roda1", "cor": c_wheel, "pontos": [(0, 110), (20, 110), (20, 140), (0, 140)]},
-        {"nome": "roda2", "cor": c_wheel, "pontos": [(130, 110), (150, 110), (150, 140), (130, 140)]},
-        {"nome": "farol1", "cor": c_light, "pontos": [(-10, 70), (15, 70), (15, 95), (-10, 95)]},
-        {"nome": "farol2", "cor": c_light, "pontos": [(130, 70), (155, 70), (155, 95), (130, 95)]},
-        {"nome": "janela", "cor": c_win, "pontos": [(15, 10), (135, 10), (135, 50), (15, 50)]},
-        {"nome": "placa", "cor": c_plate, "pontos": [(55, 80), (95, 80), (95, 100), (55, 100)]}
-    ]
+    modelo = []
+    modelo.append(getRetanguloPreenchido(0, 0, 150, 100, c_car, "cabine"))
+    modelo.append(getRetanguloPreenchido(-25, 60, 200, 50, c_car, "chassis"))
+    modelo.append(getRetanguloPreenchido(0, 110, 20, 30, c_wheel, "roda1"))
+    modelo.append(getRetanguloPreenchido(130, 110, 20, 30, c_wheel, "roda2"))
+    modelo.append(getRetanguloPreenchido(-10, 70, 25, 25, c_light, "farol1"))
+    modelo.append(getRetanguloPreenchido(130, 70, 25, 25, c_light, "farol2"))
+    modelo.append(getRetanguloPreenchido(15, 10, 120, 40, c_win, "janela"))
+    modelo.append(getRetanguloPreenchido(55, 80, 40, 20, c_plate, "placa"))
+    return modelo
 
 def getGato():
     c_p, c_d, c_n, preto = (128, 128, 128), (80, 80, 80), (255, 182, 193), (0, 0, 0)
-    return [
-        {"nome": "orelha1", "cor": c_d, "pontos": [(0, -6), (6, -6), (6, 4), (0, 4)]},
-        {"nome": "orelha2", "cor": c_d, "pontos": [(12, -6), (18, -6), (18, 4), (12, 4)]},
-        {"nome": "cabeca", "cor": c_p, "pontos": [(0, 0), (18, 0), (18, 18), (0, 18)]},
-        {"nome": "olho1", "cor": preto, "pontos": [(3, 5), (6, 5), (6, 8), (3, 8)]},
-        {"nome": "olho2", "cor": preto, "pontos": [(12, 5), (15, 5), (15, 8), (12, 8)]},
-        {"nome": "nariz", "cor": c_n, "pontos": [(8, 10), (11, 10), (11, 12), (8, 12)]},
-        {"nome": "bigode1", "cor": preto, "tipo": "linha", "pontos": [(-3, 10), (4, 11)]},
-        {"nome": "bigode2", "cor": preto, "tipo": "linha", "pontos": [(14, 11), (21, 10)]},
-        {"nome": "corpo", "cor": c_p, "pontos": [(8, 18), (48, 18), (48, 36), (8, 36)]},
-        {"nome": "rabo", "cor": c_p, "pontos": [(48, 22), (68, 22), (68, 26), (48, 26)]},
-        {"nome": "p1", "cor": c_p, "pontos": [(9, 36), (15, 36), (15, 51), (9, 51)]},
-        {"nome": "p2", "cor": c_p, "pontos": [(19, 36), (25, 36), (25, 51), (19, 51)]},
-        {"nome": "p3", "cor": c_p, "pontos": [(32, 36), (38, 36), (38, 51), (32, 51)]},
-        {"nome": "p4", "cor": c_p, "pontos": [(42, 36), (48, 36), (48, 51), (42, 51)]}
-    ]
-    
+    modelo = []
+    modelo.append(getRetanguloPreenchido(0, -6, 6, 10, c_d, "orelha1"))
+    modelo.append(getRetanguloPreenchido(12, -6, 6, 10, c_d, "orelha2"))
+    modelo.append(getRetanguloPreenchido(0, 0, 18, 18, c_p, "cabeca"))
+    modelo.append(getRetanguloPreenchido(3, 5, 3, 3, preto, "olho1"))
+    modelo.append(getRetanguloPreenchido(12, 5, 3, 3, preto, "olho2"))
+    modelo.append(getRetanguloPreenchido(8, 10, 3, 2, c_n, "nariz"))
+    modelo.append(getLinha(-3, 10, 4, 11, preto, "bigode1"))
+    modelo.append(getLinha(14, 11, 21, 10, preto, "bigode2"))
+    modelo.append(getRetanguloPreenchido(8, 18, 40, 18, c_p, "corpo"))
+    modelo.append(getRetanguloPreenchido(48, 22, 20, 4, c_p, "rabo"))
+    modelo.append(getRetanguloPreenchido(9, 36, 6, 15, c_p, "p1"))
+    modelo.append(getRetanguloPreenchido(19, 36, 6, 15, c_p, "p2"))
+    modelo.append(getRetanguloPreenchido(32, 36, 6, 15, c_p, "p3"))
+    modelo.append(getRetanguloPreenchido(42, 36, 6, 15, c_p, "p4"))
+    return modelo
+
+def getBandeira():
+    return [{
+        "nome": "areabandeira",
+        "cor": (0, 100, 0),
+        "pontos": [(0, 0), (100, 0), (100, 80), (0, 80)],
+        "uvs": [(0, 0), (1, 0), (1, 1), (0, 1)] 
+    }]
+ 
+DADOS_DO_CENARIO = [
+    {"modelo": getMoita(),    "x": 420,  "y": 260},
+    {"modelo": getCarrinho(), "x": 100,  "y": 350},
+    {"modelo": getJarro(),    "x": 30,   "y": 290},
+    {"modelo": getBanco(),    "x": 700,  "y": 300},
+    {"modelo": getCachorro(), "x": 500,  "y": 400},
+    {"modelo": getCachorro(marrom=True), "x": 700, "y": 600},
+    {"modelo": getCarro(),    "x": 1073, "y": 400},
+    {"modelo": getLixeiras(), "x": 1050, "y": 250},
+    {"modelo": getGato(),     "x": 800,  "y": 500},
+]
