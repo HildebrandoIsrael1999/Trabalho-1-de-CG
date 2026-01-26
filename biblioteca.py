@@ -189,7 +189,7 @@ def scanlineTexture(superficie, pontos, uvs, textura):
                     if 0 <= tx < tex_w and 0 <= ty < tex_h:
                         setPixel(superficie, x, y, textura.get_at((tx, ty)))
    
-#mtodo de colorir usando scanline, porém com textura
+#todo de colorir usando scanline, porém com textura
 def scanlineTexture(superficie, pontos, uvs, textura):
     # Pega as dimensões da imagem da textura
     tex_w, tex_h = textura.get_width(), textura.get_height()
@@ -245,6 +245,83 @@ def scanlineTexture(superficie, pontos, uvs, textura):
                     if 0 <= tx < tex_w and 0 <= ty < tex_h:
                         cor = textura.get_at((tx, ty))
                         setPixel(superficie, x, y, cor)
+
+# função auxiliar para misturar as cores
+def interpola_cor(c1, c2, t):
+    r = int(c1[0] + (c2[0] - c1[0]) * t)
+    g = int(c1[1] + (c2[1] - c1[1]) * t)
+    b = int(c1[2] + (c2[2] - c1[2]) * t)
+    
+    # Garante que as cores fiquem entre 0 e 255
+    r = max(0, min(r, 255))
+    g = max(0, min(g, 255))
+    b = max(0, min(b, 255))
+    
+    return (r, g, b)
+
+# sanline que suporta gradiente vertical
+def scanlineFillGradient(superficie, pontos, cor_topo, cor_base):
+
+    ys = [p[1] for p in pontos]
+    y_min = int(min(ys))
+    y_max = int(max(ys))
+    
+    altura_poly = y_max - y_min
+    if altura_poly == 0: return
+
+    n = len(pontos)
+
+    for y in range(y_min, y_max):
+        intersecoes_x = []
+
+        # Achar interseções
+        for i in range(n):
+            x0, y0 = pontos[i]
+            x1, y1 = pontos[(i + 1) % n]
+
+            if y0 == y1: continue
+            
+            if y0 > y1:
+                x0, y0, x1, y1 = x1, y1, x0, y0
+
+            if y < y0 or y >= y1: continue
+
+            # Calcula X da interseção
+            x = x0 + (y - y0) * (x1 - x0) / (y1 - y0)
+            intersecoes_x.append(x)
+
+        intersecoes_x.sort()
+
+        t = (y - y_min) / altura_poly
+        cor_linha = interpola_cor(cor_topo, cor_base, t)
+
+        for i in range(0, len(intersecoes_x), 2):
+            if i + 1 < len(intersecoes_x):
+                x_inicio = int(round(intersecoes_x[i]))
+                x_fim = int(round(intersecoes_x[i + 1]))
+
+                for x in range(x_inicio, x_fim + 1):
+                    setPixel(superficie, x, y, cor_linha)
+
+# circulo com gradiente
+def getCirculoGradiente(cx, cy, raio, cor_topo, cor_base, nome="circulo_grad", resolucao=30):
+    pontos = []
+    passo_angulo = 360 / resolucao
+
+    for i in range(resolucao):
+        rad = math.radians(i * passo_angulo)
+        px = cx + raio * math.cos(rad)
+        py = cy + raio * math.sin(rad)
+        pontos.append((px, py))
+
+    return {
+        "nome": nome,
+        "tipo": "gradiente",   # Identificador para o renderizador
+        "cor_topo": cor_topo,  # Cor passada por parâmetro
+        "cor_base": cor_base,  # Cor passada por parâmetro
+        "cor": cor_topo,       # Cor de segurança (fallback)
+        "pontos": pontos
+    }
 
 def getRetanguloPreenchido(x, y, w, h, cor, nome="retangulo"):
     return {
@@ -402,15 +479,24 @@ def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
         cor = parte["cor"]
         tipo = parte.get("tipo", "padrao")
         
-        #logica de Preenchimento para textura ou cor solida
+        # === LÓGICA DE PREENCHIMENTO ===
         if len(pts_trans) > 2 and tipo != "apenas_contorno" and tipo != "linha":
-            # Se a parte tem UVs e recebemos uma textura, usa a função da sua amiga
-            if "uvs" in parte and textura_objeto is not None:
+            
+            # 1. Verifica se é Gradiente (NOVO)
+            if tipo == "gradiente":
+                c_topo = parte.get("cor_topo", cor)
+                c_base = parte.get("cor_base", cor)
+                scanlineFillGradient(superficie, pts_trans, c_topo, c_base)
+            
+            # 2. Verifica se é Textura
+            elif "uvs" in parte and textura_objeto is not None:
                 scanlineTexture(superficie, pts_trans, parte["uvs"], textura_objeto)
+            
+            # 3. Preenchimento Sólido Padrão
             else:
                 scanlineFill(superficie, pts_trans, cor)
         
-        # Bordas
+        # === BORDAS (mantido igual) ===
         n = len(pts_trans)
         for i in range(n):
             if tipo == "linha" and i == n - 1: break

@@ -144,6 +144,12 @@ def getBandeira():
         "uvs": [(0, 0), (1, 0), (1, 1), (0, 1)] 
     }]
 
+def getPauBandeira():
+    cor_pau = (116, 70, 0)
+    modelo = []
+    modelo.append(getRetanguloPreenchido(0, 0, 10, 230, cor_pau, "pau"))
+    return modelo
+
 def getTapioca(largura=22, altura=10):
     cx, cy = 0, 0
     resolucao = 30
@@ -162,6 +168,7 @@ def getTapioca(largura=22, altura=10):
         "pontos": pontos,
         "tipo": "padrao"
     }]
+
 def getQueijo():
     # Cores
     cor_base = (255, 215, 0)   # Amarelo Ouro (o mesmo de antes)
@@ -198,6 +205,21 @@ def getQueijo():
 
     return modelo
 
+# sol com gradiente
+def getSol(x=0, y=0):
+    # === AQUI VOCÊ DEFINE AS CORES ===
+    amarelo_topo = (255, 255, 0)
+    laranja_base = (255, 140, 0)
+    
+    modelo = []
+    
+    # Chama a função da biblioteca PASSANDO as cores definidas acima
+    # Raio definido como 40 (exemplo)
+    sol = getCirculoGradiente(x, y, 40, amarelo_topo, laranja_base, nome="Sol")
+    
+    modelo.append(sol)
+    return modelo
+
 DADOS_DO_CENARIO = [
     {"modelo": getMoita(),    "x": 420,  "y": 260},
     {"modelo": getCarrinho(), "x": 100,  "y": 350},
@@ -212,6 +234,6 @@ DADOS_DO_CENARIO = [
     {"modelo": getNuvem(), "x": 600, "y": 80},
     {"modelo": getNuvem(), "x": 900, "y": 120},
     {"modelo": getNuvem(), "x": 1100, "y": 60},
-    # {"modelo": getTapioca(),  "x": 175,  "y": 355}, 
-    # {"modelo": getTapioca(largura=25, altura=13),  "x": 173,  "y": 380},
+    {"modelo": getSol(), "x": 450, "y": 100},
+    {"modelo": getPauBandeira(), "x": 200, "y": 100},
 ]
