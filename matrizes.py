@@ -39,8 +39,6 @@ def calcularMatriz(esc, ang, x, y):
     m = multiplicaMatrizes(translacao(x, y), m)
     return m
 
-
-
 def calcularMatrizViewport(v_xmin, v_ymin, v_xmax, v_ymax, largura_mundo=1280, altura_mundo=720):
 
     sx = (v_xmax - v_xmin) / largura_mundo
@@ -51,3 +49,31 @@ def calcularMatrizViewport(v_xmin, v_ymin, v_xmax, v_ymax, largura_mundo=1280, a
     m = multiplicaMatrizes(translacao(v_xmin, v_ymin), m)
     
     return m
+
+def get_aabb(modelo, matriz):
+    todos_pontos_transformados = []
+    
+    for parte in modelo:
+        pts = aplicaTransformacao(matriz, parte["pontos"])
+        todos_pontos_transformados.extend(pts)
+
+    if not todos_pontos_transformados:
+        return 0, 0, 0, 0
+
+    x_coords = [p[0] for p in todos_pontos_transformados]
+    y_coords = [p[1] for p in todos_pontos_transformados]
+    
+    x_min, x_max = min(x_coords), max(x_coords)
+    y_min, y_max = min(y_coords), max(y_coords)
+    
+    return {
+        'x': x_min,
+        'y': y_min,
+        'w': x_max - x_min,
+        'h': y_max - y_min
+    }
+def testa_colisao(aabb1, aabb2):
+    return (aabb1['x'] < aabb2['x'] + aabb2['w'] and
+            aabb1['x'] + aabb1['w'] > aabb2['x'] and
+            aabb1['y'] < aabb2['y'] + aabb2['h'] and
+            aabb1['y'] + aabb1['h'] > aabb2['y'])
