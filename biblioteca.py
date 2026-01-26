@@ -355,24 +355,6 @@ def setPreencherQuadradoFloodfill(superficie, x, y, tamanho, cor_contorno, cor_p
     # Preenche usando floodfill a partir de um ponto dentro do quadrado
     # Em setPreencherQuadradoFloodfill
     floodfill(superficie, x + 2, y + 2, cor_preenchimento)   
-def setTrianguloEquilatero(superficie, x, y, lado, cor):
-    # Calculamos a altura usando a fórmula
-    altura = lado * (math.sqrt(3) / 2)
-    
-    # Definimos os três pontos (vértices)
-    # Ponto 1: Topo (o x, y que passamos)
-    p1x, p1y = x, y
-    
-    # Ponto 2: Inferior Esquerdo
-    p2x, p2y = x - (lado / 2), y + altura
-    
-    # Ponto 3: Inferior Direito
-    p3x, p3y = x + (lado / 2), y + altura
-    
-    # 3. Desenhamos as 3 linhas para fechar o triângulo
-    setRetaBresenham(superficie, p1x, p1y, p2x, p2y, cor) # Lado esquerdo
-    setRetaBresenham(superficie, p1x, p1y, p3x, p3y, cor) # Lado direito
-    setRetaBresenham(superficie, p2x, p2y, p3x, p3y, cor) # Base
     
 def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
     pontos = [
@@ -384,39 +366,12 @@ def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
     
     # 2. Chamamos a função do professor enviando essa lista
     scanlineFill(superficie, pontos, cor)
+    
 def setPreencherRetanguloFloodfill(superficie, x, y, largura, altura, cor_contorno, cor_preenchimento):
     # Desenha o contorno do retângulo
     setRetangulo(superficie, x, y, largura, altura, cor_contorno)
     # Preenche usando floodfill a partir de um ponto dentro do retângulo
     floodfill(superficie, x + largura // 2, y + altura // 2, cor_preenchimento)     
-def setPreencherQuadrado(superficie, x, y, tamanho, cor):
-    pontos = [
-        (x, y), 
-        (x + tamanho, y), 
-        (x + tamanho, y + tamanho), 
-        (x, y + tamanho)
-    ]
-    
-    #Chamamos a função de Scanline do professor para pintar o interior
-    scanlineFill(superficie, pontos, cor)
-
-def setPreencherTriangulo(superficie, x, y, lado, cor):
- 
-    # Calculamos a altura
-    altura = lado * (math.sqrt(3) / 2)
-    
-    # Definimos os 3 cantos (vértices)
-    # Ponto 1: Topo
-    p1 = (x, y)
-    # Ponto 2: Base Esquerda (anda metade do lado para a esquerda e desce a altura)
-    p2 = (x - lado/2, y + altura)
-
-    p3 = (x + lado/2, y + altura)
-    
-    pontos_triangulo = [p1, p2, p3]
-    
-    # 4. Chamamos a função do professor para "escaneá-lo" e pintá-lo
-    scanlineFill(superficie, pontos_triangulo, cor)
 
 def setPreencherTrianguloFloodfill(superficie, x, y, lado, cor_contorno, cor_preenchimento):
     # Calcula a altura do triângulo
@@ -431,41 +386,7 @@ def setPreencherTrianguloFloodfill(superficie, x, y, lado, cor_contorno, cor_pre
     setRetaBresenham(superficie, p2x, p2y, p3x, p3y, cor_contorno)
     # Preenche usando floodfill a partir de um ponto dentro do triângulo
     floodfill(superficie, int(x), int(y + altura // 2), cor_preenchimento, cor_limite=cor_contorno) 
-
-def setCirculo(superficie, centro_x, centro_y, raio, cor):
-    x = 0
-    y = raio
-    d = 3 - 2 * raio
-
-    plotarSimetriaCirculo(superficie, centro_x, centro_y, x, y, cor)
-
-    while y >= x:
-        x += 1
-
-        if d > 0:
-            y -= 1
-            d = d + 4 * (x - y) + 10
-        else:
-            d = d + 4 * x + 6
-
-        plotarSimetriaCirculo(superficie, centro_x, centro_y, x, y, cor)
-
-def plotarSimetriaCirculo(superficie, cx, cy, x, y, cor):
-    setPixel(superficie, cx + x, cy + y, cor)
-    setPixel(superficie, cx - x, cy + y, cor)
-    setPixel(superficie, cx + x, cy - y, cor)
-    setPixel(superficie, cx - x, cy - y, cor)
-    setPixel(superficie, cx + y, cy + x, cor)
-    setPixel(superficie, cx - y, cy + x, cor)
-    setPixel(superficie, cx + y, cy - x, cor)
-    setPixel(superficie, cx - y, cy - x, cor)
-    
-def setTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
-    # Desenha a linha entre cada par de pontos fornecidos
-    setRetaBresenham(superficie, x1, y1, x2, y2, cor) # Lado A
-    setRetaBresenham(superficie, x2, y2, x3, y3, cor) # Lado B
-    setRetaBresenham(superficie, x3, y3, x1, y1, cor) # Lado C
-
+   
 def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
     pontos = [
         (x1, y1), 
@@ -474,8 +395,7 @@ def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
     ]
     
     scanlineFill(superficie, pontos, cor)
-    
-    
+       
 def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
     for parte in modelo:
         pts_trans = aplicaTransformacao(matriz, parte["pontos"])
@@ -540,7 +460,6 @@ def limitar_personagem_na_janela(x, y, largura_obj, altura_obj, largura_janela, 
 
     if y < y_min_mapa:
         y = y_min_mapa
-        
     elif y + altura_obj > altura_janela:
         y = altura_janela - altura_obj
 
