@@ -517,14 +517,14 @@ def renderizarViewport(superficie, matriz_vp, modelos_mundo, textura_grama=None)
     # Reset do recorte
     definirAreaDeRecorte(0, 0, 1280, 720)
     
-def limitar_personagem_na_janela(x, y, largura_obj, altura_obj, largura_janela, altura_janela):
+def limitar_personagem_na_janela(x, y, largura_obj, altura_obj, largura_janela, altura_janela, y_min_mapa=220):
     if x < 0:
         x = 0
     elif x + largura_obj > largura_janela:
         x = largura_janela - largura_obj
 
-    if y < 0:
-        y = 0
+    if y < y_min_mapa:
+        y = y_min_mapa
     elif y + altura_obj > altura_janela:
         y = altura_janela - altura_obj
 
