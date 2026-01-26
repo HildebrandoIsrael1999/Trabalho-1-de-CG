@@ -93,13 +93,13 @@ while rodando:
 
 
     definirAreaDeRecorte(0, 0, 1280, 720)
-    tela.fill((146, 255, 222))
+    tela.fill((135, 206, 235))
     tela.fill((100, 100, 100), (0, 300, largura, 450)) 
 
     desenhar_cenario(tela, None, img_bandeira)
     
-    setBalao1(tela, clara_x + 20, clara_y - 100)
-    setBalao2(tela, billy_x + 20, billy_y - 100)
+    # setBalao1(tela, clara_x + 20, clara_y - 100)
+    # setBalao2(tela, billy_x + 20, billy_y - 100)
 
     renderizarPersonagem(tela, getBilly(), m_billy, None)
     renderizarPersonagem(tela, getMulher(), m_clara, None)
