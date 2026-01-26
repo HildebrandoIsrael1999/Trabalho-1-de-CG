@@ -540,6 +540,7 @@ def limitar_personagem_na_janela(x, y, largura_obj, altura_obj, largura_janela, 
 
     if y < y_min_mapa:
         y = y_min_mapa
+        
     elif y + altura_obj > altura_janela:
         y = altura_janela - altura_obj
 

@@ -162,6 +162,41 @@ def getTapioca(largura=22, altura=10):
         "pontos": pontos,
         "tipo": "padrao"
     }]
+def getQueijo():
+    # Cores
+    cor_base = (255, 215, 0)   # Amarelo Ouro (o mesmo de antes)
+    cor_buraco = (218, 165, 32) # Um tom mais escuro/alaranjado para o buraco
+
+    modelo = []
+
+    # 1. A Base retangular do queijo (Fatia deitada)
+    # x=0, y=0, largura=25, altura=12
+    modelo.append(getRetanguloPreenchido(0, 0, 25, 12, cor_base, "base_queijo"))
+
+    # 2. Os Buracos
+    # Vamos adicionar 3 buracos de tamanhos diferentes em posições variadas.
+    # Usamos o "truque" de mudar o tipo para "padrao" para que eles sejam preenchidos.
+    # Usamos uma resolução baixa (10 ou 12) porque são muito pequenos.
+
+    # Buraco 1 (Esquerda, pequeno)
+    # cx=5, cy=4, raio=2
+    b1 = getCirculo(5, 4, 2, cor_buraco, "furo1", resolucao=12)
+    b1["tipo"] = "padrao" # O TRUQUE para preencher
+    modelo.append(b1)
+
+    # Buraco 2 (Centro-direita, médio)
+    # cx=15, cy=7, raio=3
+    b2 = getCirculo(15, 7, 3, cor_buraco, "furo2", resolucao=12)
+    b2["tipo"] = "padrao"
+    modelo.append(b2)
+    
+    # Buraco 3 (Perto da borda direita, pequeno)
+    # cx=21, cy=3, raio=1.5 (pode usar float no raio se seu getCirculo aceitar)
+    b3 = getCirculo(21, 3, 1.5, cor_buraco, "furo3", resolucao=10)
+    b3["tipo"] = "padrao"
+    modelo.append(b3)
+
+    return modelo
 
 DADOS_DO_CENARIO = [
     {"modelo": getMoita(),    "x": 420,  "y": 260},
