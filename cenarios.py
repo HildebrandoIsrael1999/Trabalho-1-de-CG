@@ -129,17 +129,9 @@ def getNuvem():
     cor_nuvem = (255, 255, 255) # Branco puro
     modelo = []
     
-    # Círculo Central (maior)
     modelo.append(getCirculoPreenchido(0, 0, 35, cor_nuvem, "centro"))
-    
-    # Círculo Esquerdo (médio)
     modelo.append(getCirculoPreenchido(-30, 10, 25, cor_nuvem, "esq"))
-    
-    # Círculo Direito (médio)
     modelo.append(getCirculoPreenchido(30, 10, 25, cor_nuvem, "dir"))
-    
-    # (Opcional) Base reta para dar estilo de desenho animado
-    # Se preferir ela toda redonda, remova essa linha abaixo:
     modelo.append(getRetanguloPreenchido(-30, 15, 60, 20, cor_nuvem, "base"))
 
     return modelo
@@ -151,7 +143,26 @@ def getBandeira():
         "pontos": [(0, 0), (100, 0), (100, 80), (0, 80)],
         "uvs": [(0, 0), (1, 0), (1, 1), (0, 1)] 
     }]
- 
+
+def getTapioca(largura=22, altura=10):
+    cx, cy = 0, 0
+    resolucao = 30
+    pontos = []
+    
+    for i in range(resolucao):
+        rad = math.radians(i * (360 / resolucao))
+        # Usa os valores passados nos parâmetros
+        px = cx + largura * math.cos(rad)
+        py = cy + altura * math.sin(rad)
+        pontos.append((px, py))
+
+    return [{
+        "nome": "tapioca",
+        "cor": (255, 255, 255),
+        "pontos": pontos,
+        "tipo": "padrao"
+    }]
+
 DADOS_DO_CENARIO = [
     {"modelo": getMoita(),    "x": 420,  "y": 260},
     {"modelo": getCarrinho(), "x": 100,  "y": 350},
@@ -165,5 +176,7 @@ DADOS_DO_CENARIO = [
     {"modelo": getNuvem(), "x": 350, "y": 130},
     {"modelo": getNuvem(), "x": 600, "y": 80},
     {"modelo": getNuvem(), "x": 900, "y": 120},
-    {"modelo": getNuvem(), "x": 1100, "y": 60}
+    {"modelo": getNuvem(), "x": 1100, "y": 60},
+    {"modelo": getTapioca(),  "x": 175,  "y": 355}, 
+    {"modelo": getTapioca(largura=25, altura=13),  "x": 173,  "y": 380},
 ]
