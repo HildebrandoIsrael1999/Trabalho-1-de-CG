@@ -106,10 +106,10 @@ while rodando:
     ]
     renderizarViewport(tela, matriz_vp, personagens_atuais)
 
-    # # Testes de preenchimento
+    # Testes de preenchimento
     # setPreencherQuadradoFloodfill(tela, 50, 50, 100, (0, 255, 0), (0, 0, 255))
     # setPreencherRetanguloFloodfill(tela, 200, 50, 150, 80, (255, 255, 0), (128, 0, 128))
-    # setPreencherTrianguloFloodfill(tela, 400, 50, 100, (255, 255, 255), (255, 0, 255))
+    # setPreencherTrianguloFloodfill(tela, 400, 50, 100, (255, 255, 255), (128, 0, 128))
     # setTrianguloGenerico(tela, 600, 50, 550, 150, 650, 150, (0, 0, 0))
 
     # TEXTO
