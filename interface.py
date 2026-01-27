@@ -85,3 +85,74 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
         
         pygame.display.flip()
         clock.tick(60)
+def gerenciar_ranking(novo_tempo):
+    arquivo = "ranking.txt"
+    tempos = []
+
+    if os.path.exists(arquivo):
+        with open(arquivo, "r") as f:
+            for linha in f:
+                try:
+                    val = float(linha.strip())
+                    tempos.append(val)
+                except ValueError:
+                    pass
+    
+    tempos.append(novo_tempo)
+    tempos.sort()
+    tempos = tempos[:5]
+
+    with open(arquivo, "w") as f:
+        for t in tempos:
+            f.write(f"{t:.2f}\n")
+            
+    return tempos
+
+def executar_tela_vitoria(tela, tempo_final):
+    largura = tela.get_width()
+    
+    top_5 = gerenciar_ranking(tempo_final)
+
+    txt_titulo = fonte_ui.render("ENTREGA CONCLUÍDA!", True, (0, 100, 0))
+    txt_seu_tempo = fonte_ui.render(f"Seu Tempo: {tempo_final:.2f} s", True, (0, 0, 0))
+    txt_rank_titulo = fonte_ui.render("--- MELHORES TEMPOS ---", True, (50, 50, 50))
+
+    btn_voltar = getBotao(largura//2 - 250, 550, 500, 80, (100, 100, 255), "VOLTAR AO MENU")
+
+    clock = pygame.time.Clock()
+    rodando = True
+    precisa_desenhar = True
+    
+    while rodando:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                return False
+            
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                mx, my = pygame.mouse.get_pos()
+                if (mx >= btn_voltar["x"] and mx <= btn_voltar["x"] + btn_voltar["w"] and
+                    my >= btn_voltar["y"] and my <= btn_voltar["y"] + btn_voltar["h"]):
+                    return True 
+        
+        if precisa_desenhar:
+            tela.fill((240, 240, 220)) 
+            
+            tela.blit(txt_titulo, (largura//2 - txt_titulo.get_width()//2, 50))
+            tela.blit(txt_seu_tempo, (largura//2 - txt_seu_tempo.get_width()//2, 120))
+            tela.blit(txt_rank_titulo, (largura//2 - txt_rank_titulo.get_width()//2, 200))
+
+            y_inicial = 260
+            for i, tempo in enumerate(top_5):
+                texto_rank = f"{i+1}º  -  {tempo:.2f} s"
+                cor = (255, 0, 0) if abs(tempo - tempo_final) < 0.001 else (0, 0, 0)
+                
+                surf_rank = fonte_ranking.render(texto_rank, True, cor)
+                tela.blit(surf_rank, (largura//2 - surf_rank.get_width()//2, y_inicial))
+                y_inicial += 40
+
+            desenhar_botao_customizado(tela, btn_voltar)
+            
+            pygame.display.flip()
+            precisa_desenhar = False
+            
+        clock.tick(60)
