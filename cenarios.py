@@ -1,7 +1,6 @@
 from biblioteca import *
 
 
-
 def getCachorro(marrom=False):
     if not marrom:
         c1, c2, c4 = (236, 178, 95), (244, 146, 71), (182, 0, 71)
