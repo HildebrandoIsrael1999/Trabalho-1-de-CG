@@ -7,7 +7,7 @@ from config import criar_estado_inicial, processar_eventos_jogo, atualizar_estad
 
 # --- CONFIGURAÇÃO GERAL ---
 pygame.init()
-pygame.display.set_caption("Billy da Tapioca - Final")
+pygame.display.set_caption("Tapiocaria do Billy")
 clock = pygame.time.Clock()
 largura, altura = 1280, 720
 tela = pygame.display.set_mode((largura, altura))
