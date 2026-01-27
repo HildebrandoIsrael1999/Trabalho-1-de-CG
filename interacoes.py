@@ -22,22 +22,6 @@ def pode_entregar_tapioca(billy_x, billy_y, clara_x, clara_y):
     # Mantive seu valor de 400, que deixa entregar de longe
     return distancia < 400 
 
-# --- FUNÇÕES DE MOVIMENTO (IA) ---
-def mover_npc_para_alvo(x_atual, y_atual, x_alvo, y_alvo, velocidade):
-    dx = x_alvo - x_atual
-    dy = y_alvo - y_atual
-    distancia = math.hypot(dx, dy)
-
-    if distancia < velocidade:
-        return x_alvo, y_alvo, True
-
-    move_x = (dx / distancia) * velocidade
-    move_y = (dy / distancia) * velocidade
-
-    return x_atual + move_x, y_atual + move_y, False
-
-# --- MATRIZES (ONDE DESENHAR) ---
-
 def get_matriz_queijo_mesa():
     return calcularMatriz(1.0, 0, X_CAIXA, Y_CAIXA)
 
@@ -74,12 +58,10 @@ def mover_npc_para_alvo(x_atual, y_atual, x_alvo, y_alvo, velocidade):
     dy = y_alvo - y_atual
     distancia = math.hypot(dx, dy)
 
-    # Se já está muito perto (menos que a velocidade), apenas "chega"
+
     if distancia < velocidade:
         return x_alvo, y_alvo, True
 
-    # Normaliza o vetor (transforma em tamanho 1) e multiplica pela velocidade
-    # Isso garante que ele ande na mesma velocidade em qualquer direção (diagonal ou reta)
     move_x = (dx / distancia) * velocidade
     move_y = (dy / distancia) * velocidade
 
