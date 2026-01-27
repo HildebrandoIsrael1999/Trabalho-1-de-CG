@@ -1,11 +1,19 @@
 import pygame
 from biblioteca import setPreencherRetanguloFloodfill
 
-COR_FUNDO_MENU = (200, 220, 255)
+COR_FUNDO_MENU = (59, 58, 56)
 COR_CONTORNO   = (0, 0, 0)
-COR_TXT        = (0, 0, 0)
+COR_TXT         = (255, 255, 255)
 
 pygame.font.init()
+
+try:
+    fonte_titulo = pygame.font.Font("./Fontes/RubikDirt-Regular.ttf", 100)
+except FileNotFoundError:
+    print("Erro: Arquivo Oi-Regular.ttf não encontrado. Usando fonte padrão.")
+    fonte_titulo = pygame.font.SysFont("Arial", 90, bold=True)
+
+#Fonte para os botões
 fonte_ui = pygame.font.SysFont("Arial", 40, bold=True)
 
 def getBotao(x, y, largura, altura, cor_fundo, texto):
@@ -25,41 +33,52 @@ def getBotao(x, y, largura, altura, cor_fundo, texto):
     }
 
 def desenhar_botao_customizado(tela, botao):
-    setPreencherRetanguloFloodfill(tela,botao["x"], botao["y"],botao["w"], botao["h"],COR_CONTORNO, botao["cor"])
-    
+    #Usa a função da sua biblioteca para preencher com Floodfill
+    setPreencherRetanguloFloodfill(tela, botao["x"], botao["y"], botao["w"], botao["h"], COR_CONTORNO, botao["cor"])
+    #Desenha o texto por cima
     tela.blit(botao["texto_surf"], botao["txt_pos"])
 
 def executar_menu_principal(tela, largura_tela, altura_tela):
-    btn_jogar = getBotao(largura_tela//2 - 100, 300, 200, 80, (50, 200, 50), "JOGAR")
-    btn_sair  = getBotao(largura_tela//2 - 100, 450, 200, 80, (200, 50, 50), "SAIR")
+
+    surf_titulo = fonte_titulo.render("TAPIOCARIA DO BILLY", True, COR_TXT)
+    rect_titulo = surf_titulo.get_rect(center=(largura_tela // 2, 150))
+
+    btn_jogar = getBotao(largura_tela//2 - 100, 320, 200, 80, (103, 173, 57), "JOGAR")
+    btn_sair   = getBotao(largura_tela//2 - 100, 470, 200, 80, (196, 72, 39), "SAIR")
+    
+    rect_jogar = pygame.Rect(btn_jogar["x"], btn_jogar["y"], btn_jogar["w"], btn_jogar["h"])
+    rect_sair = pygame.Rect(btn_sair["x"], btn_sair["y"], btn_sair["w"], btn_sair["h"])
+
     clock = pygame.time.Clock()
     rodando_menu = True
-    continuar = True
     
     while rodando_menu:
+        mx, my = pygame.mouse.get_pos()
+        
+        if rect_jogar.collidepoint(mx, my) or rect_sair.collidepoint(mx, my):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
-                return False # 
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW) #reseta o cursor
+                return False 
             
             if evento.type == pygame.MOUSEBUTTONDOWN:
-                mx, my = pygame.mouse.get_pos()
-                
-                if (mx >= btn_jogar["x"] and mx <= btn_jogar["x"] + btn_jogar["w"] and
-                    my >= btn_jogar["y"] and my <= btn_jogar["y"] + btn_jogar["h"]):
+                if rect_jogar.collidepoint(mx, my):
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW) #reseta o cursor
                     return True 
                 
-                # Colisão Botão SAIR
-                if (mx >= btn_sair["x"] and mx <= btn_sair["x"] + btn_sair["w"] and
-                    my >= btn_sair["y"] and my <= btn_sair["y"] + btn_sair["h"]):
-                    return False # Sinaliza para fechar
+                if rect_sair.collidepoint(mx, my):
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW) #reseta o cursor
+                    return False
+
+        tela.fill(COR_FUNDO_MENU)
+        tela.blit(surf_titulo, rect_titulo)
         
-        if continuar:
-            tela.fill(COR_FUNDO_MENU)
-            
-            desenhar_botao_customizado(tela, btn_jogar)
-            desenhar_botao_customizado(tela, btn_sair)
-            
-            pygame.display.flip()
-            continuar = False
-            
+        desenhar_botao_customizado(tela, btn_jogar)
+        desenhar_botao_customizado(tela, btn_sair)
+        
+        pygame.display.flip()
         clock.tick(60)
