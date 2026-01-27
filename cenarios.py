@@ -150,6 +150,12 @@ def getPauBandeira():
     modelo.append(getRetanguloPreenchido(0, 0, 10, 230, cor_pau, "pau"))
     return modelo
 
+def getCaixa():
+    corcaixa = (196, 168, 118)
+    modelo = []
+    modelo.append(getRetanguloPreenchido(0, 0, 50, 50, corcaixa, "caixa"))
+    return modelo
+
 def getTapioca(largura=22, altura=10):
     cx, cy = 0, 0
     resolucao = 30
@@ -236,4 +242,5 @@ DADOS_DO_CENARIO = [
     {"modelo": getNuvem(), "x": 1100, "y": 60},
     {"modelo": getSol(), "x": 450, "y": 100},
     {"modelo": getPauBandeira(), "x": 200, "y": 100},
+    {"modelo": getCaixa(), "x": 985, "y": 485},
 ]
