@@ -1,6 +1,6 @@
 import pygame
 import sys
-import os # Para verificar se o arquivo existe
+import os
 from biblioteca import setPreencherRetanguloFloodfill
 
 # --- CONFIGURAÇÕES DE CORES E FONTE ---
@@ -10,7 +10,7 @@ COR_TXT        = (0, 0, 0)
 
 pygame.font.init()
 fonte_ui = pygame.font.SysFont("Arial", 40, bold=True)
-fonte_ranking = pygame.font.SysFont("Arial", 30, bold=False) # Fonte menor pro placar
+fonte_ranking = pygame.font.SysFont("Arial", 30, bold=False)
 
 def getBotao(x, y, largura, altura, cor_fundo, texto):
     surf_texto = fonte_ui.render(texto, True, COR_TXT)
@@ -70,32 +70,23 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
             
         clock.tick(60)
 
-# --- FUNÇÃO NOVA: LIDA COM ARQUIVO TXT ---
 def gerenciar_ranking(novo_tempo):
     arquivo = "ranking.txt"
     tempos = []
 
-    # 1. Tenta ler os tempos existentes
     if os.path.exists(arquivo):
         with open(arquivo, "r") as f:
             for linha in f:
                 try:
-                    # Remove quebras de linha e converte para float
                     val = float(linha.strip())
                     tempos.append(val)
                 except ValueError:
                     pass
     
-    # 2. Adiciona o novo tempo
     tempos.append(novo_tempo)
-
-    # 3. Ordena (Menor tempo é melhor)
     tempos.sort()
-
-    # 4. Mantém apenas os top 5
     tempos = tempos[:5]
 
-    # 5. Salva de volta no arquivo
     with open(arquivo, "w") as f:
         for t in tempos:
             f.write(f"{t:.2f}\n")
@@ -105,16 +96,13 @@ def gerenciar_ranking(novo_tempo):
 def executar_tela_vitoria(tela, tempo_final):
     largura = tela.get_width()
     
-    # --- PROCESSA O RANKING ANTES DE ENTRAR NO LOOP ---
     top_5 = gerenciar_ranking(tempo_final)
 
-    # Textos Principais
     txt_titulo = fonte_ui.render("ENTREGA CONCLUÍDA!", True, (0, 100, 0))
     txt_seu_tempo = fonte_ui.render(f"Seu Tempo: {tempo_final:.2f} s", True, (0, 0, 0))
     txt_rank_titulo = fonte_ui.render("--- MELHORES TEMPOS ---", True, (50, 50, 50))
 
-    # Botão mais para baixo
-    btn_voltar = getBotao(largura//2 - 200, 550, 400, 80, (100, 100, 255), "VOLTAR AO MENU")
+    btn_voltar = getBotao(largura//2 - 250, 550, 500, 80, (100, 100, 255), "VOLTAR AO MENU")
 
     clock = pygame.time.Clock()
     rodando = True
@@ -132,30 +120,21 @@ def executar_tela_vitoria(tela, tempo_final):
                     return True 
         
         if precisa_desenhar:
-            tela.fill((240, 240, 220)) # Fundo
+            tela.fill((240, 240, 220)) 
             
-            # Desenha Títulos
             tela.blit(txt_titulo, (largura//2 - txt_titulo.get_width()//2, 50))
             tela.blit(txt_seu_tempo, (largura//2 - txt_seu_tempo.get_width()//2, 120))
-            
-            # Desenha Título do Ranking
             tela.blit(txt_rank_titulo, (largura//2 - txt_rank_titulo.get_width()//2, 200))
 
-            # --- LOOP PARA DESENHAR A LISTA DE TEMPOS ---
             y_inicial = 260
             for i, tempo in enumerate(top_5):
-                # Formata a string: "1º - 12.50s"
                 texto_rank = f"{i+1}º  -  {tempo:.2f} s"
-                
-                # Destaca se for o tempo atual (compara com uma margem de erro pequena float)
                 cor = (255, 0, 0) if abs(tempo - tempo_final) < 0.001 else (0, 0, 0)
                 
                 surf_rank = fonte_ranking.render(texto_rank, True, cor)
                 tela.blit(surf_rank, (largura//2 - surf_rank.get_width()//2, y_inicial))
-                
-                y_inicial += 40 # Pula linha
+                y_inicial += 40
 
-            # Desenha Botão
             desenhar_botao_customizado(tela, btn_voltar)
             
             pygame.display.flip()
