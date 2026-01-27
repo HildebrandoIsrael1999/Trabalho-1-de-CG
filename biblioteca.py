@@ -473,6 +473,7 @@ def setPreencherTrianguloFloodfill(superficie, x, y, lado, cor_contorno, cor_pre
     # Preenche usando floodfill a partir de um ponto dentro do triângulo
     floodfill(superficie, int(x), int(y + altura // 2), cor_preenchimento, cor_limite=cor_contorno) 
 
+#Essas funções são responsáveis por renderizar os personagens e o cenário.
 def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
     for parte in modelo:
         pts_trans = aplicaTransformacao(matriz, parte["pontos"])

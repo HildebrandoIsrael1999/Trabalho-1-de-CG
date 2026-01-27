@@ -5,7 +5,6 @@ import math
 from biblioteca import setPreencherRetanguloFloodfill, renderizarPersonagem
 from personagens import getBilly
 from cenarios import getTapioca, getQueijo
-# Importei translacao e multiplicaMatrizes para fazer o ajuste matemático
 from matrizes import calcularMatriz, translacao, multiplicaMatrizes
 
 # --- CONFIGURAÇÕES ---
@@ -44,6 +43,10 @@ def desenhar_botao_customizado(tela, botao):
     setPreencherRetanguloFloodfill(tela, botao["x"], botao["y"], botao["w"], botao["h"], COR_CONTORNO, botao["cor"])
     tela.blit(botao["texto_surf"], botao["txt_pos"])
 
+def verifica_colisao_botao(mx, my, botao):
+    return (mx >= botao["x"] and mx <= botao["x"] + botao["w"] and
+            my >= botao["y"] and my <= botao["y"] + botao["h"])
+
 # --- MENU PRINCIPAL ---
 def executar_menu_principal(tela, largura_tela, altura_tela):
     surf_titulo = fonte_titulo.render("TAPIOCARIA DO BILLY", True, COR_TXT)
@@ -52,9 +55,6 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
     btn_jogar = getBotao(largura_tela//2 - 100, 500, 200, 80, (103, 173, 57), "JOGAR")
     btn_sair  = getBotao(largura_tela//2 - 100, 600, 200, 80, (196, 72, 39), "SAIR")
     
-    rect_jogar = pygame.Rect(btn_jogar["x"], btn_jogar["y"], btn_jogar["w"], btn_jogar["h"])
-    rect_sair = pygame.Rect(btn_sair["x"], btn_sair["y"], btn_sair["w"], btn_sair["h"])
-
     clock = pygame.time.Clock()
     rodando_menu = True
     
@@ -76,14 +76,18 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
     tapioca_scale = 4.0  
     tapioca_angulo = 0   
 
-
+    # Ajuste Fino Queijo
     ajuste_local_x = -13 
     ajuste_local_y = -6
 
     while rodando_menu:
         mx, my = pygame.mouse.get_pos()
         
-        if rect_jogar.collidepoint(mx, my) or rect_sair.collidepoint(mx, my):
+        # Lógica Hover (Mãozinha)
+        colidiu_jogar = verifica_colisao_botao(mx, my, btn_jogar)
+        colidiu_sair = verifica_colisao_botao(mx, my, btn_sair)
+
+        if colidiu_jogar or colidiu_sair:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
         else:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -94,11 +98,11 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
                 return False 
             
             if evento.type == pygame.MOUSEBUTTONDOWN:
-                if rect_jogar.collidepoint(mx, my):
+                if colidiu_jogar:
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                     return True 
                 
-                if rect_sair.collidepoint(mx, my):
+                if colidiu_sair:
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                     return False
 
@@ -120,11 +124,8 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
         m_billy_menu = calcularMatriz(billy_escala_atual, billy_angulo_atual, billy_menu_x, billy_menu_y)
         renderizarPersonagem(tela, getBilly(), m_billy_menu, None)
         
-        # --- DESENHO TAPIOCA E QUEIJO ---
-        
-
+        # Desenho Tapioca
         m_tapioca = calcularMatriz(tapioca_scale, tapioca_angulo, tapioca_x, tapioca_y)
-        
         m_ajuste = translacao(ajuste_local_x, ajuste_local_y)
         m_queijo = multiplicaMatrizes(m_tapioca, m_ajuste)
         
@@ -161,7 +162,7 @@ def gerenciar_ranking(novo_tempo):
             
     return tempos
 
-# --- TELA DE VITÓRIA ---
+# --- TELA DE VITÓRIA  ---
 def executar_tela_vitoria(tela, tempo_final):
     largura = tela.get_width()
     top_5 = gerenciar_ranking(tempo_final)
@@ -170,6 +171,7 @@ def executar_tela_vitoria(tela, tempo_final):
     txt_seu_tempo = fonte_ui.render(f"Seu Tempo: {tempo_final:.2f} s", True, (0, 0, 0))
     txt_rank_titulo = fonte_ui.render("--- MELHORES TEMPOS ---", True, (50, 50, 50))
 
+    # Botão de Voltar
     btn_voltar = getBotao(largura//2 - 250, 550, 500, 80, (100, 100, 255), "VOLTAR AO MENU")
 
     clock = pygame.time.Clock()
@@ -177,15 +179,24 @@ def executar_tela_vitoria(tela, tempo_final):
     precisa_desenhar = True
     
     while rodando:
+        mx, my = pygame.mouse.get_pos()
+        
+        colidiu_voltar = verifica_colisao_botao(mx, my, btn_voltar)
+        
+        if colidiu_voltar:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                 return False
             
             if evento.type == pygame.MOUSEBUTTONDOWN:
-                mx, my = pygame.mouse.get_pos()
-                if (mx >= btn_voltar["x"] and mx <= btn_voltar["x"] + btn_voltar["w"] and
-                    my >= btn_voltar["y"] and my <= btn_voltar["y"] + btn_voltar["h"]):
-                    return True 
+                if colidiu_voltar:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                    return True # Retorna True para voltar ao loop do menu
         
         if precisa_desenhar:
             tela.fill((240, 240, 220)) 

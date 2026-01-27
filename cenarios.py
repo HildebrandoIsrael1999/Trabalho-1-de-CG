@@ -125,7 +125,7 @@ def getGato():
     return modelo
 
 def getNuvem():
-    cor_nuvem = (255, 255, 255) # Branco puro
+    cor_nuvem = (255, 255, 255) 
     modelo = []
     
     modelo.append(getCirculoPreenchido(0, 0, 35, cor_nuvem, "centro"))
@@ -162,7 +162,6 @@ def getTapioca(largura=22, altura=10):
     
     for i in range(resolucao):
         rad = math.radians(i * (360 / resolucao))
-        # Usa os valores passados nos parâmetros
         px = cx + largura * math.cos(rad)
         py = cy + altura * math.sin(rad)
         pontos.append((px, py))
@@ -175,51 +174,29 @@ def getTapioca(largura=22, altura=10):
     }]
 
 def getQueijo():
-    # Cores
-    cor_base = (255, 215, 0)   # Amarelo Ouro (o mesmo de antes)
-    cor_buraco = (218, 165, 32) # Um tom mais escuro/alaranjado para o buraco
+
+    cor_base = (255, 215, 0)
+    cor_buraco = (218, 165, 32)
 
     modelo = []
-
-    # 1. A Base retangular do queijo (Fatia deitada)
-    # x=0, y=0, largura=25, altura=12
     modelo.append(getRetanguloPreenchido(0, 0, 25, 12, cor_base, "base_queijo"))
-
-    # 2. Os Buracos
-    # Vamos adicionar 3 buracos de tamanhos diferentes em posições variadas.
-    # Usamos o "truque" de mudar o tipo para "padrao" para que eles sejam preenchidos.
-    # Usamos uma resolução baixa (10 ou 12) porque são muito pequenos.
-
-    # Buraco 1 (Esquerda, pequeno)
-    # cx=5, cy=4, raio=2
     b1 = getCirculo(5, 4, 2, cor_buraco, "furo1", resolucao=12)
-    b1["tipo"] = "padrao" # O TRUQUE para preencher
+    b1["tipo"] = "padrao" 
     modelo.append(b1)
-
-    # Buraco 2 (Centro-direita, médio)
-    # cx=15, cy=7, raio=3
     b2 = getCirculo(15, 7, 3, cor_buraco, "furo2", resolucao=12)
     b2["tipo"] = "padrao"
     modelo.append(b2)
-    
-    # Buraco 3 (Perto da borda direita, pequeno)
-    # cx=21, cy=3, raio=1.5 (pode usar float no raio se seu getCirculo aceitar)
     b3 = getCirculo(21, 3, 1.5, cor_buraco, "furo3", resolucao=10)
     b3["tipo"] = "padrao"
     modelo.append(b3)
 
     return modelo
 
-# sol com gradiente
 def getSol(x=0, y=0):
-    # === AQUI VOCÊ DEFINE AS CORES ===
     amarelo_topo = (255, 255, 0)
     laranja_base = (255, 140, 0)
     
     modelo = []
-    
-    # Chama a função da biblioteca PASSANDO as cores definidas acima
-    # Raio definido como 40 (exemplo)
     sol = getCirculoGradiente(x, y, 40, amarelo_topo, laranja_base, nome="Sol")
     
     modelo.append(sol)

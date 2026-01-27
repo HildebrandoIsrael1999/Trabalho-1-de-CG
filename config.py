@@ -8,7 +8,6 @@ from interacoes import *
 from colisao import GerenciadorColisao
 from textos import *
 
-# --- CONFIGURAÇÕES VISUAIS DA UI ---
 BTN_INSTR_X, BTN_INSTR_Y = 1050, 650
 BTN_INSTR_W, BTN_INSTR_H = 200, 50
 
