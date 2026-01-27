@@ -6,11 +6,13 @@ from matrizes import *
 from cenarios import *
 from interacoes import *
 from colisao import GerenciadorColisao
-
-# --- INICIALIZAÇÃO DOS DADOS ---
+from textos import * # --- INICIALIZAÇÃO DOS DADOS ---
 def criar_estado_inicial(largura, altura):
-    
-    img_bandeira = pygame.image.load("bandeira.png").convert()
+    try:
+        img_bandeira = pygame.image.load("bandeira.png").convert()
+    except:
+        img_bandeira = pygame.Surface((100, 100))
+        img_bandeira.fill((255, 0, 255))
 
     return {
         "largura": largura, 
@@ -18,10 +20,19 @@ def criar_estado_inicial(largura, altura):
         "colisor": GerenciadorColisao(DADOS_DO_CENARIO),
         "matriz_vp": calcularMatrizViewport(960, 20, 1260, 190, 1280, 720),
         "img_bandeira": img_bandeira,
+        
+        # --- CRONÔMETRO ---
+        "tempo_inicio": pygame.time.get_ticks(),
+        "tempo_atual_s": 0.0,
+        "jogo_finalizado": False, 
+
+        # Estados Billy
         "billy_x": 270, "billy_y": 330,
         "billy_escala": 1.0, "billy_angulo": 0,
         "billy_tem_queijo": False,
         "tapioca_recheada": False,
+
+        # Estados Clara
         "clara_x": 100, "clara_y": 590,
         "clara_escala": 0.9, "clara_angulo": 0,
         "clara_velocidade": 7,
@@ -29,12 +40,15 @@ def criar_estado_inicial(largura, altura):
         "clara_chegou": False,
         "clara_recebeu_pedido": False,
         "clara_foi_embora": False,
+
+        # Estados Menino
         "menino_x": 200, "menino_y": 590,
         "menino_escala": 1.0, "menino_angulo": 0,
+        
         "matrizes": {} 
     }
 
-# --- INPUTS (TECLADO/EVENTOS) ---
+# --- INPUTS ---
 def processar_eventos_jogo(estado, eventos):
     for evento in eventos:
         if evento.type == pygame.KEYDOWN:
@@ -57,6 +71,14 @@ def processar_eventos_jogo(estado, eventos):
                         estado["clara_recebeu_pedido"] = True
 
 def atualizar_estado_jogo(estado):
+    tempo_agora = pygame.time.get_ticks()
+
+    # 1. ATUALIZAÇÃO DO TEMPO
+    if not estado["jogo_finalizado"]:
+        diferenca_ms = tempo_agora - estado["tempo_inicio"]
+        estado["tempo_atual_s"] = diferenca_ms / 1000.0
+
+    # 2. MOVIMENTAÇÃO BILLY
     teclas = pygame.key.get_pressed()
     dx, dy = 0, 0
     if teclas[pygame.K_a]: dx -= 20
@@ -65,23 +87,39 @@ def atualizar_estado_jogo(estado):
     if teclas[pygame.K_s]: dy += 20 
     if teclas[pygame.K_r]: estado["billy_angulo"] += 5
 
-
+    # 3. IA CLARA (CORRIGIDA)
     if not estado["clara_foi_embora"]:
+        # Se ela ainda não chegou no destino atual, mova-se
         if not estado["clara_chegou"]:
             estado["clara_x"], estado["clara_y"], estado["clara_chegou"] = mover_npc_para_alvo(
                 estado["clara_x"], estado["clara_y"], 
                 estado["clara_destino_x"], estado["clara_destino_y"], 
                 estado["clara_velocidade"]
             )
+        
+        # Se ela CHEGOU no destino (else do clara_chegou)
         else:
             estado["clara_angulo"] = 0
+            
+            # --- LÓGICA DE DESTINOS ---
             if estado["clara_recebeu_pedido"]:
-                estado["clara_destino_x"] = -150
-                estado["clara_chegou"] = False
-            elif estado["clara_destino_x"] == -150:
-                estado["clara_foi_embora"] = True
-                print("Sistema: Clara saiu.")
+                # Caso 1: Recebeu pedido, mas o destino ainda não é a saída. Mude para a saída.
+                if estado["clara_destino_x"] != -150:
+                    estado["clara_destino_x"] = -150
+                    estado["clara_chegou"] = False # Força ela a andar de novo
+                
+                # Caso 2: Recebeu pedido, o destino JÁ ERA a saída (-150) e ela chegou aqui.
+                elif estado["clara_destino_x"] == -150:
+                    estado["clara_foi_embora"] = True
+                    estado["jogo_finalizado"] = True # FIM DE JOGO AQUI
+                    print("Clara saiu! Finalizando...")
 
+    # --- SEGURANÇA EXTRA ---
+    # Se por algum motivo ela passar da coordenada X = -140, finaliza na marra
+    if estado["clara_x"] <= -140:
+        estado["jogo_finalizado"] = True
+
+    # --- COLISÃO ---
     m_clara_t = calcularMatriz(estado["clara_escala"], estado["clara_angulo"], estado["clara_x"], estado["clara_y"])
     m_menino_t = calcularMatriz(estado["menino_escala"], estado["menino_angulo"], estado["menino_x"], estado["menino_y"])
     
@@ -95,22 +133,20 @@ def atualizar_estado_jogo(estado):
     if not estado["colisor"].verificarMovimento(getBilly(), novo_x, novo_y, estado["billy_escala"], estado["billy_angulo"], obstaculos):
         estado["billy_x"] = novo_x
         estado["billy_y"] = novo_y
-
         estado["billy_x"], estado["billy_y"] = limitar_personagem_na_janela(estado["billy_x"], estado["billy_y"], 40, 110, 
             estado["largura"], estado["altura"])
 
+    # --- CÁLCULO DE MATRIZES ---
     estado["matrizes"]["billy"] = calcularMatriz(estado["billy_escala"], estado["billy_angulo"], estado["billy_x"], estado["billy_y"])
     estado["matrizes"]["clara"] = calcularMatriz(estado["clara_escala"], estado["clara_angulo"], estado["clara_x"], estado["clara_y"])
     estado["matrizes"]["menino"] = calcularMatriz(estado["menino_escala"], estado["menino_angulo"], estado["menino_x"], estado["menino_y"])
     
-    # Matrizes dos itens 
+    # Itens 
     if estado["clara_recebeu_pedido"]:
         estado["matrizes"]["queijo"] = get_matriz_queijo_clara(estado["clara_x"], estado["clara_y"])
         estado["matrizes"]["tapioca"] = get_matriz_tapioca_clara(estado["clara_x"], estado["clara_y"])
     else:
-        # Lógica da Tapioca
         estado["matrizes"]["tapioca"] = get_matriz_tapioca_mesa()
-        # Lógica do Queijo
         if estado["tapioca_recheada"]:
             estado["matrizes"]["queijo"] = get_matriz_queijo_tapioca()
         elif estado["billy_tem_queijo"]:
@@ -120,32 +156,29 @@ def atualizar_estado_jogo(estado):
 
 # RENDERIZAÇÃO
 def desenhar_jogo(tela, estado):
-
     definirAreaDeRecorte(0, 0, estado["largura"], estado["altura"])
     tela.fill((135, 206, 235)) 
     tela.fill((100, 100, 100), (0, 300, estado["largura"], 450)) 
 
-    # Desenha Cenário
+    # Cenário
     desenhar_cenario(tela, None, estado["img_bandeira"])
     
-    # Desenha Personagens 
+    # Personagens 
     m = estado["matrizes"]
     renderizarPersonagem(tela, getBilly(), m["billy"], None)
     renderizarPersonagem(tela, getMenino(), m["menino"], None)
     
-    # mostra o balao de texto somente quando a clara chega no carrinho e enquanto billy nao pega o queijo
+    # Balões
     if estado["clara_chegou"] and not estado["clara_recebeu_pedido"]:
             if not estado["billy_tem_queijo"] and not estado["tapioca_recheada"]:
-                # Desenha o balão 1 perto da cabeça dela
                 setBalao1(tela, estado["clara_x"] + 20, estado["clara_y"] - 100)
                 setObjetivo1(tela, 500, 50)
             elif estado["billy_tem_queijo"]:
-                # Mostra o novo objetivo
                 setObjetivo2(tela, 500, 50)
             elif estado["tapioca_recheada"]:
-                # Mostra o novo objetivo
                 setObjetivo3(tela, 500, 50)
 
+    # Clara e Itens
     if not estado["clara_foi_embora"]:
         renderizarPersonagem(tela, getMulher(), m["clara"], None)
 
@@ -156,7 +189,7 @@ def desenhar_jogo(tela, estado):
     if estado["clara_recebeu_pedido"] and not estado["clara_foi_embora"]:
         setBalao2(tela, estado["clara_x"] + 20, estado["clara_y"] - 100)
 
-    # Desenha Viewport
+    # Viewport
     personagens_vp = [
         (getBilly(), m["billy"]),
         (getMenino(), m["menino"]),
@@ -167,3 +200,7 @@ def desenhar_jogo(tela, estado):
         personagens_vp.append((getMulher(), m["clara"]))
 
     renderizarViewport(tela, estado["matriz_vp"], personagens_vp, estado["img_bandeira"])
+
+    # HUD TEMPO
+    tempo_texto = f"Tempo: {estado['tempo_atual_s']:.1f}s"
+    setTexto(tela, tempo_texto, 20, 20, (0, 0, 0))
