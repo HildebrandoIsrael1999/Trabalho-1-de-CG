@@ -1,4 +1,6 @@
 import pygame
+import sys
+import os
 from biblioteca import setPreencherRetanguloFloodfill
 
 COR_FUNDO_MENU = (59, 58, 56)
@@ -15,6 +17,7 @@ except FileNotFoundError:
 
 #Fonte para os botões
 fonte_ui = pygame.font.SysFont("Arial", 40, bold=True)
+fonte_ranking = pygame.font.SysFont("Arial", 30, bold=False)
 
 def getBotao(x, y, largura, altura, cor_fundo, texto):
     surf_texto = fonte_ui.render(texto, True, COR_TXT)
