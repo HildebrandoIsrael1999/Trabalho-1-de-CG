@@ -8,7 +8,7 @@ from interacoes import *
 from colisao import GerenciadorColisao
 from textos import *
 
-#CONFIGURAÇÕES VISUAIS DA UI 
+# --- CONFIGURAÇÕES VISUAIS DA UI ---
 BTN_INSTR_X, BTN_INSTR_Y = 1050, 650
 BTN_INSTR_W, BTN_INSTR_H = 200, 50
 
@@ -16,7 +16,7 @@ MODAL_X, MODAL_Y = 340, 160
 MODAL_W, MODAL_H = 600, 400
 BTN_FECHAR_TAM = 40
 
-#INICIALIZAÇÃO DOS DADOS
+# --- INICIALIZAÇÃO DOS DADOS ---
 def criar_estado_inicial(largura, altura):
     try:
         img_bandeira = pygame.image.load("bandeira.png").convert()
@@ -57,10 +57,30 @@ def criar_estado_inicial(largura, altura):
 
 # --- INPUTS ---
 def processar_eventos_jogo(estado, eventos):
+    
+    mx, my = pygame.mouse.get_pos()
+    em_cima_botao = False
+
+    if estado["mostrando_instrucoes"]:
+        # Verifica se está em cima do X vermelho
+        bx = MODAL_X + MODAL_W - BTN_FECHAR_TAM - 10
+        by = MODAL_Y + 10
+        if (mx >= bx and mx <= bx + BTN_FECHAR_TAM and
+            my >= by and my <= by + BTN_FECHAR_TAM):
+            em_cima_botao = True
+    else:
+        # Verifica se está em cima do botão Instruções
+        if (mx >= BTN_INSTR_X and mx <= BTN_INSTR_X + BTN_INSTR_W and
+            my >= BTN_INSTR_Y and my <= BTN_INSTR_Y + BTN_INSTR_H):
+            em_cima_botao = True
+
+    if em_cima_botao:
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+    else:
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
     for evento in eventos:
         if evento.type == pygame.MOUSEBUTTONDOWN:
-            mx, my = pygame.mouse.get_pos()
-            
             if estado["mostrando_instrucoes"]:
                 bx = MODAL_X + MODAL_W - BTN_FECHAR_TAM - 10
                 by = MODAL_Y + 10
@@ -162,11 +182,9 @@ def atualizar_estado_jogo(estado):
 def desenhar_jogo(tela, estado):
     definirAreaDeRecorte(0, 0, estado["largura"], estado["altura"])
     
-    #FUNDO
     tela.fill((135, 206, 235)) 
     tela.fill((100, 100, 100), (0, 300, estado["largura"], 450)) 
-
-    #CENÁRIO
+    
     desenhar_cenario(tela, None, estado["img_bandeira"])
     
     m = estado["matrizes"]
@@ -192,7 +210,6 @@ def desenhar_jogo(tela, estado):
     if estado["clara_recebeu_pedido"] and not estado["clara_foi_embora"]:
         setBalao2(tela, estado["clara_x"] + 20, estado["clara_y"] - 100)
 
-    #VIEWPORT
     personagens_vp = [
         (getBilly(), m["billy"]),
         (getMenino(), m["menino"]),
@@ -204,44 +221,32 @@ def desenhar_jogo(tela, estado):
 
     renderizarViewport(tela, estado["matriz_vp"], personagens_vp, estado["img_bandeira"])
 
-    #INTERFACE
     tempo_texto = f"Tempo: {estado['tempo_atual_s']:.1f}s"
     setTexto(tela, tempo_texto, 20, 20, (0, 0, 0))
 
-    # Botão Instruções
     setPreencherRetanguloFloodfill(
         tela, BTN_INSTR_X, BTN_INSTR_Y, BTN_INSTR_W, BTN_INSTR_H, 
         (0,0,0), (200, 200, 200)
     )
     setTexto(tela, "INSTRUÇÕES", BTN_INSTR_X + 45, BTN_INSTR_Y + 15, (0,0,0))
-
-    # MODAL DE INSTRUÇÕES (CORRIGIDO COM SCANLINE, o floodfill não funcionou bem aqui)
+    
     if estado["mostrando_instrucoes"]:
         setPreencherRetangulo(
             tela, MODAL_X, MODAL_Y, MODAL_W, MODAL_H, 
-            (250, 240, 200) # Bege 
+            (250, 240, 200) 
         )
-        
-        # Desenha apenas a borda preta
         setRetangulo(
             tela, MODAL_X, MODAL_Y, MODAL_W, MODAL_H, 
             (0, 0, 0)
         )
 
-        # Botão Fechar
         fechar_x = MODAL_X + MODAL_W - BTN_FECHAR_TAM - 10
         fechar_y = MODAL_Y + 10
         
-        setPreencherRetangulo(
-             tela, fechar_x, fechar_y, BTN_FECHAR_TAM, BTN_FECHAR_TAM,
-             (255, 0, 0)
+        setPreencherQuadradoFloodfill(
+            tela, fechar_x, fechar_y, BTN_FECHAR_TAM,
+            (0,0,0), (255, 0, 0)
         )
-        setRetangulo(
-             tela, fechar_x, fechar_y, BTN_FECHAR_TAM, BTN_FECHAR_TAM,
-             (0, 0, 0)
-        )
-        
-        # O X branco
         setRetaBresenham(tela, fechar_x + 5, fechar_y + 5, fechar_x + 35, fechar_y + 35, (255,255,255))
         setRetaBresenham(tela, fechar_x + 35, fechar_y + 5, fechar_x + 5, fechar_y + 35, (255,255,255))
 

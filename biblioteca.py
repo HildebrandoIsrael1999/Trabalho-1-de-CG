@@ -303,6 +303,13 @@ def scanlineFillGradient(superficie, pontos, cor_topo, cor_base):
                 for x in range(x_inicio, x_fim + 1):
                     setPixel(superficie, x, y, cor_linha)
 
+def getLinha(x1, y1, x2, y2, cor, nome="linha"):
+    return {
+        "nome": nome,
+        "cor": cor,
+        "tipo": "linha", # Já seta a flag automaticamente
+        "pontos": [(x1, y1), (x2, y2)]
+    }
 # circulo com gradiente
 def getCirculoGradiente(cx, cy, raio, cor_topo, cor_base, nome="circulo_grad", resolucao=30):
     pontos = []
@@ -333,14 +340,6 @@ def getRetanguloPreenchido(x, y, w, h, cor, nome="retangulo"):
             (x + w, y + h),  # Base-Dir
             (x, y + h)       # Base-Esq
         ]
-    }
-
-def getLinha(x1, y1, x2, y2, cor, nome="linha"):
-    return {
-        "nome": nome,
-        "cor": cor,
-        "tipo": "linha", # Já seta a flag automaticamente
-        "pontos": [(x1, y1), (x2, y2)]
     }
 
 def getQuadrado(x, y, w, h, cor, nome="contorno"):
@@ -398,7 +397,17 @@ def getTrianguloPreenchido(p1, p2, p3, cor, nome="triangulo"):
         "cor": cor,
         "pontos": [p1, p2, p3]
     }
-                    
+
+def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
+    pontos = [
+        (x1, y1), 
+        (x2, y2), 
+        (x3, y3)
+    ]
+    
+    scanlineFill(superficie, pontos, cor)
+                       
+
 def setQuadrado(superficie, x, y, tamanho, cor):
     # 1. Linha do Topo (da esquerda para a direita)
     setRetaBresenham(superficie, x, y, x + tamanho, y, cor)
@@ -463,16 +472,7 @@ def setPreencherTrianguloFloodfill(superficie, x, y, lado, cor_contorno, cor_pre
     setRetaBresenham(superficie, p2x, p2y, p3x, p3y, cor_contorno)
     # Preenche usando floodfill a partir de um ponto dentro do triângulo
     floodfill(superficie, int(x), int(y + altura // 2), cor_preenchimento, cor_limite=cor_contorno) 
-   
-def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
-    pontos = [
-        (x1, y1), 
-        (x2, y2), 
-        (x3, y3)
-    ]
-    
-    scanlineFill(superficie, pontos, cor)
-       
+
 def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
     for parte in modelo:
         pts_trans = aplicaTransformacao(matriz, parte["pontos"])
@@ -482,7 +482,7 @@ def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
         # === LÓGICA DE PREENCHIMENTO ===
         if len(pts_trans) > 2 and tipo != "apenas_contorno" and tipo != "linha":
             
-            # 1. Verifica se é Gradiente (NOVO)
+            # Verifica se é Gradiente (NOVO)
             if tipo == "gradiente":
                 c_topo = parte.get("cor_topo", cor)
                 c_base = parte.get("cor_base", cor)
@@ -492,17 +492,16 @@ def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
             elif "uvs" in parte and textura_objeto is not None:
                 scanlineTexture(superficie, pts_trans, parte["uvs"], textura_objeto)
             
-            # 3. Preenchimento Sólido Padrão
             else:
                 scanlineFill(superficie, pts_trans, cor)
         
-        # === BORDAS (mantido igual) ===
+        # === BORDAS ===
         n = len(pts_trans)
         for i in range(n):
             if tipo == "linha" and i == n - 1: break
             p1, p2 = pts_trans[i], pts_trans[(i + 1) % n]
-            setRetaRecortada(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)
-           
+            setRetaRecortada(superficie, int(p1[0]), int(p1[1]), int(p2[0]), int(p2[1]), cor)    
+                         
 def desenhar_cenario(superficie, matriz_v=None, textura_bandeira=None):
     from cenarios import DADOS_DO_CENARIO, getBandeira
     if matriz_v is None: matriz_v = identidade()

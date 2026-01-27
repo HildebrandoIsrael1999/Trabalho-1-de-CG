@@ -1,24 +1,29 @@
 import pygame
 import sys
 import os
-from biblioteca import setPreencherRetanguloFloodfill
+import math
+from biblioteca import setPreencherRetanguloFloodfill, renderizarPersonagem
+from personagens import getBilly
+from cenarios import getTapioca, getQueijo
+# Importei translacao e multiplicaMatrizes para fazer o ajuste matemático
+from matrizes import calcularMatriz, translacao, multiplicaMatrizes
 
+# --- CONFIGURAÇÕES ---
 COR_FUNDO_MENU = (59, 58, 56)
 COR_CONTORNO   = (0, 0, 0)
-COR_TXT         = (255, 255, 255)
+COR_TXT        = (255, 255, 255)
 
 pygame.font.init()
 
 try:
     fonte_titulo = pygame.font.Font("./Fontes/RubikDirt-Regular.ttf", 100)
 except FileNotFoundError:
-    print("Erro: Arquivo Oi-Regular.ttf não encontrado. Usando fonte padrão.")
     fonte_titulo = pygame.font.SysFont("Arial", 90, bold=True)
 
-#Fonte para os botões
 fonte_ui = pygame.font.SysFont("Arial", 40, bold=True)
 fonte_ranking = pygame.font.SysFont("Arial", 30, bold=False)
 
+# --- FUNÇÕES AUXILIARES ---
 def getBotao(x, y, largura, altura, cor_fundo, texto):
     surf_texto = fonte_ui.render(texto, True, COR_TXT)
     txt_w, txt_h = surf_texto.get_size()
@@ -36,18 +41,16 @@ def getBotao(x, y, largura, altura, cor_fundo, texto):
     }
 
 def desenhar_botao_customizado(tela, botao):
-    #Usa a função da sua biblioteca para preencher com Floodfill
     setPreencherRetanguloFloodfill(tela, botao["x"], botao["y"], botao["w"], botao["h"], COR_CONTORNO, botao["cor"])
-    #Desenha o texto por cima
     tela.blit(botao["texto_surf"], botao["txt_pos"])
 
+# --- MENU PRINCIPAL ---
 def executar_menu_principal(tela, largura_tela, altura_tela):
-
     surf_titulo = fonte_titulo.render("TAPIOCARIA DO BILLY", True, COR_TXT)
-    rect_titulo = surf_titulo.get_rect(center=(largura_tela // 2, 150))
+    rect_titulo = surf_titulo.get_rect(center=(largura_tela // 2, 100))
 
-    btn_jogar = getBotao(largura_tela//2 - 100, 320, 200, 80, (103, 173, 57), "JOGAR")
-    btn_sair   = getBotao(largura_tela//2 - 100, 470, 200, 80, (196, 72, 39), "SAIR")
+    btn_jogar = getBotao(largura_tela//2 - 100, 500, 200, 80, (103, 173, 57), "JOGAR")
+    btn_sair  = getBotao(largura_tela//2 - 100, 600, 200, 80, (196, 72, 39), "SAIR")
     
     rect_jogar = pygame.Rect(btn_jogar["x"], btn_jogar["y"], btn_jogar["w"], btn_jogar["h"])
     rect_sair = pygame.Rect(btn_sair["x"], btn_sair["y"], btn_sair["w"], btn_sair["h"])
@@ -55,6 +58,28 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
     clock = pygame.time.Clock()
     rodando_menu = True
     
+    # Animação Billy
+    billy_menu_x = 90
+    billy_menu_y = 300                    
+    billy_escala_atual = 0.1
+    billy_escala_final = 5.0
+    escala_velocidade = 0.12
+    billy_angulo_atual = 0
+    voltas_totais = 3
+    total_crescimento = billy_escala_final - billy_escala_atual
+    total_frames = total_crescimento / escala_velocidade
+    angulo_velocidade = (360 * voltas_totais) / total_frames
+
+    # Animação Tapioca
+    tapioca_x = 1000
+    tapioca_y = 450
+    tapioca_scale = 4.0  
+    tapioca_angulo = 0   
+
+
+    ajuste_local_x = -13 
+    ajuste_local_y = -6
+
     while rodando_menu:
         mx, my = pygame.mouse.get_pos()
         
@@ -65,26 +90,54 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW) #reseta o cursor
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                 return False 
             
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 if rect_jogar.collidepoint(mx, my):
-                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW) #reseta o cursor
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                     return True 
                 
                 if rect_sair.collidepoint(mx, my):
-                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW) #reseta o cursor
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                     return False
 
+        # Atualização Billy
+        if billy_escala_atual < billy_escala_final:
+            billy_escala_atual += escala_velocidade
+            billy_angulo_atual += angulo_velocidade
+        else:
+            billy_escala_atual = billy_escala_final
+            billy_angulo_atual = 0
+
+        # Atualização Tapioca
+        tapioca_angulo -= 2 
+
+        # Desenho
         tela.fill(COR_FUNDO_MENU)
         tela.blit(surf_titulo, rect_titulo)
+
+        m_billy_menu = calcularMatriz(billy_escala_atual, billy_angulo_atual, billy_menu_x, billy_menu_y)
+        renderizarPersonagem(tela, getBilly(), m_billy_menu, None)
         
+        # --- DESENHO TAPIOCA E QUEIJO ---
+        
+
+        m_tapioca = calcularMatriz(tapioca_scale, tapioca_angulo, tapioca_x, tapioca_y)
+        
+        m_ajuste = translacao(ajuste_local_x, ajuste_local_y)
+        m_queijo = multiplicaMatrizes(m_tapioca, m_ajuste)
+        
+        renderizarPersonagem(tela, getTapioca(largura=30, altura=15), m_tapioca, None)
+        renderizarPersonagem(tela, getQueijo(), m_queijo, None)
+
         desenhar_botao_customizado(tela, btn_jogar)
         desenhar_botao_customizado(tela, btn_sair)
         
         pygame.display.flip()
         clock.tick(60)
+
+# --- SISTEMA DE RANKING ---
 def gerenciar_ranking(novo_tempo):
     arquivo = "ranking.txt"
     tempos = []
@@ -108,9 +161,9 @@ def gerenciar_ranking(novo_tempo):
             
     return tempos
 
+# --- TELA DE VITÓRIA ---
 def executar_tela_vitoria(tela, tempo_final):
     largura = tela.get_width()
-    
     top_5 = gerenciar_ranking(tempo_final)
 
     txt_titulo = fonte_ui.render("ENTREGA CONCLUÍDA!", True, (0, 100, 0))
