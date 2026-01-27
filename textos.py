@@ -53,7 +53,7 @@ def setBalao1(superficie, x, y):
 
     # 4. TEXTO
     margem_x, margem_y = 10, 10
-    conteudo = "Quero uma tapioca [quebra de linha] bem gostosa"
+    conteudo = "Quero uma tapioca [quebra de linha] com queijo"
     setTexto(superficie, conteudo, x + margem_x, y + margem_y, (0, 0, 0))
 
 def setBalao2(superficie, x, y):
@@ -86,5 +86,66 @@ def setBalao2(superficie, x, y):
 
     # 4. TEXTO
     margem_x, margem_y = 10, 10
-    conteudo = "Vou lá no carro [quebra de linha] pegar as tapiocas"
+    conteudo = " Obrigado [quebra de linha] Billy =)"
     setTexto(superficie, conteudo, x + margem_x, y + margem_y, (0, 0, 0))
+
+def setObjetivo1(superficie, x, y):
+    # 1. Configurações
+    largura = 150 
+    altura = 70
+    cor_balao = (255, 255, 255)
+    cor_borda = (0, 0, 0)
+    borda = 2 
+
+    # 2. BORDA (PRETA)
+    # Retângulo da borda
+    setPreencherRetangulo(superficie, x - borda, y - borda, largura + (borda * 2), altura + (borda * 2), cor_borda)
+
+    # 3. INTERIOR (BRANCO)
+    setPreencherRetangulo(superficie, x, y, largura, altura, cor_balao)
+
+    # 4. TEXTO
+    margem_x, margem_y = 10, 10
+    conteudo = "Objetivo: Pegue o [quebra de linha] queijo"
+    setTexto(superficie, conteudo, x + margem_x, y + margem_y, (0, 0, 0))
+
+def setObjetivo2(superficie, x, y):
+    # 1. Configurações
+    largura = 150 
+    altura = 70
+    cor_balao = (255, 255, 255)
+    cor_borda = (0, 0, 0)
+    borda = 2 
+
+    # 2. BORDA (PRETA)
+    # Retângulo da borda
+    setPreencherRetangulo(superficie, x - borda, y - borda, largura + (borda * 2), altura + (borda * 2), cor_borda)
+
+    # 3. INTERIOR (BRANCO)
+    setPreencherRetangulo(superficie, x, y, largura, altura, cor_balao)
+
+    # 4. TEXTO
+    margem_x, margem_y = 10, 10
+    conteudo = "Objetivo: Ponha o [quebra de linha]queijo na tapioca"
+    setTexto(superficie, conteudo, x + margem_x, y + margem_y, (0, 0, 0))
+
+def setObjetivo3(superficie, x, y):
+    # 1. Configurações
+    largura = 150 
+    altura = 70
+    cor_balao = (255, 255, 255)
+    cor_borda = (0, 0, 0)
+    borda = 2 
+
+    # 2. BORDA (PRETA)
+    # Retângulo da borda
+    setPreencherRetangulo(superficie, x - borda, y - borda, largura + (borda * 2), altura + (borda * 2), cor_borda)
+
+    # 3. INTERIOR (BRANCO)
+    setPreencherRetangulo(superficie, x, y, largura, altura, cor_balao)
+
+    # 4. TEXTO
+    margem_x, margem_y = 10, 10
+    conteudo = "Objetivo: Entregue [quebra de linha] a tapioca"
+    setTexto(superficie, conteudo, x + margem_x, y + margem_y, (0, 0, 0))
+

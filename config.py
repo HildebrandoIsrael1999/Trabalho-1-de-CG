@@ -120,9 +120,7 @@ def atualizar_estado_jogo(estado):
 
 # RENDERIZAÇÃO
 def desenhar_jogo(tela, estado):
-    """
-    Só desenha. Não calcula lógica nenhuma.
-    """
+
     definirAreaDeRecorte(0, 0, estado["largura"], estado["altura"])
     tela.fill((135, 206, 235)) 
     tela.fill((100, 100, 100), (0, 300, estado["largura"], 450)) 
@@ -135,12 +133,28 @@ def desenhar_jogo(tela, estado):
     renderizarPersonagem(tela, getBilly(), m["billy"], None)
     renderizarPersonagem(tela, getMenino(), m["menino"], None)
     
+    # mostra o balao de texto somente quando a clara chega no carrinho e enquanto billy nao pega o queijo
+    if estado["clara_chegou"] and not estado["clara_recebeu_pedido"]:
+            if not estado["billy_tem_queijo"] and not estado["tapioca_recheada"]:
+                # Desenha o balão 1 perto da cabeça dela
+                setBalao1(tela, estado["clara_x"] + 20, estado["clara_y"] - 100)
+                setObjetivo1(tela, 500, 50)
+            elif estado["billy_tem_queijo"]:
+                # Mostra o novo objetivo
+                setObjetivo2(tela, 500, 50)
+            elif estado["tapioca_recheada"]:
+                # Mostra o novo objetivo
+                setObjetivo3(tela, 500, 50)
+
     if not estado["clara_foi_embora"]:
         renderizarPersonagem(tela, getMulher(), m["clara"], None)
 
     if not estado["clara_foi_embora"] or not estado["clara_recebeu_pedido"]:
         renderizarPersonagem(tela, getTapioca(largura=25, altura=13), m["tapioca"])
         renderizarPersonagem(tela, getQueijo(), m["queijo"])
+    
+    if estado["clara_recebeu_pedido"] and not estado["clara_foi_embora"]:
+        setBalao2(tela, estado["clara_x"] + 20, estado["clara_y"] - 100)
 
     # Desenha Viewport
     personagens_vp = [
