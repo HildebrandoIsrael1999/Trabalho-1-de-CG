@@ -8,35 +8,36 @@ Este projeto é um jogo arcade 2D feito para demonstrar algoritmos de computaç�
 
 ## Arquitetura dos Arquivos
 
+
 - **main.py**  
-	Ponto de entrada do jogo. Inicializa o Pygame, gerencia o loop principal, música, menu e chama funções de atualização e renderização do estado do jogo.
+	Ponto de entrada do jogo, responsável por inicializar o Pygame e todos os módulos do sistema. Gerencia o loop principal, controle de FPS, música de fundo e transições entre telas. Realiza a chamada das funções de atualização do estado do jogo e renderização dos elementos gráficos. Controla o fluxo entre menu, gameplay e tela de ranking. Também faz o tratamento de encerramento do jogo e recursos.
 
 - **interface.py**  
-	Implementa o menu principal, botões e lógica de interação do usuário com a interface gráfica.
+	Implementa o menu principal, botões, telas de instrução e ranking. Gerencia a navegação entre diferentes telas do jogo, detectando cliques e interações do usuário. Responsável pelo layout visual dos menus, animações de entrada e saída, e feedback visual dos botões. Realiza a integração com o sistema de ranking e exibe informações do jogador. Permite customização de opções e configurações básicas.
 
 - **config.py**  
-	Gerencia o estado do jogo, incluindo posições dos personagens, itens, lógica de eventos (teclado), atualização de variáveis e controle de fluxo do gameplay.
+	Gerencia o estado global do jogo, incluindo posições dos personagens, itens, obstáculos e variáveis de controle. Processa eventos do teclado e mouse, atualizando o estado conforme as ações do jogador. Controla o fluxo do gameplay, como início, pausa, vitória e derrota. Realiza a lógica de atualização de variáveis, como tempo, pontuação e itens coletados. Centraliza a comunicação entre os módulos e mantém o estado sincronizado.
 
 - **personagens.py**  
-	Define os modelos dos personagens (Billy, Clara, Menino) como listas de primitivas geométricas (retângulos, linhas, círculos).
+	Define os modelos geométricos dos personagens (Billy, Clara, Menino) usando listas de primitivas (retângulos, linhas, círculos). Cada personagem é descrito por suas partes, cores e proporções, facilitando transformações e animações. Permite fácil alteração de aparência e adição de novos personagens. Organiza os dados para renderização eficiente. Serve de base para colisão e interação com o cenário.
 
 - **cenarios.py**  
-	Define os objetos do cenário (moita, carrinho, banco, cachorro, etc.) usando funções de primitivas geométricas.
+	Define os objetos do cenário (moita, carrinho, banco, cachorro, etc.) como conjuntos de primitivas geométricas. Cada elemento do cenário possui funções específicas para construção e posicionamento. Permite a composição de cenários variados e dinâmicos. Facilita a aplicação de transformações e efeitos visuais. Serve de referência para colisão e interação dos personagens com o ambiente.
 
 - **biblioteca.py**  
-	Biblioteca gráfica principal. Implementa algoritmos de rasterização (Bresenham, Scanline), preenchimento, clipping (Cohen-Sutherland), funções para desenhar e transformar primitivas.
+	Biblioteca gráfica principal do projeto, implementando algoritmos de rasterização de linhas (Bresenham), polígonos (Scanline), círculos e preenchimento. Contém funções para desenhar e transformar primitivas geométricas, além de aplicar clipping (Cohen-Sutherland). Gerencia a renderização manual dos elementos na matriz de pixels. Permite a criação de efeitos visuais e animações. Centraliza utilitários gráficos para uso em todo o sistema.
 
 - **matrizes.py**  
-	Implementa operações de matrizes 3x3 para transformações afins: identidade, translação, escala, rotação, multiplicação e aplicação de matriz em pontos.
+	Implementa operações de matrizes 3x3 para transformações afins: identidade, translação, escala, rotação, multiplicação e aplicação de matriz em pontos. Permite compor múltiplas transformações em uma única matriz. Facilita a manipulação geométrica de personagens e objetos do cenário. Garante precisão e eficiência nas operações gráficas. Serve de base para animações e movimentações complexas.
 
 - **colisao.py**  
-	Gerencia colisão entre personagens e obstáculos usando bounding boxes (AABB).
+	Gerencia colisão entre personagens, itens e obstáculos usando bounding boxes (AABB). Implementa funções para detectar sobreposição e calcular respostas de colisão. Permite bloquear movimentos, coletar itens e interagir com o ambiente. Otimiza o desempenho do jogo evitando cálculos desnecessários. Centraliza toda a lógica de física e interação espacial.
 
 - **textos.py**  
-	Renderiza textos e balões de fala na tela usando fontes do Pygame.
+	Renderiza textos, balões de fala e informações na tela usando fontes do Pygame. Permite exibir diálogos, instruções, pontuação e mensagens do sistema. Gerencia estilos, cores e posicionamento dos textos. Facilita a comunicação visual com o jogador. Suporta animações e efeitos visuais em textos.
 
 - **clipping.py**  
-	Implementa o algoritmo de Cohen-Sutherland para recorte de linhas.
+	Implementa o algoritmo de Cohen-Sutherland para recorte de linhas e polígonos, garantindo que apenas elementos visíveis sejam desenhados. Permite otimizar a renderização e evitar artefatos fora da área útil. Facilita a implementação de viewport e mini-mapa. Serve de base para efeitos de câmera e zoom. Centraliza utilitários de recorte geométrico para todo o sistema.
 
 ---
 
