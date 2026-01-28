@@ -1,68 +1,245 @@
-🕹️ [NOME DO JOGO] | Arcade Experience
+# Documentação do Projeto "Billy da Tapioca"
 
-📝 Descrição do Projeto
-Este projeto consiste em um jogo arcade 2D desenvolvido para a primeira avaliação da disciplina de Computação Gráfica. O desafio central foi construir todo o motor gráfico do zero, utilizando estritamente a manipulação de matrizes numéricas através da função set_pixel, sem o auxílio de bibliotecas gráficas de alto nível para renderização.
+## Visão Geral
 
+Este projeto é um jogo arcade 2D feito para demonstrar algoritmos de computação gráfica clássicos, como rasterização, preenchimento, transformações geométricas, clipping e renderização manual usando matrizes. O motor gráfico foi construído do zero, sem bibliotecas gráficas de alto nível.
 
-🚀 Requisitos Técnicos Implementados
-O projeto foi organizado para demonstrar visualmente cada um dos algoritmos exigidos:
+---
 
-🎨 Primitivas e Preenchimento
+## Arquitetura dos Arquivos
 
-Tela de Abertura: Desenvolvida integralmente com algoritmos de rasterização de reta, circunferência e elipse.
+- **main.py**  
+	Ponto de entrada do jogo. Inicializa o Pygame, gerencia o loop principal, música, menu e chama funções de atualização e renderização do estado do jogo.
 
+- **interface.py**  
+	Implementa o menu principal, botões e lógica de interação do usuário com a interface gráfica.
 
-Algoritmos de Preenchimento: Aplicação de Flood Fill/Boundary Fill nos elementos da logo e Scanline para os polígonos dinâmicos do jogo.
+- **config.py**  
+	Gerencia o estado do jogo, incluindo posições dos personagens, itens, lógica de eventos (teclado), atualização de variáveis e controle de fluxo do gameplay.
 
+- **personagens.py**  
+	Define os modelos dos personagens (Billy, Clara, Menino) como listas de primitivas geométricas (retângulos, linhas, círculos).
 
+- **cenarios.py**  
+	Define os objetos do cenário (moita, carrinho, banco, cachorro, etc.) usando funções de primitivas geométricas.
 
-Sombreamento e Textura: Uso de polígonos com gradientes de cores definidos por vértice e mapeamento de texturas de imagens.
+- **biblioteca.py**  
+	Biblioteca gráfica principal. Implementa algoritmos de rasterização (Bresenham, Scanline), preenchimento, clipping (Cohen-Sutherland), funções para desenhar e transformar primitivas.
 
-🔄 Transformações e Animação
+- **matrizes.py**  
+	Implementa operações de matrizes 3x3 para transformações afins: identidade, translação, escala, rotação, multiplicação e aplicação de matriz em pontos.
 
-Transformações Geométricas: Implementação de matrizes de translação, escala e rotação.
+- **colisao.py**  
+	Gerencia colisão entre personagens e obstáculos usando bounding boxes (AABB).
 
+- **textos.py**  
+	Renderiza textos e balões de fala na tela usando fontes do Pygame.
 
-Dinâmica: Pelo menos uma animação ativa controlada pelo sistema.
+- **clipping.py**  
+	Implementa o algoritmo de Cohen-Sutherland para recorte de linhas.
 
-🖼️ Visualização e Clipping
+---
 
-Pipeline Gráfico: Sistema de Janela (Mundo) para Viewport (Dispositivo).
+## Fluxo Principal do Jogo
 
+1. **Inicialização**  
+	 - Carrega recursos, configura tela e música.
+	 - Exibe menu principal ([interface.py](interface.py)).
 
-Interatividade de Câmera: Funcionalidade de Zoom e Translação de visualização.
+2. **Loop do Jogo**  
+	 - Captura eventos do usuário (teclado, mouse).
+	 - Atualiza o estado do jogo ([config.py](config.py)).
+	 - Renderiza cenário, personagens e itens ([biblioteca.py](biblioteca.py), [cenarios.py](cenarios.py), [personagens.py](personagens.py)).
+	 - Aplica transformações geométricas via matrizes ([matrizes.py](matrizes.py)).
+	 - Gerencia colisões ([colisao.py](colisao.py)).
+	 - Exibe textos e balões ([textos.py](textos.py)).
+	 - Atualiza a tela a 60 FPS.
 
+---
 
-Clipping: Recorte de linhas e polígonos via algoritmo de Cohen-Sutherland.
+## Principais Funções do Projeto
 
-🖱️ Interface e Input
+### 1. `criar_estado_inicial(largura, altura)`
+**Descrição:**  
+Inicializa o estado do jogo, criando um dicionário com todas as variáveis necessárias para controlar o gameplay, como posição dos personagens, tempo, itens coletados, status de vitória, etc.
 
-Controles: Interação completa via teclado ou mouse.
+**Exemplo de uso:**  
+```python
+estado_jogo = criar_estado_inicial(1280, 720)
+```
+**Principais variáveis criadas:**  
+- Posições dos personagens
+- Lista de itens no cenário
+- Tempo inicial do jogo
+- Flags de vitória/derrota
 
+---
 
-Menu: Menu interativo para navegação entre jogo e tela inicial.
+### 2. `processar_eventos_jogo(estado_jogo, eventos)`
+**Descrição:**  
+Processa os eventos capturados pelo Pygame (teclado, mouse) e atualiza o estado do jogo conforme as ações do jogador.  
+Exemplo: movimentação do personagem, interação com objetos, pausar o jogo.
 
-🛠️ Como Executar
-Siga os passos abaixo para compilar e rodar o projeto localmente:
+**Exemplo de uso:**  
+```python
+eventos = pygame.event.get()
+processar_eventos_jogo(estado_jogo, eventos)
+```
+**Principais ações:**  
+- Movimentação (setas/WASD)
+- Interação com itens
+- Fechar o jogo
 
-Pré-requisitos: Certifique-se de ter o [Linguagem, ex: Python 3.x] instalado.
+---
 
-Instalação: 
+### 3. `atualizar_estado_jogo(estado_jogo)`
+**Descrição:**  
+Atualiza as variáveis do estado do jogo a cada frame. Calcula novas posições, verifica colisões, atualiza animações, checa condições de vitória/derrota e controla o tempo de jogo.
 
-```bash git clone  cd 
-pip install -r requirements.txt # Se houver dependências como PyGame
+**Exemplo de uso:**  
+```python
+atualizar_estado_jogo(estado_jogo)
+```
+**Principais tarefas:**  
+- Atualizar posições dos personagens
+- Verificar colisão com obstáculos e itens
+- Atualizar tempo e status do jogo
 
-Execução:
+---
 
-Bash
+### 4. `desenhar_jogo(tela, estado_jogo)`
+**Descrição:**  
+Renderiza todos os elementos do jogo na tela: cenário, personagens, itens, textos e balões de fala. Utiliza as funções de desenho da biblioteca gráfica para rasterizar cada objeto conforme seu modelo e matriz de transformação.
 
-python main.py
-🎞️ Vídeo de Demonstração
-Clique no link abaixo para ver a execução completa das funcionalidades, incluindo a tela de abertura e o gameplay: 👉 [ASSISTIR VÍDEO NO YOUTUBE] 
+**Exemplo de uso:**  
+```python
+desenhar_jogo(tela, estado_jogo)
+```
+**Principais elementos desenhados:**  
+- Cenário (moita, banco, carrinho, etc.)
+- Personagens (Billy, Clara, Menino)
+- Itens (tapioca, queijo, caixa)
+- Textos e balões de fala
 
-👥 Equipe (Trio)
-Nome 1 - [E-mail/GitHub]
+---
 
-Nome 2 - [E-mail/GitHub]
+### 5. `renderizarPersonagem(modelo, matriz, tela)`
+**Descrição:**  
+Recebe o modelo do personagem (lista de primitivas geométricas), aplica a matriz de transformação (escala, rotação, translação) e desenha cada parte na tela usando algoritmos de rasterização.
 
-Nome 3 - [E-mail/GitHub]
+**Exemplo de uso:**  
+```python
+renderizarPersonagem(modelo_billy, matriz_billy, tela)
+```
+**Principais etapas:**  
+- Aplica matriz de transformação em cada ponto do modelo
+- Chama funções de desenho para cada primitiva (retângulo, círculo, linha)
+
+---
+
+### 6. `scanlineFill(poligono, cor, tela)`
+**Descrição:**  
+Preenche um polígono na tela usando o algoritmo de scanline, que percorre linhas horizontais e determina os segmentos internos do polígono para colorir.
+
+**Exemplo de uso:**  
+```python
+scanlineFill(poligono, (255,255,255), tela)
+```
+**Principais etapas:**  
+- Calcula interseções das scanlines com as arestas do polígono
+- Preenche os segmentos internos com a cor desejada
+
+---
+
+### 7. `setRetaBresenham(x1, y1, x2, y2, cor, tela)`
+**Descrição:**  
+Desenha uma linha entre dois pontos usando o algoritmo de Bresenham, eficiente para rasterização de linhas em grids de pixels.
+
+**Exemplo de uso:**  
+```python
+setRetaBresenham(10, 20, 100, 200, (0,0,0), tela)
+```
+**Principais etapas:**  
+- Calcula os pixels que formam a linha entre os pontos
+- Colore cada pixel na tela
+
+---
+
+### 8. `cohenSutherlandClip(x1, y1, x2, y2, xmin, ymin, xmax, ymax)`
+**Descrição:**  
+Recorta uma linha para garantir que ela seja desenhada apenas dentro dos limites da tela (viewport), usando o algoritmo de Cohen-Sutherland.
+
+**Exemplo de uso:**  
+```python
+nova_linha = cohenSutherlandClip(x1, y1, x2, y2, 0, 0, largura, altura)
+```
+**Principais etapas:**  
+- Verifica se a linha está dentro, fora ou parcialmente dentro da área visível
+- Retorna os pontos ajustados para desenhar apenas a parte visível
+
+---
+
+### 9. `calcularMatriz(escala, rotacao, translacao)`
+**Descrição:**  
+Gera uma matriz de transformação 3x3 combinando escala, rotação e translação, usada para transformar modelos geométricos antes de desenhar.
+
+**Exemplo de uso:**  
+```python
+matriz = calcularMatriz((1.0, 1.0), 45, (100, 200))
+```
+**Principais etapas:**  
+- Cria matriz de escala
+- Cria matriz de rotação
+- Cria matriz de translação
+- Multiplica as matrizes para obter a transformação final
+
+---
+
+### 10. Funções de Modelos (`getBilly`, `getMulher`, `getMenino`, `getMoita`, etc.)
+**Descrição:**  
+Cada função retorna uma lista de primitivas geométricas que compõem o personagem ou objeto do cenário. Cada primitiva tem cor, posição, tamanho e nome.
+
+**Exemplo de uso:**  
+```python
+modelo_billy = getBilly()
+modelo_moita = getMoita()
+```
+**Principais etapas:**  
+- Define cada parte do objeto como retângulo, círculo, linha, etc.
+- Retorna lista para ser usada na renderização
+
+---
+
+## Conceitos Implementados
+
+- **Rasterização manual** (linhas, polígonos, círculos)
+- **Preenchimento** (scanline, flood fill)
+- **Transformações geométricas** (matrizes 3x3)
+- **Clipping** (Cohen-Sutherland)
+- **Colisão** (AABB)
+- **Renderização de viewport** (mini-mapa)
+- **Interface gráfica** (menu, botões)
+- **Textos e balões de fala**
+
+---
+
+## Recomendações
+
+Para entender detalhes de cada algoritmo e função, consulte [DOCUMENTACAO.md](DOCUMENTACAO.md), que traz exemplos, fluxos e explicações didáticas sobre cada parte do sistema.
+
+---
+
+## Demonstração em Vídeo
+
+Assista à execução completa do projeto, incluindo tela de abertura e gameplay:
+
+[👉 Assistir vídeo no YouTube](https://www.youtube.com/seu-link-aqui)
+
+---
+
+## Equipe
+
+**Hildebrando Israel ** - email1@exemplo.com
+**Samuel ** - email2@exemplo.com
+**Clara ** - email3@exemplo.com
+
