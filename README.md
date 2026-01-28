@@ -1,4 +1,4 @@
-# Documentação do Projeto "Billy da Tapioca"
+# "Billy da Tapioca"
 
 ## Visão Geral
 
