@@ -2,7 +2,20 @@
 
 ## Visão Geral
 
-Este projeto é um jogo arcade 2D feito para demonstrar algoritmos de computação gráfica clássicos, como rasterização, preenchimento, transformações geométricas, clipping e renderização manual usando matrizes. O motor gráfico foi construído do zero, sem bibliotecas gráficas de alto nível.
+
+Este projeto é um jogo arcade 2D desenvolvido como parte de uma avaliação acadêmica de Computação Gráfica. O objetivo principal é demonstrar, de forma prática e visual, a implementação de algoritmos clássicos da área, como rasterização de linhas e polígonos, preenchimento, transformações geométricas, clipping e renderização manual utilizando matrizes de pixels. Todo o motor gráfico foi construído do zero, sem o uso de bibliotecas gráficas de alto nível, o que evidencia o domínio dos conceitos fundamentais de gráficos computacionais.
+
+O jogo apresenta uma interface interativa, cenários dinâmicos e personagens modelados geometricamente, permitindo ao usuário explorar e interagir com o ambiente. Cada elemento visual é desenhado manualmente, utilizando algoritmos como Bresenham para linhas, Scanline para preenchimento de polígonos e Cohen-Sutherland para clipping.
+
+Além da parte gráfica, o projeto aborda aspectos de lógica de jogo, como controle de estado, detecção de colisão, animações, sistema de ranking e interface de menus. O sistema foi projetado para ser modular, facilitando a manutenção e expansão de funcionalidades.
+
+Um dos grandes diferenciais é a aplicação de transformações geométricas via matrizes 3x3, permitindo animações, movimentação e efeitos visuais sofisticados. O código está organizado em módulos temáticos, cada um responsável por uma parte específica do sistema, promovendo clareza e reutilização.
+
+O projeto também inclui recursos como renderização de textos, balões de fala, mini-mapa (viewport), efeitos de zoom e translação de câmera, além de suporte a múltiplos tipos de interação (teclado e mouse). O resultado é uma experiência completa, que une teoria e prática de computação gráfica em um produto funcional e didático.
+
+Este trabalho serve como referência para estudantes e entusiastas que desejam entender como construir um motor gráfico do zero, explorando desde algoritmos matemáticos até a integração com interfaces de usuário. O código é comentado e estruturado para facilitar o aprendizado e a adaptação para outros projetos.
+
+O desenvolvimento envolveu desafios como otimização de desempenho, precisão matemática, organização modular e integração de múltiplos algoritmos gráficos. O resultado final é um jogo divertido, educativo e tecnicamente robusto, que demonstra o potencial da computação gráfica aplicada.
 
 ---
 
