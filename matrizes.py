@@ -10,7 +10,7 @@ def escala(sx, sy):
     return [[sx, 0, 0], [0, sy, 0], [0, 0, 1]]
 
 def rotacao(angulo_graus):
-    # Converte graus para radianos conforme a fórmula dos slides do Matheus
+    
     theta = math.radians(angulo_graus)
     c, s = math.cos(theta), math.sin(theta)
     return [[c, -s, 0], [s, c, 0], [0, 0, 1]]
@@ -26,7 +26,7 @@ def multiplicaMatrizes(a, b):
 def aplicaTransformacao(m, pontos):
     novos = []
     for x, y in pontos:
-        # v = [x, y, 1] em coordenadas homogêneas para translação
+        
         nx = m[0][0]*x + m[0][1]*y + m[0][2]
         ny = m[1][0]*x + m[1][1]*y + m[1][2]
         novos.append((nx, ny))

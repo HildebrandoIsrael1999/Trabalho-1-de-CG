@@ -15,7 +15,7 @@ MODAL_X, MODAL_Y = 340, 160
 MODAL_W, MODAL_H = 600, 400
 BTN_FECHAR_TAM = 40
 
-# --- INICIALIZAÇÃO DOS DADOS ---
+
 def criar_estado_inicial(largura, altura):
     try:
         img_bandeira = pygame.image.load("bandeira.png").convert()
@@ -54,21 +54,21 @@ def criar_estado_inicial(largura, altura):
         "matrizes": {} 
     }
 
-# --- INPUTS ---
+
 def processar_eventos_jogo(estado, eventos):
     
     mx, my = pygame.mouse.get_pos()
     em_cima_botao = False
 
     if estado["mostrando_instrucoes"]:
-        # Verifica se está em cima do X vermelho
+        
         bx = MODAL_X + MODAL_W - BTN_FECHAR_TAM - 10
         by = MODAL_Y + 10
         if (mx >= bx and mx <= bx + BTN_FECHAR_TAM and
             my >= by and my <= by + BTN_FECHAR_TAM):
             em_cima_botao = True
     else:
-        # Verifica se está em cima do botão Instruções
+        
         if (mx >= BTN_INSTR_X and mx <= BTN_INSTR_X + BTN_INSTR_W and
             my >= BTN_INSTR_Y and my <= BTN_INSTR_Y + BTN_INSTR_H):
             em_cima_botao = True
@@ -177,7 +177,7 @@ def atualizar_estado_jogo(estado):
         else:
             estado["matrizes"]["queijo"] = get_matriz_queijo_mesa()
 
-# RENDERIZAÇÃO
+
 def desenhar_jogo(tela, estado):
     definirAreaDeRecorte(0, 0, estado["largura"], estado["altura"])
     
@@ -249,7 +249,7 @@ def desenhar_jogo(tela, estado):
         setRetaBresenham(tela, fechar_x + 5, fechar_y + 5, fechar_x + 35, fechar_y + 35, (255,255,255))
         setRetaBresenham(tela, fechar_x + 35, fechar_y + 5, fechar_x + 5, fechar_y + 35, (255,255,255))
 
-        # Texto
+        
         txt_instrucoes = (
             "COMO JOGAR: [quebra de linha]"
             "[quebra de linha]"

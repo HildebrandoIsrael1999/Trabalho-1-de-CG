@@ -22,7 +22,7 @@ except FileNotFoundError:
 fonte_ui = pygame.font.SysFont("Arial", 40, bold=True)
 fonte_ranking = pygame.font.SysFont("Arial", 30, bold=False)
 
-# --- FUNÇÕES AUXILIARES ---
+
 def getBotao(x, y, largura, altura, cor_fundo, texto):
     surf_texto = fonte_ui.render(texto, True, COR_TXT)
     txt_w, txt_h = surf_texto.get_size()
@@ -47,7 +47,7 @@ def verifica_colisao_botao(mx, my, botao):
     return (mx >= botao["x"] and mx <= botao["x"] + botao["w"] and
             my >= botao["y"] and my <= botao["y"] + botao["h"])
 
-# --- MENU PRINCIPAL ---
+
 def executar_menu_principal(tela, largura_tela, altura_tela):
     surf_titulo = fonte_titulo.render("TAPIOCARIA DO BILLY", True, COR_TXT)
     rect_titulo = surf_titulo.get_rect(center=(largura_tela // 2, 100))
@@ -58,7 +58,7 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
     clock = pygame.time.Clock()
     rodando_menu = True
     
-    # Animação Billy
+ 
     billy_menu_x = 90
     billy_menu_y = 300                    
     billy_escala_atual = 0.1
@@ -70,20 +70,20 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
     total_frames = total_crescimento / escala_velocidade
     angulo_velocidade = (360 * voltas_totais) / total_frames
 
-    # Animação Tapioca
+    
     tapioca_x = 1000
     tapioca_y = 450
     tapioca_scale = 4.0  
     tapioca_angulo = 0   
 
-    # Ajuste Fino Queijo
+    
     ajuste_local_x = -13 
     ajuste_local_y = -6
 
     while rodando_menu:
         mx, my = pygame.mouse.get_pos()
         
-        # Lógica Hover (Mãozinha)
+        
         colidiu_jogar = verifica_colisao_botao(mx, my, btn_jogar)
         colidiu_sair = verifica_colisao_botao(mx, my, btn_sair)
 
@@ -106,7 +106,7 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                     return False
 
-        # Atualização Billy
+        
         if billy_escala_atual < billy_escala_final:
             billy_escala_atual += escala_velocidade
             billy_angulo_atual += angulo_velocidade
@@ -114,17 +114,17 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
             billy_escala_atual = billy_escala_final
             billy_angulo_atual = 0
 
-        # Atualização Tapioca
+        
         tapioca_angulo -= 2 
 
-        # Desenho
+        
         tela.fill(COR_FUNDO_MENU)
         tela.blit(surf_titulo, rect_titulo)
 
         m_billy_menu = calcularMatriz(billy_escala_atual, billy_angulo_atual, billy_menu_x, billy_menu_y)
         renderizarPersonagem(tela, getBilly(), m_billy_menu, None)
         
-        # Desenho Tapioca
+        
         m_tapioca = calcularMatriz(tapioca_scale, tapioca_angulo, tapioca_x, tapioca_y)
         m_ajuste = translacao(ajuste_local_x, ajuste_local_y)
         m_queijo = multiplicaMatrizes(m_tapioca, m_ajuste)
@@ -138,7 +138,7 @@ def executar_menu_principal(tela, largura_tela, altura_tela):
         pygame.display.flip()
         clock.tick(60)
 
-# --- SISTEMA DE RANKING ---
+
 def gerenciar_ranking(novo_tempo):
     arquivo = "ranking.txt"
     tempos = []
@@ -162,7 +162,7 @@ def gerenciar_ranking(novo_tempo):
             
     return tempos
 
-# --- TELA DE VITÓRIA  ---
+
 def executar_tela_vitoria(tela, tempo_final):
     largura = tela.get_width()
     top_5 = gerenciar_ranking(tempo_final)
@@ -171,7 +171,7 @@ def executar_tela_vitoria(tela, tempo_final):
     txt_seu_tempo = fonte_ui.render(f"Seu Tempo: {tempo_final:.2f} s", True, (0, 0, 0))
     txt_rank_titulo = fonte_ui.render("--- MELHORES TEMPOS ---", True, (50, 50, 50))
 
-    # Botão de Voltar
+    
     btn_voltar = getBotao(largura//2 - 250, 550, 500, 80, (100, 100, 255), "VOLTAR AO MENU")
 
     clock = pygame.time.Clock()

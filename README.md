@@ -19,26 +19,26 @@ Este projeto é um jogo arcade 2D desenvolvido como parte de uma avaliação aca
 - **config.py**  
 	Gerencia o estado global do jogo, incluindo posições dos personagens, itens, obstáculos e variáveis de controle. Processa eventos do teclado e mouse, atualizando o estado conforme as ações do jogador. Controla o fluxo do gameplay, como início, pausa, vitória e derrota. Realiza a lógica de atualização de variáveis, como tempo, pontuação e itens coletados. Centraliza a comunicação entre os módulos e mantém o estado sincronizado.
 
-- **personagens.py**  
-	Define os modelos geométricos dos personagens (Billy, Clara, Menino) usando listas de primitivas (retângulos, linhas, círculos). Cada personagem é descrito por suas partes, cores e proporções, facilitando transformações e animações. Permite fácil alteração de aparência e adição de novos personagens. Organiza os dados para renderização eficiente. Serve de base para colisão e interação com o cenário.
+**personagens.py**  
+	Responsável apenas por definir os pontos dos personagens (Billy, Clara, Menino) através das funções get. Não realiza renderização direta, apenas retorna listas de pontos para serem usados na função renderizarPersonagem da biblioteca. Permite fácil alteração de aparência e adição de novos personagens. Organiza os dados para renderização eficiente e serve de base para colisão.
 
-- **cenarios.py**  
-	Define os objetos do cenário (moita, carrinho, banco, cachorro, etc.) como conjuntos de primitivas geométricas. Cada elemento do cenário possui funções específicas para construção e posicionamento. Permite a composição de cenários variados e dinâmicos. Facilita a aplicação de transformações e efeitos visuais. Serve de referência para colisão e interação dos personagens com o ambiente.
+**cenarios.py**  
+	Define os pontos dos objetos do cenário (moita, carrinho, banco, cachorro, etc.) usando funções get. Não realiza renderização direta, apenas retorna listas de pontos para facilitar a organização e uso na renderização. Permite composição de cenários variados e dinâmicos, além de servir de referência para colisão.
 
-- **biblioteca.py**  
-	Biblioteca gráfica principal do projeto, implementando algoritmos de rasterização de linhas (Bresenham), polígonos (Scanline), círculos e preenchimento. Contém funções para desenhar e transformar primitivas geométricas, além de aplicar clipping (Cohen-Sutherland). Gerencia a renderização manual dos elementos na matriz de pixels. Permite a criação de efeitos visuais e animações. Centraliza utilitários gráficos para uso em todo o sistema.
+**biblioteca.py**  
+	Biblioteca gráfica principal do projeto, implementando algoritmos de rasterização de linhas (Bresenham), polígonos (Scanline), círculos e preenchimento. Contém funções para desenhar e transformar primitivas geométricas, além de aplicar clipping (Cohen-Sutherland) em linhas. Gerencia a renderização manual dos elementos na matriz de pixels, incluindo a função renderizarPersonagem que utiliza os dados de personagens.py e a renderização do cenário a partir dos pontos definidos em cenarios.py. Implementa também a renderização da viewport (mini-mapa) e centraliza utilitários gráficos para uso em todo o sistema.
 
 - **matrizes.py**  
 	Implementa operações de matrizes 3x3 para transformações afins: identidade, translação, escala, rotação, multiplicação e aplicação de matriz em pontos. Permite compor múltiplas transformações em uma única matriz. Facilita a manipulação geométrica de personagens e objetos do cenário. Garante precisão e eficiência nas operações gráficas. Serve de base para animações e movimentações complexas.
 
-- **colisao.py**  
-	Gerencia colisão entre personagens, itens e obstáculos usando bounding boxes (AABB). Implementa funções para detectar sobreposição e calcular respostas de colisão. Permite bloquear movimentos, coletar itens e interagir com o ambiente. Otimiza o desempenho do jogo evitando cálculos desnecessários. Centraliza toda a lógica de física e interação espacial.
+**colisao.py**  
+	Gerencia colisão entre personagens, itens e obstáculos usando bounding boxes (AABB). Implementa funções para detectar sobreposição e calcular respostas de colisão. Permite bloquear movimentos, coletar itens e interagir com o ambiente. Otimiza o desempenho do jogo evitando cálculos desnecessários. Centraliza toda a lógica de colisão do sistema.
 
 - **textos.py**  
 	Renderiza textos, balões de fala e informações na tela usando fontes do Pygame. Permite exibir diálogos, instruções, pontuação e mensagens do sistema. Gerencia estilos, cores e posicionamento dos textos. Facilita a comunicação visual com o jogador. Suporta animações e efeitos visuais em textos.
 
-- **clipping.py**  
-	Implementa o algoritmo de Cohen-Sutherland para recorte de linhas e polígonos, garantindo que apenas elementos visíveis sejam desenhados. Permite otimizar a renderização e evitar artefatos fora da área útil. Facilita a implementação de viewport e mini-mapa. Serve de base para efeitos de câmera e zoom. Centraliza utilitários de recorte geométrico para todo o sistema.
+**clipping.py**  
+	Implementa o algoritmo de Cohen-Sutherland para recorte de linhas (linhaRecortada), garantindo que apenas segmentos visíveis sejam desenhados na tela. Permite otimizar a renderização e evitar artefatos fora da área útil. Facilita a implementação da viewport (mini-mapa). Centraliza utilitários de recorte geométrico para todo o sistema.
 
 ---
 
@@ -127,7 +127,7 @@ desenhar_jogo(tela, estado_jogo)
 
 ### 5. `renderizarPersonagem(modelo, matriz, tela)`
 **Descrição:**  
-Recebe o modelo do personagem (lista de primitivas geométricas), aplica a matriz de transformação (escala, rotação, translação) e desenha cada parte na tela usando algoritmos de rasterização.
+Recebe o modelo do personagem (lista de primitivas geométricas), aplica a matriz de transformação (escala, rotação, translação) e desenha cada parte na tela usando algoritmos de rasterização. Para polígonos, utiliza o algoritmo ScanlineFill para realizar o preenchimento das formas, garantindo renderização eficiente e visualmente correta.
 
 **Exemplo de uso:**  
 ```python
@@ -136,6 +136,7 @@ renderizarPersonagem(modelo_billy, matriz_billy, tela)
 **Principais etapas:**  
 - Aplica matriz de transformação em cada ponto do modelo
 - Chama funções de desenho para cada primitiva (retângulo, círculo, linha)
+- Utiliza ScanlineFill para preencher polígonos do personagem
 
 ---
 
@@ -169,37 +170,39 @@ setRetaBresenham(10, 20, 100, 200, (0,0,0), tela)
 
 ### 8. `cohenSutherlandClip(x1, y1, x2, y2, xmin, ymin, xmax, ymax)`
 **Descrição:**  
-Recorta uma linha para garantir que ela seja desenhada apenas dentro dos limites da tela (viewport), usando o algoritmo de Cohen-Sutherland.
+Recorta uma linha para garantir que ela seja desenhada apenas dentro dos limites da tela (viewport), usando o algoritmo de Cohen-Sutherland. No projeto, essa função é utilizada dentro de setLinhaRecortada, que recebe os valores da linha e da área de recorte, aplica o algoritmo e, se a linha estiver visível, chama setLinhaBresenham para desenhar o segmento recortado.
 
 **Exemplo de uso:**  
 ```python
-nova_linha = cohenSutherlandClip(x1, y1, x2, y2, 0, 0, largura, altura)
+setLinhaRecortada(x1, y1, x2, y2, 0, 0, largura, altura, tela)
 ```
 **Principais etapas:**  
 - Verifica se a linha está dentro, fora ou parcialmente dentro da área visível
 - Retorna os pontos ajustados para desenhar apenas a parte visível
+- Chama setLinhaBresenham para desenhar o segmento recortado
 
 ---
 
 ### 9. `calcularMatriz(escala, rotacao, translacao)`
 **Descrição:**  
-Gera uma matriz de transformação 3x3 combinando escala, rotação e translação, usada para transformar modelos geométricos antes de desenhar.
+Gera uma matriz de transformação 3x3 combinando escala, rotação e translação, usada para transformar modelos geométricos antes de desenhar. No projeto, o correto é primeiro transladar o objeto para a origem (0,0), aplicar a escala e rotação, e só então realizar a translação final para posicionar o objeto no local desejado da tela. Esse contexto garante que as transformações ocorram de forma previsível e correta para todos os elementos.
 
 **Exemplo de uso:**  
 ```python
 matriz = calcularMatriz((1.0, 1.0), 45, (100, 200))
 ```
 **Principais etapas:**  
+- Cria matriz de translação para levar o objeto à origem
 - Cria matriz de escala
 - Cria matriz de rotação
-- Cria matriz de translação
-- Multiplica as matrizes para obter a transformação final
+- Cria matriz de translação final para posicionar o objeto
+- Multiplica as matrizes na ordem correta para obter a transformação final
 
 ---
 
 ### 10. Funções de Modelos (`getBilly`, `getMulher`, `getMenino`, `getMoita`, etc.)
 **Descrição:**  
-Cada função retorna uma lista de primitivas geométricas que compõem o personagem ou objeto do cenário. Cada primitiva tem cor, posição, tamanho e nome.
+Cada função retorna uma lista de pontos compõem o personagem ou objeto do cenário. Cada primitiva tem cor, posição, tamanho e nome.
 
 **Exemplo de uso:**  
 ```python
@@ -222,12 +225,6 @@ modelo_moita = getMoita()
 - **Renderização de viewport** (mini-mapa)
 - **Interface gráfica** (menu, botões)
 - **Textos e balões de fala**
-
----
-
-## Recomendações
-
-Para entender detalhes de cada algoritmo e função, consulte [DOCUMENTACAO.md](DOCUMENTACAO.md), que traz exemplos, fluxos e explicações didáticas sobre cada parte do sistema.
 
 ---
 

@@ -1,21 +1,21 @@
-# Constantes de Região (Códigos de Bit)
-INSIDE = 0  # 0000
-LEFT   = 1  # 0001
-RIGHT  = 2  # 0010
-BOTTOM = 4  # 0100
-TOP    = 8  # 1000
+
+INSIDE = 0  
+LEFT   = 1  
+RIGHT  = 2  
+BOTTOM = 4  
+TOP    = 8  
 
 def calcular_codigo_regiao(x, y, x_min, y_min, x_max, y_max):
     code = INSIDE
     
-    if x < x_min:      # À esquerda da janela
+    if x < x_min:      
         code |= LEFT
-    elif x > x_max:    # À direita da janela
+    elif x > x_max:   
         code |= RIGHT
         
-    if y < y_min:      # Abaixo da janela
+    if y < y_min:      
         code |= BOTTOM
-    elif y > y_max:    # Acima da janela
+    elif y > y_max:    
         code |= TOP
         
     return code
@@ -40,7 +40,7 @@ def cohenSutherlandClip(x1, y1, x2, y2, x_min, y_min, x_max, y_max):
             y = 0
             code_out = code1 if code1 != 0 else code2
             
-            # Fórmulas de interseção (y = y1 + m * (x - x1))
+            
 
             if code_out & TOP:
                 x = x1 + (x2 - x1) * (y_max - y1) / (y2 - y1)

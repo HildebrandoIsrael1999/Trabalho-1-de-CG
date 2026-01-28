@@ -4,8 +4,7 @@ from clipping import *
 CLIP_XMIN, CLIP_YMIN = 0, 0
 CLIP_XMAX, CLIP_YMAX = 1280, 720
 
-#Get usam para pegar os pontos para serem desenhados, assim facilitando ao utilizar as matrizes
-#Set usam para desenhar na tela diretamente, pixel a pixel, dificilmente usável para personagens complexos, mas mais leves, ou seja, coisas estáticas.
+
 def definirAreaDeRecorte(xmin, ymin, xmax, ymax):
     global CLIP_XMIN, CLIP_YMIN, CLIP_XMAX, CLIP_YMAX
     CLIP_XMIN, CLIP_YMIN = xmin, ymin
@@ -19,7 +18,7 @@ def setPixel(superficie, x, y, cor):
             superficie.set_at((x, y), cor)
         
 def setRetaBresenham(superficie, x0, y0, x1, y1, cor):
-  # Flags para transformações
+  
     steep = abs(y1 - y0) > abs(x1 - x0)
     if steep:
         x0, y0 = y0, x0
@@ -37,7 +36,7 @@ def setRetaBresenham(superficie, x0, y0, x1, y1, cor):
         ystep = -1
         dy = -dy
 
-    # Bresenham clássico
+    
     d = 2 * dy - dx
     incE = 2 * dy
     incNE = 2 * (dy - dx)
@@ -110,7 +109,7 @@ def setRetaRecortada(superficie, x0, y0, x1, y1, cor):
     resultado = cohenSutherlandClip(x0, y0, x1, y1, CLIP_XMIN, CLIP_YMIN, CLIP_XMAX, CLIP_YMAX)
     
     if resultado is None:
-        return # Não desenha nada, economiza processamento.
+        return 
 
     novo_x0, novo_y0, novo_x1, novo_y1 = resultado
 
@@ -118,20 +117,20 @@ def setRetaRecortada(superficie, x0, y0, x1, y1, cor):
 
 def scanlineFill(superficie, pontos, cor_preenchimento):
 
-    # Achar o topo e o fundo do desenho (Y mínimo e máximo)
+    
     ys = [p[1] for p in pontos]
     y_min = int(min(ys))
     y_max = int(max(ys))
 
     n = len(pontos)
 
-    # Descer linha por linha (da menor altura para a maior)
+    
     for y in range(y_min, y_max):
         intersecoes_x = []
 
         for i in range(n):
             x0, y0 = pontos[i]
-            x1, y1 = pontos[(i + 1) % n] # Conecta o último ponto ao primeiro
+            x1, y1 = pontos[(i + 1) % n] 
 
             if y0 == y1:
                 continue
@@ -152,7 +151,7 @@ def scanlineFill(superficie, pontos, cor_preenchimento):
                 x_inicio = int(round(intersecoes_x[i]))
                 x_fim = int(round(intersecoes_x[i + 1]))
 
-                # Desenha a linha horizontal pixel por pixel usando seu setPixel
+                
                 for x in range(x_inicio, x_fim + 1):
                     setPixel(superficie, x, y, cor_preenchimento)
                     
@@ -189,9 +188,9 @@ def scanlineTexture(superficie, pontos, uvs, textura):
                     if 0 <= tx < tex_w and 0 <= ty < tex_h:
                         setPixel(superficie, x, y, textura.get_at((tx, ty)))
    
-#todo de colorir usando scanline, porém com textura
+
 def scanlineTexture(superficie, pontos, uvs, textura):
-    # Pega as dimensões da imagem da textura
+    
     tex_w, tex_h = textura.get_width(), textura.get_height()
     n = len(pontos)
 
@@ -246,20 +245,20 @@ def scanlineTexture(superficie, pontos, uvs, textura):
                         cor = textura.get_at((tx, ty))
                         setPixel(superficie, x, y, cor)
 
-# função auxiliar para misturar as cores
+
 def interpola_cor(c1, c2, t):
     r = int(c1[0] + (c2[0] - c1[0]) * t)
     g = int(c1[1] + (c2[1] - c1[1]) * t)
     b = int(c1[2] + (c2[2] - c1[2]) * t)
     
-    # Garante que as cores fiquem entre 0 e 255
+    
     r = max(0, min(r, 255))
     g = max(0, min(g, 255))
     b = max(0, min(b, 255))
     
     return (r, g, b)
 
-# sanline que suporta gradiente vertical
+
 def scanlineFillGradient(superficie, pontos, cor_topo, cor_base):
 
     ys = [p[1] for p in pontos]
@@ -274,7 +273,7 @@ def scanlineFillGradient(superficie, pontos, cor_topo, cor_base):
     for y in range(y_min, y_max):
         intersecoes_x = []
 
-        # Achar interseções
+        
         for i in range(n):
             x0, y0 = pontos[i]
             x1, y1 = pontos[(i + 1) % n]
@@ -286,7 +285,7 @@ def scanlineFillGradient(superficie, pontos, cor_topo, cor_base):
 
             if y < y0 or y >= y1: continue
 
-            # Calcula X da interseção
+            
             x = x0 + (y - y0) * (x1 - x0) / (y1 - y0)
             intersecoes_x.append(x)
 
@@ -307,10 +306,10 @@ def getLinha(x1, y1, x2, y2, cor, nome="linha"):
     return {
         "nome": nome,
         "cor": cor,
-        "tipo": "linha", # Já seta a flag automaticamente
+        "tipo": "linha", 
         "pontos": [(x1, y1), (x2, y2)]
     }
-# circulo com gradiente
+
 def getCirculoGradiente(cx, cy, raio, cor_topo, cor_base, nome="circulo_grad", resolucao=30):
     pontos = []
     passo_angulo = 360 / resolucao
@@ -323,10 +322,10 @@ def getCirculoGradiente(cx, cy, raio, cor_topo, cor_base, nome="circulo_grad", r
 
     return {
         "nome": nome,
-        "tipo": "gradiente",   # Identificador para o renderizador
-        "cor_topo": cor_topo,  # Cor passada por parâmetro
-        "cor_base": cor_base,  # Cor passada por parâmetro
-        "cor": cor_topo,       # Cor de segurança (fallback)
+        "tipo": "gradiente",   
+        "cor_topo": cor_topo, 
+        "cor_base": cor_base,  
+        "cor": cor_topo,       
         "pontos": pontos
     }
 
@@ -335,15 +334,15 @@ def getRetanguloPreenchido(x, y, w, h, cor, nome="retangulo"):
         "nome": nome,
         "cor": cor,
         "pontos": [
-            (x, y),          # Topo-Esq
-            (x + w, y),      # Topo-Dir
-            (x + w, y + h),  # Base-Dir
-            (x, y + h)       # Base-Esq
+            (x, y),          
+            (x + w, y),      
+            (x + w, y + h),  
+            (x, y + h)       
         ]
     }
 
 def getQuadrado(x, y, w, h, cor, nome="contorno"):
-    # Reaproveita a lógica do retângulo, mas seta o tipo
+    
     obj = getRetanguloPreenchido(x, y, w, h, cor, nome)
     obj["tipo"] = "apenas_contorno"
     return obj  
@@ -360,9 +359,9 @@ def getCirculo(cx, cy, raio, cor, nome="circulo_vazado", resolucao=30):
     passo_angulo = 360 / resolucao
 
     for i in range(resolucao):
-        # Converte graus para radianos
+        
         rad = math.radians(i * passo_angulo)
-        # Calcula a posição do ponto na circunferência
+        
         px = cx + raio * math.cos(rad)
         py = cy + raio * math.sin(rad)
         pontos.append((px, py))
@@ -370,7 +369,7 @@ def getCirculo(cx, cy, raio, cor, nome="circulo_vazado", resolucao=30):
     return {
         "nome": nome,
         "cor": cor,
-        "tipo": "apenas_contorno", # Importante para ser vazado
+        "tipo": "apenas_contorno", 
         "pontos": pontos
     }
 
@@ -387,7 +386,6 @@ def getCirculoPreenchido(cx, cy, raio, cor, nome="circulo_cheio", resolucao=20):
     return {
         "nome": nome,
         "cor": cor,
-        # Sem "tipo": "apenas_contorno", o seu renderizarPersonagem vai usar scanlineFill autom.
         "pontos": pontos
     }
     
@@ -409,37 +407,36 @@ def setPreencherTrianguloGenerico(superficie, x1, y1, x2, y2, x3, y3, cor):
                        
 
 def setQuadrado(superficie, x, y, tamanho, cor):
-    # 1. Linha do Topo (da esquerda para a direita)
+    
     setRetaBresenham(superficie, x, y, x + tamanho, y, cor)
     
-    # 2. Linha da Esquerda (de cima para baixo)
+    
     setRetaBresenham(superficie, x, y, x, y + tamanho, cor)
     
-    # 3. Linha da Direita (de cima para baixo, deslocada pelo tamanho)
+    
     setRetaBresenham(superficie, x + tamanho, y, x + tamanho, y + tamanho, cor)
 
-    # 4. Linha de Baixo (da esquerda para a direita, deslocada para baixo)
+    
     setRetaBresenham(superficie, x, y + tamanho, x + tamanho, y + tamanho, cor)
     
 def setRetangulo(superficie, x, y, largura, altura, cor):
     
-    # 1. Linha do Topo (da esquerda para a direita)
+    
     setRetaBresenham(superficie, x, y, x + largura, y, cor)
     
-    # 2. Linha da Esquerda (de cima para baixo)
+    
     setRetaBresenham(superficie, x, y, x, y + altura, cor)
     
-    # 3. Linha da Direita (de cima para baixo, deslocada pelo tamanho)
+    
     setRetaBresenham(superficie, x + largura, y, x + largura, y + altura, cor)
     
-    # 4. Linha de baixo (da esquerda para a direita, deslocada para baixo)
+    
     setRetaBresenham(superficie, x, y + altura, x + largura, y + altura,cor)
 
 def setPreencherQuadradoFloodfill(superficie, x, y, tamanho, cor_contorno, cor_preenchimento):
-    # Desenha o contorno do quadrado
+    
     setQuadrado(superficie, x, y, tamanho, cor_contorno)
-    # Preenche usando floodfill a partir de um ponto dentro do quadrado
-    # Em setPreencherQuadradoFloodfill
+    
     floodfill(superficie, x + 2, y + 2, cor_preenchimento)   
     
 def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
@@ -450,53 +447,53 @@ def setPreencherRetangulo(superficie, x, y, largura, altura, cor):
         (x, y + altura)
     ]
     
-    # 2. Chamamos a função do professor enviando essa lista
+    
     scanlineFill(superficie, pontos, cor)
     
 def setPreencherRetanguloFloodfill(superficie, x, y, largura, altura, cor_contorno, cor_preenchimento):
-    # Desenha o contorno do retângulo
+    
     setRetangulo(superficie, x, y, largura, altura, cor_contorno)
-    # Preenche usando floodfill a partir de um ponto dentro do retângulo
+    
     floodfill(superficie, x + largura // 2, y + altura // 2, cor_preenchimento)     
 
 def setPreencherTrianguloFloodfill(superficie, x, y, lado, cor_contorno, cor_preenchimento):
-    # Calcula a altura do triângulo
+    
     altura = lado * (math.sqrt(3) / 2)
-    # Define os três vértices
+    
     p1x, p1y = x, y
     p2x, p2y = x - (lado / 2), y + altura
     p3x, p3y = x + (lado / 2), y + altura
-    # Desenha o contorno do triângulo
+    
     setRetaBresenham(superficie, p1x, p1y, p2x, p2y, cor_contorno)
     setRetaBresenham(superficie, p1x, p1y, p3x, p3y, cor_contorno)
     setRetaBresenham(superficie, p2x, p2y, p3x, p3y, cor_contorno)
-    # Preenche usando floodfill a partir de um ponto dentro do triângulo
+    
     floodfill(superficie, int(x), int(y + altura // 2), cor_preenchimento, cor_limite=cor_contorno) 
 
-#Essas funções são responsáveis por renderizar os personagens e o cenário.
+
 def renderizarPersonagem(superficie, modelo, matriz, textura_objeto=None):
     for parte in modelo:
         pts_trans = aplicaTransformacao(matriz, parte["pontos"])
         cor = parte["cor"]
         tipo = parte.get("tipo", "padrao")
         
-        # === LÓGICA DE PREENCHIMENTO ===
+        
         if len(pts_trans) > 2 and tipo != "apenas_contorno" and tipo != "linha":
             
-            # Verifica se é Gradiente (NOVO)
+            
             if tipo == "gradiente":
                 c_topo = parte.get("cor_topo", cor)
                 c_base = parte.get("cor_base", cor)
                 scanlineFillGradient(superficie, pts_trans, c_topo, c_base)
             
-            # 2. Verifica se é Textura
+            
             elif "uvs" in parte and textura_objeto is not None:
                 scanlineTexture(superficie, pts_trans, parte["uvs"], textura_objeto)
             
             else:
                 scanlineFill(superficie, pts_trans, cor)
         
-        # === BORDAS ===
+       
         n = len(pts_trans)
         for i in range(n):
             if tipo == "linha" and i == n - 1: break
@@ -507,35 +504,35 @@ def desenhar_cenario(superficie, matriz_v=None, textura_bandeira=None):
     from cenarios import DADOS_DO_CENARIO, getBandeira
     if matriz_v is None: matriz_v = identidade()
 
-    # Desenha a bandeira (que usa textura)
+   
     m_band = calcularMatriz(1.0, 0, 100, 100)
     renderizarPersonagem(superficie, getBandeira(), multiplicaMatrizes(matriz_v, m_band), textura_bandeira)
 
-    # Desenha o resto do cenário (cor sólida)
+    
     for item in DADOS_DO_CENARIO:
         m_obj = calcularMatriz(1.0, 0, item["x"], item["y"])
         renderizarPersonagem(superficie, item["modelo"], multiplicaMatrizes(matriz_v, m_obj), None)
 
 def renderizarViewport(superficie, matriz_vp, modelos_mundo, textura_grama=None):
-    # Desenha a Moldura e o Fundo sólido
+   
     setPreencherRetangulo(superficie, 958, 18, 304, 174, (0, 0, 0))    # Borda
     setPreencherRetangulo(superficie, 960, 20, 300, 170, (40, 40, 40)) # Fundo escuro
 
     definirAreaDeRecorte(960, 20, 1260, 190)
     
-    # Desenha o Céu e Chão reduzidos
+    
     setPreencherRetangulo(superficie, 960, 20, 300, 70, (135, 206, 235)) 
     setPreencherRetangulo(superficie, 960, 90, 300, 100, (100, 100, 100))
 
-    # IMPORTANTE: Passar a textura para o desenho do cenário na viewport
+    
     desenhar_cenario(superficie, matriz_vp, textura_grama)
 
-    # Desenha os Personagens
+   
     for modelo, matriz_original in modelos_mundo:
         m_final = multiplicaMatrizes(matriz_vp, matriz_original)
         renderizarPersonagem(superficie, modelo, m_final)
         
-    # Reset do recorte
+    
     definirAreaDeRecorte(0, 0, 1280, 720)
     
 def limitar_personagem_na_janela(x, y, largura_obj, altura_obj, largura_janela, altura_janela, y_min_mapa=220):

@@ -3,7 +3,7 @@ from matrizes import *
 
 
 def getBilly():
-    # Paleta de cores
+    
     cor_pele = (179, 139, 109)
     cor_roupa = (255, 0, 0)
     cor_branco = (255, 255, 255)
@@ -58,7 +58,7 @@ def getMulher():
     return modelo
 
 def getMenino():
-    # Cores
+    
     cor_pele = (255, 224, 189)
     cor_cabelo = (0, 0, 0)
     cor_blusa = (173, 216, 230)
