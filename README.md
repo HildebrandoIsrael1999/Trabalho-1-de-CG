@@ -37,7 +37,7 @@ Este projeto é um jogo arcade 2D desenvolvido como parte de uma avaliação aca
 - **textos.py**  
 	Renderiza textos, balões de fala e informações na tela usando fontes do Pygame. Permite exibir diálogos, instruções, pontuação e mensagens do sistema. Gerencia estilos, cores e posicionamento dos textos. Facilita a comunicação visual com o jogador. Suporta animações e efeitos visuais em textos.
 
-**clipping.py**  
+- **clipping.py**  
 	Implementa o algoritmo de Cohen-Sutherland para recorte de linhas (linhaRecortada), garantindo que apenas segmentos visíveis sejam desenhados na tela. Permite otimizar a renderização e evitar artefatos fora da área útil. Facilita a implementação da viewport (mini-mapa). Centraliza utilitários de recorte geométrico para todo o sistema.
 
 ---
@@ -274,6 +274,7 @@ Assista à execução completa do projeto, incluindo tela de abertura e gameplay
 **Hildebrando Israel** - hildebrando.sales@aluno.uece.br
 **Samuel Cristhian** - samuel.cristhian@aluno.uece.br
 **Clara Figueiredo** - clara.figueiredo@aluno.uece.br
+
 
 
 
