@@ -228,6 +228,34 @@ modelo_moita = getMoita()
 
 ---
 
+## Como executar o projeto
+
+1. **Pré-requisitos:**
+   - Python 3.8 ou superior instalado.
+   - Recomenda-se o uso de ambiente virtual (venv).
+   - Instale as dependências necessárias:
+     ```bash
+     pip install pygame
+     ```
+
+2. **Baixe/clique no repositório** e certifique-se de que todos os arquivos e pastas (incluindo a pasta `Músicas/` e `Fontes/`) estejam no mesmo diretório.
+
+3. **Execute o jogo:**
+   - No terminal, navegue até a pasta do projeto e rode:
+     ```bash
+     python main.py
+     ```
+
+4. **Controles:**
+   - Use as setas do teclado para movimentar o personagem.
+   - Siga as instruções exibidas na tela para interagir com menus e objetos.
+
+5. **Observações:**
+   - O jogo foi desenvolvido para rodar em Windows, mas pode funcionar em outros sistemas com Python e Pygame instalados.
+   - Certifique-se de que os arquivos de música estejam no caminho correto para evitar erros de áudio.
+
+---
+
 ## Demonstração em Vídeo
 
 Assista à execução completa do projeto, incluindo tela de abertura e gameplay:

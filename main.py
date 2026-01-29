@@ -3,7 +3,7 @@ import pygame
 import sys
 from interface import executar_menu_principal, executar_tela_vitoria
 from config import criar_estado_inicial, processar_eventos_jogo, atualizar_estado_jogo, desenhar_jogo
-from musica import tocar_musica_menu, tocar_musica_jogo, parar_musica
+from musica import tocar_musica_menu, tocar_musica_jogo, parar_musica, tocar_aplausos
 
 pygame.init()
 pygame.mixer.init()
@@ -44,8 +44,10 @@ while programa_rodando:
         pygame.display.flip()
         clock.tick(60)
 
+
     if programa_rodando:
         parar_musica()
+        tocar_aplausos()
         if not executar_tela_vitoria(tela, tempo_final_registrado):
             programa_rodando = False
 

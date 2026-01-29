@@ -8,5 +8,11 @@ def tocar_musica_jogo():
     pygame.mixer.music.load("Músicas/Dinâmica do Jogo.mp3")
     pygame.mixer.music.play(-1)
 
+
 def parar_musica():
     pygame.mixer.music.stop()
+
+
+def tocar_aplausos():
+    efeito_aplausos = pygame.mixer.Sound("Músicas/applause-02-loop-253126.mp3")
+    efeito_aplausos.play()
