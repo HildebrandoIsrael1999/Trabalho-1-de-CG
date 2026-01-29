@@ -19,19 +19,19 @@ Este projeto é um jogo arcade 2D desenvolvido como parte de uma avaliação aca
 - **config.py**  
 	Gerencia o estado global do jogo, incluindo posições dos personagens, itens, obstáculos e variáveis de controle. Processa eventos do teclado e mouse, atualizando o estado conforme as ações do jogador. Controla o fluxo do gameplay, como início, pausa e fim de jogo. Realiza a lógica de atualização de variáveis, como tempo, pontuação e itens coletados. Centraliza a comunicação entre os módulos e mantém o estado sincronizado.
 
-**personagens.py**  
+- **personagens.py**  
 	Responsável apenas por definir os pontos dos personagens (Billy, Clara, Menino) através das funções get. Não realiza renderização direta, apenas retorna listas de pontos para serem usados na função renderizarPersonagem da biblioteca. Permite fácil alteração de aparência e adição de novos personagens. Organiza os dados para renderização eficient, serve de base para colisão e modulariza mais facilmente a manipulação de matrizes com pontos.
 
-**cenarios.py**  
+- **cenarios.py**  
 	Define os pontos dos objetos do cenário (moita, carrinho, banco, cachorro, etc.) usando funções get. Não realiza renderização direta, apenas retorna listas de pontos para facilitar a organização e uso na renderização. Permite composição de cenários variados e dinâmicos, além de servir de referência para colisão.
 
-**biblioteca.py**  
+- **biblioteca.py**  
 	Biblioteca gráfica principal do projeto, implementando algoritmos de rasterização de linhas (Bresenham), polígonos (Scanline), círculos e preenchimento. Contém funções para desenhar e obter os pontos das primitivas geométricas, além de aplicar clipping (Cohen-Sutherland) em linhas. Gerencia a renderização manual dos elementos na matriz de pixels, incluindo a função renderizarPersonagem que utiliza os dados de personagens.py e a renderização do cenário a partir dos pontos definidos em cenarios.py. Implementa também a renderização da viewport (mini-mapa) e centraliza utilitários gráficos para uso em todo o sistema.
 
 - **matrizes.py**  
 	Implementa operações de matrizes 3x3 para transformações afins: identidade, translação, escala, rotação, multiplicação e aplicação de matriz em pontos. Permite compor múltiplas transformações em uma única matriz. Facilita a manipulação geométrica de personagens e objetos do cenário. Garante precisão e eficiência nas operações gráficas. Serve de base para animações e movimentações complexas.
 
-**colisao.py**  
+- **colisao.py**  
 	Gerencia colisão entre personagens, itens e obstáculos usando bounding boxes (AABB). Implementa funções para detectar sobreposição de pixels e calcular respostas de colisão. Permite bloquear movimentos, otimiza o desempenho do jogo evitando cálculos desnecessários. Centraliza toda a lógica de colisão do sistema.
 
 - **textos.py**  
@@ -274,5 +274,6 @@ Assista à execução completa do projeto, incluindo tela de abertura e gameplay
 **Hildebrando Israel** - hildebrando.sales@aluno.uece.br
 **Samuel Cristhian** - samuel.cristhian@aluno.uece.br
 **Clara Figueiredo** - clara.figueiredo@aluno.uece.br
+
 
 
