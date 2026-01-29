@@ -1,4 +1,4 @@
-# "Billy da Tapioca"
+# "Tapioca do Billy"
 
 ## Visão Geral
 
@@ -11,28 +11,28 @@ Este projeto é um jogo arcade 2D desenvolvido como parte de uma avaliação aca
 
 
 - **main.py**  
-	Ponto de entrada do jogo, responsável por inicializar o Pygame e todos os módulos do sistema. Gerencia o loop principal, controle de FPS, música de fundo e transições entre telas. Realiza a chamada das funções de atualização do estado do jogo e renderização dos elementos gráficos. Controla o fluxo entre menu, gameplay e tela de ranking. Também faz o tratamento de encerramento do jogo e recursos.
+	Ponto de entrada do jogo, responsável por inicializar o Pygame e todos os módulos do sistema. Gerencia o loop principal, controle de FPS, música de fundo e transições entre telas. Realiza a chamada das funções de atualização do estado do jogo e renderização dos elementos gráficos. Controla o fluxo entre menu e tela de ranking. Também faz o tratamento de encerramento do jogo.
 
 - **interface.py**  
 	Implementa o menu principal, botões, telas de instrução e ranking. Gerencia a navegação entre diferentes telas do jogo, detectando cliques e interações do usuário. Responsável pelo layout visual dos menus, animações de entrada e saída, e feedback visual dos botões. Realiza a integração com o sistema de ranking e exibe informações do jogador. Permite customização de opções e configurações básicas.
 
 - **config.py**  
-	Gerencia o estado global do jogo, incluindo posições dos personagens, itens, obstáculos e variáveis de controle. Processa eventos do teclado e mouse, atualizando o estado conforme as ações do jogador. Controla o fluxo do gameplay, como início, pausa, vitória e derrota. Realiza a lógica de atualização de variáveis, como tempo, pontuação e itens coletados. Centraliza a comunicação entre os módulos e mantém o estado sincronizado.
+	Gerencia o estado global do jogo, incluindo posições dos personagens, itens, obstáculos e variáveis de controle. Processa eventos do teclado e mouse, atualizando o estado conforme as ações do jogador. Controla o fluxo do gameplay, como início, pausa e fim de jogo. Realiza a lógica de atualização de variáveis, como tempo, pontuação e itens coletados. Centraliza a comunicação entre os módulos e mantém o estado sincronizado.
 
 **personagens.py**  
-	Responsável apenas por definir os pontos dos personagens (Billy, Clara, Menino) através das funções get. Não realiza renderização direta, apenas retorna listas de pontos para serem usados na função renderizarPersonagem da biblioteca. Permite fácil alteração de aparência e adição de novos personagens. Organiza os dados para renderização eficiente e serve de base para colisão.
+	Responsável apenas por definir os pontos dos personagens (Billy, Clara, Menino) através das funções get. Não realiza renderização direta, apenas retorna listas de pontos para serem usados na função renderizarPersonagem da biblioteca. Permite fácil alteração de aparência e adição de novos personagens. Organiza os dados para renderização eficient, serve de base para colisão e modulariza mais facilmente a manipulação de matrizes com pontos.
 
 **cenarios.py**  
 	Define os pontos dos objetos do cenário (moita, carrinho, banco, cachorro, etc.) usando funções get. Não realiza renderização direta, apenas retorna listas de pontos para facilitar a organização e uso na renderização. Permite composição de cenários variados e dinâmicos, além de servir de referência para colisão.
 
 **biblioteca.py**  
-	Biblioteca gráfica principal do projeto, implementando algoritmos de rasterização de linhas (Bresenham), polígonos (Scanline), círculos e preenchimento. Contém funções para desenhar e transformar primitivas geométricas, além de aplicar clipping (Cohen-Sutherland) em linhas. Gerencia a renderização manual dos elementos na matriz de pixels, incluindo a função renderizarPersonagem que utiliza os dados de personagens.py e a renderização do cenário a partir dos pontos definidos em cenarios.py. Implementa também a renderização da viewport (mini-mapa) e centraliza utilitários gráficos para uso em todo o sistema.
+	Biblioteca gráfica principal do projeto, implementando algoritmos de rasterização de linhas (Bresenham), polígonos (Scanline), círculos e preenchimento. Contém funções para desenhar e obter os pontos das primitivas geométricas, além de aplicar clipping (Cohen-Sutherland) em linhas. Gerencia a renderização manual dos elementos na matriz de pixels, incluindo a função renderizarPersonagem que utiliza os dados de personagens.py e a renderização do cenário a partir dos pontos definidos em cenarios.py. Implementa também a renderização da viewport (mini-mapa) e centraliza utilitários gráficos para uso em todo o sistema.
 
 - **matrizes.py**  
 	Implementa operações de matrizes 3x3 para transformações afins: identidade, translação, escala, rotação, multiplicação e aplicação de matriz em pontos. Permite compor múltiplas transformações em uma única matriz. Facilita a manipulação geométrica de personagens e objetos do cenário. Garante precisão e eficiência nas operações gráficas. Serve de base para animações e movimentações complexas.
 
 **colisao.py**  
-	Gerencia colisão entre personagens, itens e obstáculos usando bounding boxes (AABB). Implementa funções para detectar sobreposição e calcular respostas de colisão. Permite bloquear movimentos, coletar itens e interagir com o ambiente. Otimiza o desempenho do jogo evitando cálculos desnecessários. Centraliza toda a lógica de colisão do sistema.
+	Gerencia colisão entre personagens, itens e obstáculos usando bounding boxes (AABB). Implementa funções para detectar sobreposição de pixels e calcular respostas de colisão. Permite bloquear movimentos, otimiza o desempenho do jogo evitando cálculos desnecessários. Centraliza toda a lógica de colisão do sistema.
 
 - **textos.py**  
 	Renderiza textos, balões de fala e informações na tela usando fontes do Pygame. Permite exibir diálogos, instruções, pontuação e mensagens do sistema. Gerencia estilos, cores e posicionamento dos textos. Facilita a comunicação visual com o jogador. Suporta animações e efeitos visuais em textos.
@@ -49,13 +49,13 @@ Este projeto é um jogo arcade 2D desenvolvido como parte de uma avaliação aca
 	 - Exibe menu principal ([interface.py](interface.py)).
 
 2. **Loop do Jogo**  
-	 - Captura eventos do usuário (teclado, mouse).
+	 - Captura eventos do usuário (teclado, mouse) ([config.py](config.py)).
 	 - Atualiza o estado do jogo ([config.py](config.py)).
 	 - Renderiza cenário, personagens e itens ([biblioteca.py](biblioteca.py), [cenarios.py](cenarios.py), [personagens.py](personagens.py)).
 	 - Aplica transformações geométricas via matrizes ([matrizes.py](matrizes.py)).
 	 - Gerencia colisões ([colisao.py](colisao.py)).
 	 - Exibe textos e balões ([textos.py](textos.py)).
-	 - Atualiza a tela a 60 FPS.
+	 - Atualiza a tela a 60 FPS. ([main.py](main.py)).
 
 ---
 
@@ -73,7 +73,10 @@ estado_jogo = criar_estado_inicial(1280, 720)
 - Posições dos personagens
 - Lista de itens no cenário
 - Tempo inicial do jogo
-- Flags de vitória/derrota
+- Flags de incio e fim do jogo.
+- Criação das hitboxes dos itens do cenário.
+- Criação da matriz da viewport.
+- Flags de interações.
 
 ---
 
@@ -88,24 +91,23 @@ eventos = pygame.event.get()
 processar_eventos_jogo(estado_jogo, eventos)
 ```
 **Principais ações:**  
-- Movimentação (setas/WASD)
-- Interação com itens
-- Fechar o jogo
+- Movimentação (setas/WASD).
+- Interação com itens.
 
 ---
 
 ### 3. `atualizar_estado_jogo(estado_jogo)`
 **Descrição:**  
-Atualiza as variáveis do estado do jogo a cada frame. Calcula novas posições, verifica colisões, atualiza animações, checa condições de vitória/derrota e controla o tempo de jogo.
+Atualiza as variáveis do estado do jogo a cada frame. Calcula novas posições, verifica colisões, atualiza animações e controla o tempo de jogo.
 
 **Exemplo de uso:**  
 ```python
 atualizar_estado_jogo(estado_jogo)
 ```
 **Principais tarefas:**  
-- Atualizar posições dos personagens
-- Verificar colisão com obstáculos e itens
-- Atualizar tempo e status do jogo
+- Atualizar posições dos personagens.
+- Verificar colisão com obstáculos e itens.
+- Atualizar tempo e status do jogo.
 
 ---
 
@@ -118,25 +120,25 @@ Renderiza todos os elementos do jogo na tela: cenário, personagens, itens, text
 desenhar_jogo(tela, estado_jogo)
 ```
 **Principais elementos desenhados:**  
-- Cenário (moita, banco, carrinho, etc.)
-- Personagens (Billy, Clara, Menino)
-- Itens (tapioca, queijo, caixa)
-- Textos e balões de fala
+- Cenário (moita, banco, carrinho, etc.).
+- Personagens (Billy, Clara, Menino).
+- Itens (tapioca, queijo, caixa).
+- Textos e balões de fala.
 
 ---
 
 ### 5. `renderizarPersonagem(modelo, matriz, tela)`
 **Descrição:**  
-Recebe o modelo do personagem (lista de primitivas geométricas), aplica a matriz de transformação (escala, rotação, translação) e desenha cada parte na tela usando algoritmos de rasterização. Para polígonos, utiliza o algoritmo ScanlineFill para realizar o preenchimento das formas, garantindo renderização eficiente e visualmente correta.
+Recebe o modelo do personagem (lista de primitivas geométricas com pontos), aplica a matriz de transformação (escala, rotação, translação) e desenha cada parte na tela usando algoritmos de rasterização. Para polígonos, utiliza o algoritmo ScanlineFill, ScanlineTexture, ScanlineFillGradiente para realizar o preenchimento das formas, garantindo renderização eficiente e visualmente correta.
 
 **Exemplo de uso:**  
 ```python
 renderizarPersonagem(modelo_billy, matriz_billy, tela)
 ```
 **Principais etapas:**  
-- Aplica matriz de transformação em cada ponto do modelo
-- Chama funções de desenho para cada primitiva (retângulo, círculo, linha)
-- Utiliza ScanlineFill para preencher polígonos do personagem
+- Aplica matriz de transformação em cada ponto do modelo.
+- Chama funções de desenho para cada primitiva (retângulo, círculo, linha).
+- Utiliza ScanlineFill e outros para preencher polígonos do personagem.
 
 ---
 
@@ -149,8 +151,8 @@ Preenche um polígono na tela usando o algoritmo de scanline, que percorre linha
 scanlineFill(poligono, (255,255,255), tela)
 ```
 **Principais etapas:**  
-- Calcula interseções das scanlines com as arestas do polígono
-- Preenche os segmentos internos com a cor desejada
+- Calcula interseções das scanlines com as arestas do polígono.
+- Preenche os segmentos internos com a cor desejada.
 
 ---
 
@@ -168,35 +170,35 @@ setRetaBresenham(10, 20, 100, 200, (0,0,0), tela)
 
 ---
 
-### 8. `cohenSutherlandClip(x1, y1, x2, y2, xmin, ymin, xmax, ymax)`
+### 8. `setRetaRecortada(superficie, x0, y0, x1, y1, cor)`
 **Descrição:**  
-Recorta uma linha para garantir que ela seja desenhada apenas dentro dos limites da tela (viewport), usando o algoritmo de Cohen-Sutherland. No projeto, essa função é utilizada dentro de setLinhaRecortada, que recebe os valores da linha e da área de recorte, aplica o algoritmo e, se a linha estiver visível, chama setLinhaBresenham para desenhar o segmento recortado.
+Recorta uma linha para garantir que ela seja desenhada apenas dentro dos limites da tela e viewport, usando o algoritmo de Cohen-Sutherland. Recebe os valores da linha e da área de recorte, aplica o algoritmo e, se a linha estiver visível, chama setRetaBresenham para desenhar o segmento recortado.
 
 **Exemplo de uso:**  
 ```python
 setLinhaRecortada(x1, y1, x2, y2, 0, 0, largura, altura, tela)
 ```
 **Principais etapas:**  
-- Verifica se a linha está dentro, fora ou parcialmente dentro da área visível
-- Retorna os pontos ajustados para desenhar apenas a parte visível
-- Chama setLinhaBresenham para desenhar o segmento recortado
+- Verifica se a linha está dentro, fora ou parcialmente dentro da área visível.
+- Retorna os pontos ajustados para desenhar apenas a parte visível.
+- Chama setRetaBresenham para desenhar o segmento recortado.
 
 ---
 
 ### 9. `calcularMatriz(escala, rotacao, translacao)`
 **Descrição:**  
-Gera uma matriz de transformação 3x3 combinando escala, rotação e translação, usada para transformar modelos geométricos antes de desenhar. No projeto, o correto é primeiro transladar o objeto para a origem (0,0), aplicar a escala e rotação, e só então realizar a translação final para posicionar o objeto no local desejado da tela. Esse contexto garante que as transformações ocorram de forma previsível e correta para todos os elementos.
+Gera uma matriz de transformação 3x3 combinando escala, rotação e translação, usada para transformar modelos geométricos antes de desenhar. No projeto, o correto é primeiro transladar o objeto para a origem (0,0), aplicar a escala e rotação, e só então realizar a translação final para posicionar o objeto no local desejado da tela, porém, nossos objetos são calculados para serem desenhados na origem e só posteriormente são movidos para suas respectivas posições. Esse contexto garante que as transformações ocorram de forma previsível e correta para todos os elementos.
 
 **Exemplo de uso:**  
 ```python
 matriz = calcularMatriz((1.0, 1.0), 45, (100, 200))
 ```
 **Principais etapas:**  
-- Cria matriz de translação para levar o objeto à origem
-- Cria matriz de escala
-- Cria matriz de rotação
-- Cria matriz de translação final para posicionar o objeto
-- Multiplica as matrizes na ordem correta para obter a transformação final
+- Cria matriz de translação para levar o objeto à origem.
+- Cria matriz de escala.
+- Cria matriz de rotação.
+- Cria matriz de translação final para posicionar o objeto.
+- Multiplica as matrizes na ordem correta para obter a transformação final.
 
 ---
 
@@ -225,6 +227,9 @@ modelo_moita = getMoita()
 - **Renderização de viewport** (mini-mapa)
 - **Interface gráfica** (menu, botões)
 - **Textos e balões de fala**
+- **Animações**
+- **Adição de músicas**
+- **Sistema de Ranking**
 
 ---
 
@@ -247,7 +252,7 @@ modelo_moita = getMoita()
      ```
 
 4. **Controles:**
-   - Use as setas do teclado para movimentar o personagem.
+   - Use as letras do teclado ( W , A , S , D e SPACE) para movimentar o personagem e realizar ações.
    - Siga as instruções exibidas na tela para interagir com menus e objetos.
 
 5. **Observações:**
@@ -266,7 +271,8 @@ Assista à execução completa do projeto, incluindo tela de abertura e gameplay
 
 ## Equipe
 
-**Hildebrando Israel ** - email1@exemplo.com
-**Samuel ** - email2@exemplo.com
-**Clara ** - email3@exemplo.com
+**Hildebrando Israel** - hildebrando.sales@aluno.uece.br
+**Samuel Cristhian** - samuel.cristhian@aluno.uece.br
+**Clara Figueiredo** - clara.figueiredo@aluno.uece.br
+
 
