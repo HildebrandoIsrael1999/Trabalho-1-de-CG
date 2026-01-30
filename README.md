@@ -261,11 +261,27 @@ modelo_moita = getMoita()
 
 ---
 
+### Executando no Linux
+
+- Instale o Python e o Pygame normalmente:
+  ```bash
+  sudo apt update
+  sudo apt install python3 python3-pip
+  pip3 install pygame
+  ```
+- Certifique-se de que as dependências de áudio do sistema estejam instaladas (exemplo: `libsdl2-mixer-2.0-0`).
+- Execute o jogo com:
+  ```bash
+  python3 main.py
+  ```
+- Se houver problemas de áudio, verifique permissões e se o dispositivo de som está configurado corretamente.
+- Os caminhos de arquivos são sensíveis a maiúsculas/minúsculas no Linux. Mantenha os nomes das pastas e arquivos exatamente como estão no projeto.
+
 ## Demonstração em Vídeo
 
 Assista à execução completa do projeto, incluindo tela de abertura e gameplay:
 
-[👉 Assistir vídeo no YouTube](https://www.youtube.com/seu-link-aqui)
+[👉 Assistir vídeo no YouTube](https://youtu.be/cp4KBEc3QFg?si=2DZo0g6Cyt-dRVFD)
 
 ---
 
@@ -274,6 +290,7 @@ Assista à execução completa do projeto, incluindo tela de abertura e gameplay
 **Hildebrando Israel** - hildebrando.sales@aluno.uece.br
 **Samuel Cristhian** - samuel.cristhian@aluno.uece.br
 **Clara Figueiredo** - clara.figueiredo@aluno.uece.br
+
 
 
 
